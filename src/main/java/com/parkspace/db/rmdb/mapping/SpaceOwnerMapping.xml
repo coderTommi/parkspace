@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.SpaceOwnerDao">
+	<!-- 根据车位编号获取车位业主信息 -->
+	<select id="getSpaceOwner" parameterType="string" resultType="SpaceOwner">
+		select * from SpaceOwner where spaceno=#{spaceno}
+	</select>
+	<!-- 保存车位业主信息 -->
+	<insert id="addSpaceOwner" parameterType="SpaceOwner">
+    	insert into SpaceOwner(
+				spaceno,
+				userId,
+				isauth,
+				carno,
+				memo,
+				createBy,
+				createTime,
+				modifyBy,
+				modifyTime
+    		) 
+         values(
+       			#{spaceno},
+       			#{userId},
+       			#{isauth},
+       			#{carno},
+       			#{memo},
+       			#{createBy},
+       			#{createTime},
+       			#{modifyBy},
+       			#{modifyTime}
+         )
+	</insert>
+	
+	<!-- 更改车位业主信息 -->
+	<update id="updateSpaceOwner" parameterType="SpaceOwner">
+    	update SpaceOwner set
+    			userId     = #{userId},
+    			isauth     = #{isauth},
+    			carno      = #{carno},
+    			memo       = #{memo},
+    			modifyBy   = #{modifyBy},
+    			modifyTime = #{modifyTime}
+    	where   spaceno = #{spaceno}
+	</update>
+	
+	<!-- 删除车位业主信息,修改isauth为-1,需要同时更新编辑人和编辑时间 -->
+	<update id="deleteSpaceOwner" parameterType="SpaceOwner">
+    	update SpaceOwner set
+    			isauth   = -1,
+    			modifyBy   = #{modifyBy},
+    			modifyTime = #{modifyTime}
+    	where spaceno = #{spaceno}
+	</update>
+	<!-- 根据条件查询车位业主信息 -->
+	<select id="getSpaceOwnerList" parameterType="SpaceOwner" resultType="SpaceOwner">
+		select * from SpaceOwner where 1=1
+			 <if test="spaceno != null">
+            	and spaceno = #{spaceno}
+        	 </if>
+        	 <if test="userId != null">
+            	and userId = #{userId}
+        	 </if>
+        	 <if test="isauth != null">
+            	and isauth = #{isauth}
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and createTime >= #{createTime} ]]>
+        	 </if>
+        	 order by createTime desc
+	</select>
+</mapper>
