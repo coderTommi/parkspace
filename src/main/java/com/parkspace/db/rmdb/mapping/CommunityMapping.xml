@@ -2,17 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.parkspace.db.rmdb.dao.CommunityDao">
 	<!-- 根据id查询小区信息 -->
-	<select id="getCommunity" parameterType="string" resultType="com.parkspace.db.rmdb.entity.Community">
+	<select id="getCommunity" parameterType="string" resultType="Community">
 		select * from community where comid=#{comid}
 	</select>
 	<!-- 新增小区信息 -->
-	<insert id="addCommunity" parameterType="com.parkspace.db.rmdb.entity.Community">
-    	insert into community(comid,zoneid,comname,address,isenable,memo,createBy,createTime,modifyBy,modifyTime) 
-    	          values(#{comid},#{zoneid},#{comname},#{address},#{isenable},#{memo},#{createBy},#{createTime},#{modifyBy},#{modifyTime})
+	<insert id="addCommunity" parameterType="Community">
+    	insert into community(
+    			comid,
+    			zoneid,
+    			comname,
+    			address,
+    			isenable,
+    			memo,
+    			createBy,
+    			createTime,
+    			modifyBy,
+    			modifyTime
+    		) 
+    	 values(
+    	 		#{comid},
+    	 		#{zoneid},
+    	 		#{comname},
+    	 		#{address},
+    	 		#{isenable},
+    	 		#{memo},
+    	 		#{createBy},
+    	 		#{createTime},
+    	 		#{modifyBy},
+    	 		#{modifyTime}
+    	 	)
 	</insert>
 	
 	<!-- 更新小区信息 -->
-	<update id="updateCommunity" parameterType="com.parkspace.db.rmdb.entity.Community">
+	<update id="updateCommunity" parameterType="Community">
     	update community set
     			zoneid         = #{zoneid},
     			comname        = #{comname},
@@ -25,7 +47,7 @@
 	</update>
 	
 	<!-- 根据id删除小区信息 -->
-	<update id="deleteCommunity" parameterType="com.parkspace.db.rmdb.entity.Community">
+	<update id="deleteCommunity" parameterType="Community">
     	update community set
     			isenable   = 2,
     			modifyBy   = #{modifyBy},
@@ -33,7 +55,7 @@
     	where comid = #{comid}
 	</update>
 	<!-- 根据具体条件查询小区信息 -->
-	<select id="getCommunityList" parameterType="com.parkspace.db.rmdb.entity.Community" resultType="com.parkspace.db.rmdb.entity.Community">
+	<select id="getCommunityList" parameterType="Community" resultType="Community">
 		select * from community where 1=1
 			 <if test="comid != null">
             	and comid = #{comid}

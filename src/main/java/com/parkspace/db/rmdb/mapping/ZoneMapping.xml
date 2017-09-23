@@ -2,17 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.parkspace.db.rmdb.dao.ZoneDao">
 	<!-- 根据id查询区域信息 -->
-	<select id="getZone" parameterType="string" resultType="com.parkspace.db.rmdb.entity.Zone">
+	<select id="getZone" parameterType="string" resultType="Zone">
 		select * from zone where zoneid=#{zoneid}
 	</select>
 	<!-- 新增区域信息 -->
-	<insert id="addZone" parameterType="com.parkspace.db.rmdb.entity.Zone">
-    	insert into zone(zoneid,zonename,isenable,province,city,zone,memo,createBy,createTime,modifyBy,modifyTime) 
-    	          values(#{zoneid},#{zonename},#{isenable},#{province},#{city},#{zone},#{memo},#{createBy},#{createTime},#{modifyBy},#{modifyTime})
+	<insert id="addZone" parameterType="Zone">
+    	insert into zone(
+				zoneid,
+				zonename,
+				isenable,
+				province,
+				city,
+				zone,
+				memo,
+				createBy,
+				createTime,
+				modifyBy,
+				modifyTime
+    		) 
+         values(
+       			#{zoneid},
+       			#{zonename},
+       			#{isenable},
+       			#{province},
+       			#{city},
+       			#{zone},
+       			#{memo},
+       			#{createBy},
+       			#{createTime},
+       			#{modifyBy},
+       			#{modifyTime}
+         )
 	</insert>
 	
 	<!-- 更新区域信息 -->
-	<update id="updateZone" parameterType="com.parkspace.db.rmdb.entity.Zone">
+	<update id="updateZone" parameterType="Zone">
     	update zone set
     			zonename   = #{zonename},
     			isenable   = #{isenable},
@@ -26,7 +50,7 @@
 	</update>
 	
 	<!-- 根据id删除区域信息 -->
-	<update id="deleteZone" parameterType="com.parkspace.db.rmdb.entity.Zone">
+	<update id="deleteZone" parameterType="Zone">
     	update zone set
     			isenable   = 2,
     			modifyBy   = #{modifyBy},
@@ -34,7 +58,7 @@
     	where zoneid = #{zoneid}
 	</update>
 	<!-- 根据具体条件查询区域信息 -->
-	<select id="getZoneList" parameterType="com.parkspace.db.rmdb.entity.Zone" resultType="com.parkspace.db.rmdb.entity.Zone">
+	<select id="getZoneList" parameterType="Zone" resultType="Zone">
 		select * from zone where 1=1
 			 <if test="zoneid != null">
             	and zoneid = #{zoneid}

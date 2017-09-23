@@ -3,6 +3,11 @@
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 
+	<typeAliases>
+		<typeAlias alias="Community" type="com.parkspace.db.rmdb.entity.Community"/>
+		<typeAlias alias="Zone" type="com.parkspace.db.rmdb.entity.Zone"/>
+		<typeAlias alias="ParkingSpace" type="com.parkspace.db.rmdb.entity.ParkingSpace"/>
+	</typeAliases>
  	<plugins>
 	 	<plugin interceptor="com.github.pagehelper.PageInterceptor">
 	 		<property name="helperDialect" value="mysql"/>

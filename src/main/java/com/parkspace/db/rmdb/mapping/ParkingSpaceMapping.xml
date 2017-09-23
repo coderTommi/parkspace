@@ -1,8 +1,111 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.parkspace.db.rmdb.dao.ParkingSpaceDao">
-	<!-- 根据id查询得到一个停车位对象 -->
-	<select id="getParkingSpace" parameterType="string" resultType="com.parkspace.db.rmdb.entity.ParkingSpace">
+	<!-- 根据id查询车位信息 -->
+	<select id="getParkingSpace" parameterType="string" resultType="ParkingSpace">
 		select * from parkingspace where spaceno=#{spaceno}
+	</select>
+	<!-- 新增车位信息 -->
+	<insert id="addParkingSpace" parameterType="ParkingSpace">
+    	insert into parkingspace(
+    			spaceno,
+    			comid,
+    			parkPositionFloor,
+    			parkPositionZone,
+    			parkPositionX,
+    			parkPositionY,
+    			parkStatus,
+    			parkType,
+    			parkPositionDes,
+    			spaceOwner,
+    			memo,
+    			createBy,
+    			createTime,
+    			modifyBy,
+    			modifyTime
+    		) 
+    	 values(
+    	 		#{spaceno},
+    	 		#{comid},
+    	 		#{parkPositionFloor},
+    	 		#{parkPositionZone},
+    	 		#{parkPositionX},
+    	 		#{parkPositionY},
+    	 		#{parkStatus},
+    	 		#{parkType},
+    	 		#{parkPositionDes},
+    	 		#{spaceOwner},
+    	 		#{memo},
+    	 		#{createBy},
+    	 		#{createTime},
+    	 		#{modifyBy},
+    	 		#{modifyTime}
+    	 	)
+	</insert>
+	
+	<!-- 更新车位信息 -->
+	<update id="updateParkingSpace" parameterType="ParkingSpace">
+    	update ParkingSpace set
+    			comid                    = #{comid},
+    			parkPositionFloor        = #{parkPositionFloor},
+    			parkPositionZone         = #{parkPositionZone},
+    			parkPositionX            = #{parkPositionX},
+    			parkPositionY            = #{parkPositionY},
+    			parkStatus               = #{parkStatus},
+    			parkType                 = #{parkType},
+    			parkPositionDes          = #{parkPositionDes},
+    			spaceOwner               = #{spaceOwner},
+    			memo                     = #{memo},
+    			modifyBy                 = #{modifyBy},
+    			modifyTime               = #{modifyTime}
+    	where spaceno = #{spaceno}
+	</update>
+	
+	<!-- 根据id删除车位信息 -->
+	<update id="deleteParkingSpace" parameterType="ParkingSpace">
+    	update ParkingSpace set
+    			parkStatus   = 'N',
+    			modifyBy     = #{modifyBy},
+    			modifyTime   = #{modifyTime}
+    	where comid = #{comid}
+	</update>
+	<!-- 根据具体条件查询车位信息 -->
+	<select id="getParkingSpaceList" parameterType="ParkingSpace" resultType="ParkingSpace">
+		select * from ParkingSpace where 1=1
+			 <if test="spaceno != null">
+            	and spaceno = #{spaceno}
+        	 </if>
+        	 <if test="comid != null">
+            	and comid = #{comid}
+        	 </if>
+        	 <if test="parkPositionFloor != null">
+            	and parkPositionFloor = #{parkPositionFloor}
+        	 </if>
+        	 <if test="parkPositionZone != null">
+            	and parkPositionZone = #{parkPositionZone}
+        	 </if>
+        	 <if test="parkPositionX != null">
+            	and parkPositionX = #{parkPositionX}
+        	 </if>
+        	 <if test="parkPositionY != null">
+            	and parkPositionY = #{parkPositionY}
+        	 </if>
+        	 <if test="parkStatus != null">
+            	and parkStatus = #{parkStatus}
+        	 </if>
+        	 <if test="parkType != null">
+            	and parkType = #{parkType}
+        	 </if>
+        	 
+        	 <if test="parkPositionDes != null">
+            	and parkPositionDes like '%'||#{parkPositionDes}||'%'
+        	 </if>
+        	 <if test="spaceOwner != null">
+            	and spaceOwner = #{spaceOwner}
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and createTime >= #{createTime} ]]>
+        	 </if>
+        	 order by createTime desc
 	</select>
 </mapper>
