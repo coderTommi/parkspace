@@ -16,14 +16,53 @@ import com.parkspace.db.rmdb.entity.Community;
 */
 
 public interface CommunityDao {
-	//根据小区id获取小区信息
+	/**
+	 * @Title: getCommunity
+	 * <p>Description:根据小区id获取小区信息</p>
+	 * @param     comid 小区编号
+	 * @return Community    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:18:13</p>
+	 */
 	public Community getCommunity(String comid);
-	//保存小区信息id自动生成,在service层返回主键id
+	/**
+	 * @Title: addCommunity
+	 * <p>Description:
+	 * 保存小区信息id自动生成,在service层返回主键id
+	 * </p>
+	 * @param     community 小区信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:17:58</p>
+	 */
 	public void addCommunity(Community community);
-	//更改小区信息
+	/**
+	 * @Title: updateCommunity
+	 * <p>Description:更改小区信息</p>
+	 * @param     community 小区信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:17:44</p>
+	 */
 	public void updateCommunity(Community community);
-	//删除小区信息,修改isenable为2,需要同时更新编辑人和编辑时间
+	/**
+	 * @Title: deleteCommunity
+	 * <p>Description:
+	 * 删除小区信息,修改isenable为2,需要同时更新编辑人和编辑时间
+	 * </p>
+	 * @param     community 小区信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:17:26</p>
+	 */
 	public void deleteCommunity(Community community);
-	//根据条件查询小区信息
+	/**
+	 * @Title: getCommunityList
+	 * <p>Description:根据条件查询小区信息</p>
+	 * @param     community 小区信息
+	 * @return List<Community>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:17:00</p>
+	 */
 	public List<Community> getCommunityList(Community community);
 }

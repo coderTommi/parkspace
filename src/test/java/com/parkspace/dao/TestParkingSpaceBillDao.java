@@ -37,6 +37,7 @@ public class TestParkingSpaceBillDao {
 	public String userId = "1";
 	public String spaceno = "3-001-0";
 	public String orderJnlNo = "448b297c-ea8b-4057-9d28-a3d15840ab13";
+	public String uuid1 = "c7997094-02b5-4c0a-9d6b-138886db59c4";
 	@Test
 	public void testAddParkingSpaceBill(){
 		for(int i = 0; i < 3; i++){
@@ -59,6 +60,12 @@ public class TestParkingSpaceBillDao {
 	public void testGetParkingSpaceBill(){
 		ParkingSpaceBill parkingSpaceBill = parkingSpaceBillDao.getParkingSpaceBill(orderJnlNo);
 		System.out.println(parkingSpaceBill);
+	}
+	
+	@Test
+	public void testGetParkingSpaceBillHis(){
+		ParkingSpaceBillHis parkingSpaceBillHis = parkingSpaceBillHisDao.getParkingSpaceBillHis(uuid1);
+		System.out.println(parkingSpaceBillHis);
 	}
 	
 	@Test

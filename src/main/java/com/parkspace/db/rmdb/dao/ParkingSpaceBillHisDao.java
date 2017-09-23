@@ -17,10 +17,33 @@ import com.parkspace.db.rmdb.entity.ParkingSpaceBillHis;
 */
 
 public interface ParkingSpaceBillHisDao {
-	//根据主键查询历史订单信息
-	public ParkingSpaceBillHis getParkingSpaceBillHis(String orderJnlNo);
-	//保存历史车位订单信息，id自动生成,在service层返回主键id
+	/**
+	 * @Title: getParkingSpaceBillHis
+	 * <p>Description:根据主键查询历史订单信息</p>
+	 * @param     UUID 历史订单主键
+	 * @return ParkingSpaceBillHis    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:11:58</p>
+	 */
+	public ParkingSpaceBillHis getParkingSpaceBillHis(String UUID);
+	/**
+	 * @Title: addParkingSpaceBillHis
+	 * <p>Description:
+	 * 保存历史车位订单信息，id自动生成,在service层返回主键id
+	 * </p>
+	 * @param     parkingSpaceBillHis 历史车位订单信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:11:38</p>
+	 */
 	public void addParkingSpaceBillHis(ParkingSpaceBillHis parkingSpaceBillHis);
-	//根据条件查询历史车位订单信息
+	/**
+	 * @Title: getParkingSpaceBillHisList
+	 * <p>Description:根据条件查询历史车位订单信息</p>
+	 * @param     parkingSpaceBillHis 历史车位订单信息
+	 * @return List<ParkingSpaceBillHis>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:11:16</p>
+	 */
 	public List<ParkingSpaceBillHis> getParkingSpaceBillHisList(ParkingSpaceBillHis parkingSpaceBillHis);
 }

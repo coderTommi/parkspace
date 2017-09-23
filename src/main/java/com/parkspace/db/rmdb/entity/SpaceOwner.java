@@ -38,6 +38,19 @@ public class SpaceOwner implements Serializable{
 	private String modifyBy;
 	//修改时间
 	private Date modifyTime;
+	
+	//车位信息
+	private ParkingSpace parkingSpace;
+	//用户基本信息
+	
+	
+	
+	public ParkingSpace getParkingSpace() {
+		return parkingSpace;
+	}
+	public void setParkingSpace(ParkingSpace parkingSpace) {
+		this.parkingSpace = parkingSpace;
+	}
 	public String getSpaceno() {
 		return spaceno;
 	}
@@ -96,6 +109,6 @@ public class SpaceOwner implements Serializable{
 	public String toString() {
 		return "SpaceOwner [spaceno=" + spaceno + ", userId=" + userId + ", isauth=" + isauth + ", carno=" + carno
 				+ ", memo=" + memo + ", createBy=" + createBy + ", createTime=" + createTime + ", modifyBy=" + modifyBy
-				+ ", modifyTime=" + modifyTime + "]";
+				+ ", modifyTime=" + modifyTime + ", parkingSpace=" + parkingSpace + "]";
 	}
 }

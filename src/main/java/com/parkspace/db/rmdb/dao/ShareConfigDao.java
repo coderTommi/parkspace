@@ -16,14 +16,55 @@ import com.parkspace.db.rmdb.entity.ShareConfig;
 */
 
 public interface ShareConfigDao {
-	//根据id获取车位共享信息
+	/**
+	 * @Title: getShareConfig
+	 * <p>Description:根据id获取车位共享信息</p>
+	 * @param     UUID 车位共享主键
+	 * @return ShareConfig    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:04:46</p>
+	 */
 	public ShareConfig getShareConfig(String UUID);
-	//保存车位共享信息id自动生成,在service层返回主键id
+	/**
+	 * @Title: addShareConfig
+	 * <p>Description:
+	 * 保存车位共享信息id自动生成,在service层返回主键id
+	 * </p>
+	 * @param     shareConfig 车位共享信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:05:09</p>
+	 */
 	public void addShareConfig(ShareConfig shareConfig);
-	//更改车位共享信息
+	/**
+	 * @Title: updateShareConfig
+	 * <p>Description:
+	 * 更改车位共享信息
+	 * </p>
+	 * @param     shareConfig 车位共享信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:05:35</p>
+	 */
 	public void updateShareConfig(ShareConfig shareConfig);
-	//删除车位共享信息,修改isOpen为0,需要同时更新编辑人和编辑时间
+	/**
+	 * @Title: deleteShareConfig
+	 * <p>Description:
+	 * 删除车位共享信息,修改isOpen为0,需要同时更新编辑人和编辑时间
+	 * </p>
+	 * @param     shareConfig 车位共享信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:06:12</p>
+	 */
 	public void deleteShareConfig(ShareConfig shareConfig);
-	//根据条件查询车位共享信息
+	/**
+	 * @Title: getShareConfigList
+	 * <p>Description:根据条件查询车位共享信息</p>
+	 * @param     shareConfig 车位共享信息
+	 * @return List<ShareConfig>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:05:58</p>
+	 */
 	public List<ShareConfig> getShareConfigList(ShareConfig shareConfig);
 }

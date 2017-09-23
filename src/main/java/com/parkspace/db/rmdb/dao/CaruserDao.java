@@ -17,14 +17,53 @@ import com.parkspace.db.rmdb.entity.Caruser;
 */
 
 public interface CaruserDao {
-	//根据用户编号和车牌号获取车主信息
+	/**
+	 * @Title: getCaruser
+	 * <p>Description:
+	 * 根据用户编号和车牌号获取车主信息
+	 * </p>
+	 * @param     userIdAndcarnoMap 构建查询map
+	 * @return Caruser    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:21:21</p>
+	 */
 	public Caruser getCaruser(Map<String,String> userIdAndcarnoMap);
-	//保存车主信息
+	/**
+	 * @Title: addCaruser
+	 * <p>Description:保存车主信息</p>
+	 * @param     Caruser 车主信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:20:53</p>
+	 */
 	public void addCaruser(Caruser Caruser);
-	//更改车主信息
+	/**
+	 * @Title: updateCaruser
+	 * <p>Description:更改车主信息</p>
+	 * @param     Caruser 车主信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:20:47</p>
+	 */
 	public void updateCaruser(Caruser Caruser);
-	//删除车主信息,修改isauth为-1,需要同时更新编辑人和编辑时间
+	/**
+	 * @Title: deleteCaruser
+	 * <p>Description:
+	 * 删除车主信息,修改isauth为-1,需要同时更新编辑人和编辑时间
+	 * </p>
+	 * @param     Caruser 车主信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:20:39</p>
+	 */
 	public void deleteCaruser(Caruser Caruser);
-	//根据条件查询车主信息
+	/**
+	 * @Title: getCaruserList
+	 * <p>Description:根据条件查询车主信息</p>
+	 * @param     Caruser 车主信息
+	 * @return List<Caruser>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:20:10</p>
+	 */
 	public List<Caruser> getCaruserList(Caruser Caruser);
 }

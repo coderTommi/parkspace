@@ -17,15 +17,53 @@ import com.parkspace.db.rmdb.entity.PropertyMgmtUser;
 */
 
 public interface PropertyMgmtUserDao {
-	//根据小区id和用户id获取物业信息
-	//构建hashmap comid和userId
+	/**
+	 * @Title: getPropertyMgmtUser
+	 * <p>Description:
+	 * 根据小区id和用户id获取物业信息
+	 * </p>
+	 * @param     comidAndUserIdMap 构建hashmap comid和userId
+	 * @return PropertyMgmtUser    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:08:13</p>
+	 */
 	public PropertyMgmtUser getPropertyMgmtUser(Map<String,String> comidAndUserIdMap);
-	//保存物业信息
+	/**
+	 * @Title: addPropertyMgmtUser
+	 * <p>Description:保存物业信息</p>
+	 * @param     propertyMgmtUser 物业管理员信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:08:01</p>
+	 */
 	public void addPropertyMgmtUser(PropertyMgmtUser propertyMgmtUser);
-	//更改物业信息
+	/**
+	 * @Title: updatePropertyMgmtUser
+	 * <p>Description:更改物业信息</p>
+	 * @param     propertyMgmtUser 物业管理员信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:07:46</p>
+	 */
 	public void updatePropertyMgmtUser(PropertyMgmtUser propertyMgmtUser);
-	//删除物业信息,修改isAdmin为-1,需要同时更新编辑人和编辑时间
+	/**
+	 * @Title: deletePropertyMgmtUser
+	 * <p>Description:
+	 * 删除物业信息,修改isAdmin为-1,需要同时更新编辑人和编辑时间
+	 * </p>
+	 * @param     propertyMgmtUser 物业管理员信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:07:19</p>
+	 */
 	public void deletePropertyMgmtUser(PropertyMgmtUser propertyMgmtUser);
-	//根据条件查询物业信息
+	/**
+	 * @Title: getPropertyMgmtUserList
+	 * <p>Description:根据条件查询物业信息</p>
+	 * @param     propertyMgmtUser 物业管理员信息
+	 * @return List<PropertyMgmtUser>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:06:49</p>
+	 */
 	public List<PropertyMgmtUser> getPropertyMgmtUserList(PropertyMgmtUser propertyMgmtUser);
 }
