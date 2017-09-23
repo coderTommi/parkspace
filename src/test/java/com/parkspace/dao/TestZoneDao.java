@@ -29,34 +29,36 @@ import com.parkspace.db.rmdb.entity.Zone;
 public class TestZoneDao {
 	@Resource
 	private ZoneDao zoneDao;
+	public String zoneid = "c7116d6b-c620-49ec-b671-1058724f9fa7";
 	
 	@Test
 	public void testAddZone(){
-		String zoneid = UUID.randomUUID().toString();
-		Zone zone = new Zone();
-		zone.setZoneid(zoneid);
-		zone.setCity("setCity");
-		zone.setCreateBy("setCreateBy");
-		zone.setCreateTime(new Date());
-		zone.setMemo("memo");
-		zone.setModifyBy("setModifyBy");
-		zone.setModifyTime(new Date());
-		zone.setProvince("setProvince");
-		zone.setZone("setZone");
-		zone.setZonename("setZonename");
-		zoneDao.addZone(zone);
+		for(int i = 0; i < 3; i++){
+			String zoneid = UUID.randomUUID().toString();
+			Zone zone = new Zone();
+			zone.setZoneid(zoneid);
+			zone.setCity("setCity" + i);
+			zone.setCreateBy("setCreateBy" + i);
+			zone.setCreateTime(new Date());
+			zone.setMemo("memo" + i);
+			zone.setModifyBy("setModifyBy" + i);
+			zone.setModifyTime(new Date());
+			zone.setProvince("setProvince" + i);
+			zone.setZone("setZone" + i);
+			zone.setZonename("setZonename" + i);
+			zone.setIsenable(0);
+			zoneDao.addZone(zone);
+		}
 	}
 	
 	@Test
 	public void testGetZone(){
-		String zoneid = "c7116d6b-c620-49ec-b671-1058724f9fa7";
 		Zone zone = zoneDao.getZone(zoneid);
 		System.out.println(zone);
 	}
 	
 	@Test
 	public void testUpdateZone(){
-		String zoneid = "c7116d6b-c620-49ec-b671-1058724f9fa7";
 		Zone zone = zoneDao.getZone(zoneid);
 		zone.setCity("setCity1");
 		zone.setMemo("memo1");
@@ -71,7 +73,6 @@ public class TestZoneDao {
 	
 	@Test
 	public void testDeleteZone(){
-		String zoneid = "c7116d6b-c620-49ec-b671-1058724f9fa7";
 		Zone zone = zoneDao.getZone(zoneid);
 		zone.setModifyBy("setModifyBy2");
 		zone.setModifyTime(new Date());
@@ -83,7 +84,9 @@ public class TestZoneDao {
 	public void testGetZoneList(){
 		Zone zone = new Zone();
 		List<Zone> list = zoneDao.getZoneList(zone);
-		System.out.println(list);
+		for(Zone z : list){
+			System.out.println(z);
+		}
 	}
 	
 	@Test

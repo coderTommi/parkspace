@@ -4,35 +4,32 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Title: Zone.java
- * @Package com.parkspace.db.rmdb.dao
+ * @Title: Community.java
+ * @Package com.parkspace.db.rmdb.entity
  * <p>Description:
- * 行政区域（Zone），记录区域的基本信息
+ * 小区表:记录小区的基本信息
  * </p>
  * @author sunld
  * @version V1.0.0 
- * <p>CreateDate:2017年9月22日 下午11:04:49</p>
+ * <p>CreateDate:2017年9月23日 上午9:09:57</p>
 */
 
-public class Zone implements Serializable{
+public class Community implements Serializable{
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+	//小区ID
+	private String comid;
 	//区域ID
-//	private String zoneid = UUID.randomUUID().toString();
 	private String zoneid;
-	//区域名称
-	private String zonename;
-	//是否启用  0：否  1：是，2:表示删除，默认0
+	//小区名称
+	private String comname;
+	//小区地址
+	private String address;
+	//是否开通  0：否  1：是,默认0，如果是2表示禁用
 	private Integer isenable;
-	//省编码
-	private String province;
-	//市
-	private String city;
-	//区
-	private String zone;
 	//备注
 	private String memo;
 	//创建人
@@ -43,41 +40,35 @@ public class Zone implements Serializable{
 	private String modifyBy;
 	//修改时间
 	private Date modifyTime;
+	public String getComid() {
+		return comid;
+	}
+	public void setComid(String comid) {
+		this.comid = comid;
+	}
 	public String getZoneid() {
 		return zoneid;
 	}
 	public void setZoneid(String zoneid) {
 		this.zoneid = zoneid;
 	}
-	public String getZonename() {
-		return zonename;
+	public String getComname() {
+		return comname;
 	}
-	public void setZonename(String zonename) {
-		this.zonename = zonename;
+	public void setComname(String comname) {
+		this.comname = comname;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	public Integer getIsenable() {
 		return isenable;
 	}
 	public void setIsenable(Integer isenable) {
 		this.isenable = isenable;
-	}
-	public String getProvince() {
-		return province;
-	}
-	public void setProvince(String province) {
-		this.province = province;
-	}
-	public String getCity() {
-		return city;
-	}
-	public void setCity(String city) {
-		this.city = city;
-	}
-	public String getZone() {
-		return zone;
-	}
-	public void setZone(String zone) {
-		this.zone = zone;
 	}
 	public String getMemo() {
 		return memo;
@@ -111,8 +102,8 @@ public class Zone implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "Zone [zoneid=" + zoneid + ", zonename=" + zonename + ", isenable=" + isenable + ", province=" + province
-				+ ", city=" + city + ", zone=" + zone + ", memo=" + memo + ", createBy=" + createBy + ", createTime="
-				+ createTime + ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + "]";
+		return "Community [comid=" + comid + ", zoneid=" + zoneid + ", comname=" + comname + ", address=" + address
+				+ ", isenable=" + isenable + ", memo=" + memo + ", createBy=" + createBy + ", createTime=" + createTime
+				+ ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + "]";
 	}
 }
