@@ -1,6 +1,7 @@
 package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @Title: ParkingSpace.java
@@ -32,7 +33,7 @@ public class ParkingSpace implements Serializable{
 	//车位纵坐标
 	private String parkPositionY;
 	//车位状态，1占用，0空闲，N不对外开放，默认为N
-	private String parkStatus;
+	private String parkStatus = "N";
 	//车位类型：P:物业、O:业主、E:其他，未知车位类型
 	private String parkType;
 	//位置描述,形如：靠近X号楼X单元
@@ -44,11 +45,11 @@ public class ParkingSpace implements Serializable{
 	//创建人
 	private String createBy;
 	//创建时间
-	private String createTime;
+	private Date createTime;
 	//修改人
 	private String modifyBy;
 	//修改时间
-	private String modifyTime;
+	private Date modifyTime;
 	public String getSpaceno() {
 		return spaceno;
 	}
@@ -121,10 +122,10 @@ public class ParkingSpace implements Serializable{
 	public void setCreateBy(String createBy) {
 		this.createBy = createBy;
 	}
-	public String getCreateTime() {
+	public Date getCreateTime() {
 		return createTime;
 	}
-	public void setCreateTime(String createTime) {
+	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
 	public String getModifyBy() {
@@ -133,10 +134,10 @@ public class ParkingSpace implements Serializable{
 	public void setModifyBy(String modifyBy) {
 		this.modifyBy = modifyBy;
 	}
-	public String getModifyTime() {
+	public Date getModifyTime() {
 		return modifyTime;
 	}
-	public void setModifyTime(String modifyTime) {
+	public void setModifyTime(Date modifyTime) {
 		this.modifyTime = modifyTime;
 	}
 	
