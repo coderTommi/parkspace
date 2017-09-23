@@ -98,7 +98,7 @@
         	 </if>
         	 
         	 <if test="parkPositionDes != null">
-            	and parkPositionDes like '%'||#{parkPositionDes}||'%'
+            	and parkPositionDes like CONCAT('%', #{parkPositionDes}, '%') 
         	 </if>
         	 <if test="spaceOwner != null">
             	and spaceOwner = #{spaceOwner}

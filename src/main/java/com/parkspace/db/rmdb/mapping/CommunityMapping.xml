@@ -64,10 +64,10 @@
             	and zoneid = #{zoneid}
         	 </if>
         	 <if test="comname != null">
-            	and comname like '%'||#{comname}||'%'
+            	and comname like CONCAT('%', #{comname}, '%')  
         	 </if>
         	 <if test="address != null">
-            	and address like '%'||#{address}||'%'
+            	and address like CONCAT('%', #{address}, '%') 
         	 </if>
         	 <if test="isenable != null">
             	and isenable = #{isenable}

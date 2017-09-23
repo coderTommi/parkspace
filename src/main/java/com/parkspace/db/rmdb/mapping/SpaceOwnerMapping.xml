@@ -55,7 +55,8 @@
 	<select id="getSpaceOwnerList" parameterType="SpaceOwner" resultType="SpaceOwner">
 		select * from SpaceOwner where 1=1
 			 <if test="spaceno != null">
-            	and spaceno = #{spaceno}
+            	<!-- and spaceno = #{spaceno} -->
+            	and spaceno like CONCAT('%', #{spaceno}, '%') 
         	 </if>
         	 <if test="userId != null">
             	and userId = #{userId}
@@ -63,6 +64,11 @@
         	 <if test="isauth != null">
             	and isauth = #{isauth}
         	 </if>
+        	 
+        	 <if test="carno != null">
+            	and carno like CONCAT('%', #{carno}, '%') 
+        	 </if>
+        	 
         	 <if test="createTime != null">
             	<![CDATA[ and createTime >= #{createTime} ]]>
         	 </if>

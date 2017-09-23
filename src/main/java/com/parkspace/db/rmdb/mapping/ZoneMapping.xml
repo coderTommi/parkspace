@@ -64,7 +64,7 @@
             	and zoneid = #{zoneid}
         	 </if>
         	 <if test="zonename != null">
-            	and zonename like '%'||#{zonename}||'%'
+            	and zonename like CONCAT('%', #{zonename}, '%') 
         	 </if>
         	 <if test="isenable != null">
             	and isenable = #{isenable}

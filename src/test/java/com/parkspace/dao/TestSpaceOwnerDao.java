@@ -85,6 +85,8 @@ public class TestSpaceOwnerDao {
 	@Test
 	public void testGetSpaceOwnerList(){
 		SpaceOwner spaceOwner = new SpaceOwner();
+//		spaceOwner.setSpaceno("3-001-0");
+		spaceOwner.setCarno("4");
 		List<SpaceOwner> list = spaceOwnerDao.getSpaceOwnerList(spaceOwner);
 		for(SpaceOwner z : list){
 			System.out.println(z);
