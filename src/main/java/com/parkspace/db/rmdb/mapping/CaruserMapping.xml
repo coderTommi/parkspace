@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.CaruserDao">
+	<!-- 根据用户编号和车牌号获取车主信息-->
+	<select id="getCaruser" parameterType="HashMap" resultType="Caruser">
+		select * from Caruser where userId=#{userId} and carno=#{carno}
+	</select>
+	<!-- 保存车主信息 -->
+	<insert id="addCaruser" parameterType="Caruser">
+    	insert into Caruser(
+    			userId,
+    			carno,
+    			isauth,
+    			memo,
+    			createBy,
+    			createTime,
+    			modifyBy,
+    			modifyTime
+    		) 
+    	 values(
+    	 		#{userId},
+    	 		#{carno},
+    	 		#{isauth},
+    	 		#{memo},
+    	 		#{createBy},
+    	 		#{createTime},
+    	 		#{modifyBy},
+    	 		#{modifyTime}
+    	 	)
+	</insert>
+	
+	<!-- 更改车主信息 -->
+	<update id="updateCaruser" parameterType="Caruser">
+    	update Caruser set
+    			isauth         = #{isauth},
+    			memo           = #{memo},
+    			modifyBy       = #{modifyBy},
+    			modifyTime     = #{modifyTime}
+    	where userId=#{userId} and carno=#{carno}
+	</update>
+	
+	<!-- 删除车主信息,修改isauth为-1,需要同时更新编辑人和编辑时间 -->
+	<update id="deleteCaruser" parameterType="Caruser">
+    	update Caruser set
+    			isauth     = -1,
+    			modifyBy   = #{modifyBy},
+    			modifyTime = #{modifyTime}
+    	where userId=#{userId} and carno=#{carno}
+	</update>
+	<!-- 根据条件查询车主信息 -->
+	<select id="getCaruserList" parameterType="Caruser" resultType="Caruser">
+		select * from Caruser where 1=1
+			 <if test="userId != null">
+            	and userId = #{userId}
+        	 </if>
+        	 <if test="carno != null">
+            	and carno = #{carno}
+        	 </if>
+        	 <if test="isauth != null">
+            	and isauth = #{isauth}
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and createTime >= #{createTime} ]]>
+        	 </if>
+        	 order by createTime desc
+	</select>
+</mapper>
