@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.BlackListDao">
+	<!-- 根据id查询黑名单信息 -->
+	<select id="getBlackList" parameterType="string" resultType="BlackList">
+		select * from BlackList where UUID=#{UUID}
+	</select>
+	<!-- 新增黑名单信息 -->
+	<insert id="addBlackList" parameterType="BlackList">
+    	insert into BlackList(
+				UUID,
+				userId,
+				isCancel,
+				memo,
+				createTime,
+				modifyTime
+    		) 
+         values(
+       			#{UUID},
+       			#{userId},
+       			#{isCancel},
+       			#{memo},
+       			#{createTime},
+       			#{modifyTime}
+         )
+	</insert>
+	
+	<!-- 更新黑名单信息 -->
+	<update id="updateBlackList" parameterType="BlackList">
+    	update BlackList set
+    			userId     = #{userId},
+    			isCancel   = #{isCancel},
+    			memo       = #{memo},
+    			modifyTime = #{modifyTime}
+    	where UUID = #{UUID}
+	</update>
+	
+	<!-- 根据id删除黑名单信息 -->
+	<update id="deleteBlackList" parameterType="BlackList">
+    	update BlackList set
+    			isCancel   = 1,
+    			modifyTime = #{modifyTime}
+    	where UUID = #{UUID}
+	</update>
+	<!-- 根据具体条件查询黑名单信息 -->
+	<select id="getBlackListList" parameterType="BlackList" resultType="BlackList">
+		select * from BlackList where 1=1
+			 <if test="UUID != null">
+            	and UUID = #{UUID}
+        	 </if>
+        	 <if test="userId != null">
+            	and userId = #{userId}
+        	 </if>
+        	 <if test="isCancel != null">
+            	and isCancel = #{isCancel}
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and createTime >= #{createTime} ]]>
+        	 </if>
+        	 order by createTime desc
+	</select>
+</mapper>
