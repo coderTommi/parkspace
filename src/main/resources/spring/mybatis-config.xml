@@ -7,6 +7,7 @@
 		<typeAlias alias="Community" type="com.parkspace.db.rmdb.entity.Community"/>
 		<typeAlias alias="Zone" type="com.parkspace.db.rmdb.entity.Zone"/>
 		<typeAlias alias="ParkingSpace" type="com.parkspace.db.rmdb.entity.ParkingSpace"/>
+		<typeAlias alias="PropertyMgmtUser" type="com.parkspace.db.rmdb.entity.PropertyMgmtUser"/>
 	</typeAliases>
  	<plugins>
 	 	<plugin interceptor="com.github.pagehelper.PageInterceptor">

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.PropertyMgmtUserDao">
+	<!-- 根据小区id和用户id获取物业信息 -->
+	<select id="getPropertyMgmtUser" parameterType="HashMap" resultType="PropertyMgmtUser">
+		select * from propertymgmtuser where comid=#{comid} and userId=#{userId}
+	</select>
+	<!-- 新增物业信息 -->
+	<insert id="addPropertyMgmtUser" parameterType="PropertyMgmtUser">
+    	insert into propertymgmtuser(
+    			comid,
+    			userId,
+    			isAdmin,
+    			memo,
+    			createBy,
+    			createTime,
+    			modifyBy,
+    			modifyTime
+    		) 
+    	 values(
+    	 		#{comid},
+    	 		#{userId},
+    	 		#{isAdmin},
+    	 		#{memo},
+    	 		#{createBy},
+    	 		#{createTime},
+    	 		#{modifyBy},
+    	 		#{modifyTime}
+    	 	)
+	</insert>
+	
+	<!-- 更新物业信息 -->
+	<update id="updatePropertyMgmtUser" parameterType="PropertyMgmtUser">
+    	update propertymgmtuser set
+    			isAdmin        = #{isAdmin},
+    			memo           = #{memo},
+    			modifyBy       = #{modifyBy},
+    			modifyTime     = #{modifyTime}
+    	where comid = #{comid} and userId=#{userId}
+	</update>
+	
+	<!-- 根据id删除物业信息 -->
+	<update id="deletePropertyMgmtUser" parameterType="PropertyMgmtUser">
+    	update propertymgmtuser set
+    			isAdmin    = -1,
+    			modifyBy   = #{modifyBy},
+    			modifyTime = #{modifyTime}
+    	where comid = #{comid} and userId=#{userId}
+	</update>
+	<!-- 根据具体条件查询物业信息 -->
+	<select id="getPropertyMgmtUserList" parameterType="PropertyMgmtUser" resultType="PropertyMgmtUser">
+		select * from propertymgmtuser where 1=1
+			 <if test="comid != null">
+            	and comid = #{comid}
+        	 </if>
+        	 <if test="userId != null">
+            	and userId = #{userId}
+        	 </if>
+        	 <if test="isAdmin != null">
+            	and isAdmin = #{isAdmin}
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and createTime >= #{createTime} ]]>
+        	 </if>
+        	 order by createTime desc
+	</select>
+</mapper>
