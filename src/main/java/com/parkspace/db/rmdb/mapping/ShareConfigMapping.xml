@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.ShareConfigDao">
+	<!-- 根据id获取车位共享信息 -->
+	<select id="getShareConfig" parameterType="string" resultType="ShareConfig">
+		select * from ShareConfig where UUID=#{UUID}
+	</select>
+	<!-- 保存车位共享信息id自动生成,在service层返回主键id -->
+	<insert id="addShareConfig" parameterType="ShareConfig">
+    	insert into ShareConfig(
+				UUID,
+				spaceno,
+				isOpen,
+				shareType,
+				startTime,
+				endTime,
+				internalDate,
+				createBy,
+				createTime,
+				modifyBy,
+				modifyTime
+    		) 
+         values(
+       			#{UUID},
+       			#{spaceno},
+       			#{isOpen},
+       			#{shareType},
+       			#{startTime},
+       			#{endTime},
+       			#{internalDate},
+       			#{createBy},
+       			#{createTime},
+       			#{modifyBy},
+       			#{modifyTime}
+         )
+	</insert>
+	
+	<!-- 更改车位共享信息 -->
+	<update id="updateShareConfig" parameterType="ShareConfig">
+    	update ShareConfig set
+    			spaceno      = #{spaceno},
+    			isOpen       = #{isOpen},
+    			shareType    = #{shareType},
+    			startTime    = #{startTime},
+    			endTime      = #{endTime},
+    			internalDate = #{internalDate},
+    			modifyBy     = #{modifyBy},
+    			modifyTime   = #{modifyTime}
+    	where   UUID = #{UUID}
+	</update>
+	
+	<!-- 删除车位共享信息,修改isOpen为0,需要同时更新编辑人和编辑时间-->
+	<update id="deleteShareConfig" parameterType="ShareConfig">
+    	update ShareConfig set
+    			isOpen     = 0,
+    			modifyBy   = #{modifyBy},
+    			modifyTime = #{modifyTime}
+    	where   UUID = #{UUID}
+	</update>
+	<!-- 根据条件查询车位共享信息 -->
+	<select id="getShareConfigList" parameterType="ShareConfig" resultType="ShareConfig">
+		select * from ShareConfig where 1=1
+			 <if test="UUID != null">
+            	and UUID = #{UUID}
+        	 </if>
+        	 <if test="spaceno != null">
+            	and spaceno = #{spaceno}
+        	 </if>
+        	 <if test="isOpen != null">
+            	and isOpen = #{isOpen}
+        	 </if>
+        	 <if test="shareType != null">
+            	and shareType = #{shareType}
+        	 </if>
+        	 <if test="startTime != null">
+            	<![CDATA[ and startTime >= #{startTime} ]]>
+        	 </if>
+        	 <if test="endTime != null">
+            	<![CDATA[ and endTime <= #{endTime} ]]>
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and createTime >= #{createTime} ]]>
+        	 </if>
+        	 order by createTime desc
+	</select>
+</mapper>
