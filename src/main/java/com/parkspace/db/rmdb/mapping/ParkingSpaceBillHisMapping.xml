@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.ParkingSpaceBillHisDao">
+	<!-- 根据主键查询历史订单信息-->
+	<select id="getParkingSpaceBillHis" parameterType="string" resultType="ParkingSpaceBillHis">
+		select * from ParkingSpaceBillHis where UUID=#{UUID}
+	</select>
+	<!-- 保存历史车位订单信息，id自动生成,在service层返回主键id -->
+	<insert id="addParkingSpaceBillHis" parameterType="ParkingSpaceBillHis">
+    	insert into ParkingSpaceBillHis(
+    			UUID,
+				orderJnlNo,
+				userId,
+				carno,
+				spaceno,
+				billStatus,
+				parkHours,
+				unitPrice,
+				budgetPrice,
+				createTime,
+				actualParkHours,
+				actualPrice,
+				recodeTime
+    		) 
+         values(
+         		#{UUID},
+       			#{orderJnlNo},
+       			#{userId},
+       			#{carno},
+       			#{spaceno},
+       			#{billStatus},
+       			#{parkHours},
+       			#{unitPrice},
+       			#{budgetPrice},
+       			#{createTime},
+       			#{actualParkHours},
+       			#{actualPrice},
+       			#{recodeTime}
+         )
+	</insert>
+	<!-- 根据条件查询历史车位订单信息 -->
+	<select id="getParkingSpaceBillHisList" parameterType="ParkingSpaceBillHis" resultType="ParkingSpaceBillHis">
+		select * from ParkingSpaceBillHis where 1=1
+			 <if test="UUID != null">
+            	and UUID = #{UUID}
+        	 </if>
+			 <if test="orderJnlNo != null">
+            	and orderJnlNo = #{orderJnlNo}
+        	 </if>
+        	 <if test="userId != null">
+            	and userId = #{userId}
+        	 </if>
+        	 <if test="carno != null">
+            	and carno = #{carno}
+        	 </if>
+        	 <if test="spaceno != null">
+            	and spaceno = #{spaceno}
+        	 </if>
+        	 <if test="billStatus != null">
+            	and billStatus = #{billStatus}
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and createTime >= #{createTime} ]]>
+        	 </if>
+        	 order by recodeTime desc
+	</select>
+</mapper>

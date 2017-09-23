@@ -12,6 +12,8 @@
 		<typeAlias alias="SpaceOwner" type="com.parkspace.db.rmdb.entity.SpaceOwner"/>
 		<typeAlias alias="ShareConfig" type="com.parkspace.db.rmdb.entity.ShareConfig"/>
 		<typeAlias alias="Caruser" type="com.parkspace.db.rmdb.entity.Caruser"/>
+		<typeAlias alias="ParkingSpaceBill" type="com.parkspace.db.rmdb.entity.ParkingSpaceBill"/>
+		<typeAlias alias="ParkingSpaceBillHis" type="com.parkspace.db.rmdb.entity.ParkingSpaceBillHis"/>
 	</typeAliases>
  	<plugins>
 	 	<plugin interceptor="com.github.pagehelper.PageInterceptor">

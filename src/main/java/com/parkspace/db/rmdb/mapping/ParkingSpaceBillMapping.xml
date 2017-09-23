@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.ParkingSpaceBillDao">
+	<!-- 根据订单编号获取车位订单信息 -->
+	<select id="getParkingSpaceBill" parameterType="string" resultType="ParkingSpaceBill">
+		select * from ParkingSpaceBill where orderJnlNo=#{orderJnlNo}
+	</select>
+	<!-- 保存车位订单信息，id自动生成,在service层返回主键id -->
+	<insert id="addParkingSpaceBill" parameterType="ParkingSpaceBill">
+    	insert into ParkingSpaceBill(
+				orderJnlNo,
+				userId,
+				carno,
+				spaceno,
+				billStatus,
+				parkHours,
+				unitPrice,
+				budgetPrice,
+				createTime
+    		) 
+         values(
+       			#{orderJnlNo},
+       			#{userId},
+       			#{carno},
+       			#{spaceno},
+       			#{billStatus},
+       			#{parkHours},
+       			#{unitPrice},
+       			#{budgetPrice},
+       			#{createTime}
+         )
+	</insert>
+	
+	<!-- 更改车位订单信息 -->
+	<update id="updateParkingSpaceBill" parameterType="ParkingSpaceBill">
+    	update ParkingSpaceBill
+    		<trim prefix="set" suffixOverrides=",">
+    			<if test="parkHours != null">
+            		parkHours     = #{parkHours},
+        	 	</if>
+        	 	<if test="budgetPrice != null">
+            		budgetPrice   = #{budgetPrice},
+        	 	</if>
+        	 	<if test="billStatus != null">
+            		billStatus   = #{billStatus},
+        	 	</if>
+        	 	<if test="unitPrice != null">
+            		unitPrice   = #{unitPrice},
+        	 	</if>
+        	 	<if test="createTime != null">
+            		createTime   = #{createTime},
+        	 	</if>
+        	 </trim>
+    	where orderJnlNo = #{orderJnlNo}
+	</update>
+	
+	<!-- 删除车位订单信息，数据保存到历史订单中 -->
+	<delete id="deleteParkingSpaceBill" parameterType="String">
+    	delete from ParkingSpaceBill where orderJnlNo = #{orderJnlNo}
+	</delete>
+	<!-- 根据条件查询车位订单信息 -->
+	<select id="getParkingSpaceBillList" parameterType="ParkingSpaceBill" resultType="ParkingSpaceBill">
+		select * from ParkingSpaceBill where 1=1
+			 <if test="orderJnlNo != null">
+            	and orderJnlNo = #{orderJnlNo}
+        	 </if>
+        	 <if test="userId != null">
+            	and userId = #{userId}
+        	 </if>
+        	 <if test="carno != null">
+            	and carno = #{carno}
+        	 </if>
+        	 <if test="spaceno != null">
+            	and spaceno = #{spaceno}
+        	 </if>
+        	 <if test="billStatus != null">
+            	and billStatus = #{billStatus}
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and createTime >= #{createTime} ]]>
+        	 </if>
+        	 order by createTime desc
+	</select>
+</mapper>
