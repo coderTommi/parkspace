@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.parkspace.common.OperationResult;
-import com.parkspace.db.rmdb.entity.User;
+import com.parkspace.db.rmdb.entity.BaseUser;
 import com.parkspace.service.IUserService;
 
 @Controller

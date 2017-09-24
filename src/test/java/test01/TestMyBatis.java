@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.parkspace.db.rmdb.entity.User;
+import com.parkspace.db.rmdb.entity.BaseUser;
 import com.parkspace.service.IUserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -22,7 +22,7 @@ public class TestMyBatis {
 	private IUserService userService = null;
 	@Test
 	public void test1(){
-		User user = userService.getUser(1);
+		BaseUser user = userService.getUser(1);
 		System.out.println(user.getUserName());
 	}
 
