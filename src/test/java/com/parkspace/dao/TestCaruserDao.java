@@ -1,6 +1,5 @@
 package com.parkspace.dao;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,12 +37,7 @@ public class TestCaruserDao {
 		for(int i = 0; i < 3; i++){
 			Caruser caruser = new Caruser();
 			caruser.setCarno("鲁A-001-"+i);
-			caruser.setCreateBy("createBy"+i);
-			caruser.setCreateTime(new Date());
 			caruser.setIsauth(1);
-			caruser.setMemo("memo"+i);
-			caruser.setModifyBy("modifyBy"+i);
-			caruser.setModifyTime(new Date());
 			caruser.setUserId(userId);
 			caruserDao.addCaruser(caruser);
 		}
@@ -54,8 +48,7 @@ public class TestCaruserDao {
 		Map<String,String> map = new HashMap<String,String>();
 		map.put("carno", carno);
 		map.put("userId", userId);
-		Caruser caruser = caruserDao.getCaruser(map);
-		System.out.println(caruser);
+		caruserDao.getCaruser(map);
 	}
 	
 	@Test
@@ -65,33 +58,22 @@ public class TestCaruserDao {
 		map.put("userId", userId);
 		Caruser caruser = caruserDao.getCaruser(map);
 		caruser.setIsauth(0);
-		caruser.setMemo("memo001");
-		caruser.setModifyBy("modifyBy001");
-		caruser.setModifyTime(new Date());
 		caruserDao.updateCaruser(caruser);
 	}
 	
 	@Test
 	public void testDeleteCaruser(){
-		
 		Map<String,String> map = new HashMap<String,String>();
 		map.put("carno", carno);
 		map.put("userId", userId);
 		Caruser caruser = caruserDao.getCaruser(map);
-		
-		caruser.setModifyBy("setModifyBy2");
-		caruser.setModifyTime(new Date());
 		caruserDao.deleteCaruser(caruser);
 	}
 	
 	@Test
 	public void testGetCaruserList(){
 		Caruser caruser = new Caruser();
-		List<Caruser> list = caruserDao.getCaruserList(caruser);
-		for(Caruser com : list){
-			System.out.println(com);
-		}
-		
+		caruserDao.getCaruserList(caruser);
 	}
 	
 	@Test
@@ -101,9 +83,6 @@ public class TestCaruserDao {
 		Caruser caruser = new Caruser();
 		List<Caruser> list = caruserDao.getCaruserList(caruser);
 		PageInfo<Caruser> page = new PageInfo<Caruser>(list);
-		List<Caruser> list2 = page.getList();
-		for(Caruser Caruser1 : list2){
-			System.out.println(Caruser1);
-		}
+		page.getList();
 	}
 }

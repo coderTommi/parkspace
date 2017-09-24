@@ -1,67 +1,72 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.parkspace.db.rmdb.dao.CaruserDao">
+	<!-- 业主表字段 -->
+	<sql id="Caruser_Column">
+		car.carno,car.isauth
+	</sql>
+	<!-- 用户基本信息表字段 -->
+	<sql id="Baseuser_Column">
+		u.userId,u.userName,u.nickName,u.telephone,u.isAdmin,u.idtype,u.idno,u.state,u.weixinAccount,u.avator,u.memo,u.createBy,u.createTime,u.modifyBy,u.modifyTime
+	</sql>
 	<!-- 根据用户编号和车牌号获取车主信息-->
 	<select id="getCaruser" parameterType="HashMap" resultType="Caruser">
-		select * from Caruser where userId=#{userId} and carno=#{carno}
+		select 
+			<include refid="Caruser_Column"/>,
+			<include refid="Baseuser_Column"/>
+		from Caruser car, Baseuser u
+		where car.userId = u.userId
+		and   car.userId=#{userId} 
+		and   car.carno=#{carno}
 	</select>
 	<!-- 保存车主信息 -->
 	<insert id="addCaruser" parameterType="Caruser">
     	insert into Caruser(
     			userId,
     			carno,
-    			isauth,
-    			memo,
-    			createBy,
-    			createTime,
-    			modifyBy,
-    			modifyTime
+    			isauth
     		) 
     	 values(
     	 		#{userId},
     	 		#{carno},
-    	 		#{isauth},
-    	 		#{memo},
-    	 		#{createBy},
-    	 		#{createTime},
-    	 		#{modifyBy},
-    	 		#{modifyTime}
+    	 		#{isauth}
     	 	)
 	</insert>
 	
 	<!-- 更改车主信息 -->
 	<update id="updateCaruser" parameterType="Caruser">
     	update Caruser set
-    			isauth         = #{isauth},
-    			memo           = #{memo},
-    			modifyBy       = #{modifyBy},
-    			modifyTime     = #{modifyTime}
+    			isauth         = #{isauth}
     	where userId=#{userId} and carno=#{carno}
 	</update>
 	
 	<!-- 删除车主信息,修改isauth为-1,需要同时更新编辑人和编辑时间 -->
 	<update id="deleteCaruser" parameterType="Caruser">
     	update Caruser set
-    			isauth     = -1,
-    			modifyBy   = #{modifyBy},
-    			modifyTime = #{modifyTime}
+    			isauth     = -1
     	where userId=#{userId} and carno=#{carno}
 	</update>
 	<!-- 根据条件查询车主信息 -->
 	<select id="getCaruserList" parameterType="Caruser" resultType="Caruser">
-		select * from Caruser where 1=1
+		select 
+			<include refid="Caruser_Column"/>,
+			<include refid="Baseuser_Column"/>
+		from Caruser car, Baseuser u
+		where car.userId = u.userId
+		     <!-- 车主基本信息 -->
 			 <if test="userId != null">
-            	and userId = #{userId}
+            	and car.userId = #{userId}
         	 </if>
         	 <if test="carno != null">
-            	and carno = #{carno}
+            	and car.carno = #{carno}
         	 </if>
         	 <if test="isauth != null">
-            	and isauth = #{isauth}
+            	and car.isauth = #{isauth}
         	 </if>
+        	 <!-- 用户基本信息 -->
         	 <if test="createTime != null">
-            	<![CDATA[ and createTime >= #{createTime} ]]>
+            	<![CDATA[ and u.createTime >= #{createTime} ]]>
         	 </if>
-        	 order by createTime desc
+        order by u.createTime desc
 	</select>
 </mapper>
