@@ -63,6 +63,13 @@
         	 <if test="isauth != null">
             	and car.isauth = #{isauth}
         	 </if>
+        	 <!-- 车主多状态查询 -->
+        	 <if test="isauthQuery != null">
+        	  	and car.isauth in
+        	  	<foreach item="item" index="index" collection="isauthQuery" open="(" separator="," close=")">  
+ 					#{item}  
+				</foreach>
+        	 </if>
         	 <!-- 用户基本信息 -->
         	 <if test="createTime != null">
             	<![CDATA[ and u.createTime >= #{createTime} ]]>

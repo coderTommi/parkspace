@@ -20,9 +20,17 @@ public class Caruser extends BaseUser implements Serializable{
 	private static final long serialVersionUID = 1L;
 	//车牌号
 	private String carno;
-	//是否认证 0:否 1：是，默认1，-1表示禁用
+	//状态0:未认证 1：已认证，默认1，-1表示禁用
 	private Integer isauth;
+	//状态查询条件
+	private Integer[] isauthQuery;
 	
+	public Integer[] getIsauthQuery() {
+		return isauthQuery;
+	}
+	public void setIsauthQuery(Integer[] isauthQuery) {
+		this.isauthQuery = isauthQuery;
+	}
 	public String getCarno() {
 		return carno;
 	}

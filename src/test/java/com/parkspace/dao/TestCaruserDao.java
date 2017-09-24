@@ -73,6 +73,7 @@ public class TestCaruserDao {
 	@Test
 	public void testGetCaruserList(){
 		Caruser caruser = new Caruser();
+		caruser.setIsauthQuery(new Integer[]{1});
 		caruserDao.getCaruserList(caruser);
 	}
 	

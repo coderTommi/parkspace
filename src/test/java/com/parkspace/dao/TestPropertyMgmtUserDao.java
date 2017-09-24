@@ -1,6 +1,5 @@
 package com.parkspace.dao;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,20 +40,11 @@ public class TestPropertyMgmtUserDao {
 	@Test
 	public void testAddPropertyMgmtUser(){
 		List<Community> conList = communityDao.getCommunityList( new Community());
-		int i = 0;
 		for(Community c : conList){
 			PropertyMgmtUser propertyMgmtUser = new PropertyMgmtUser();
 			propertyMgmtUser.setComid(c.getComid());
-			propertyMgmtUser.setCreateBy("createBy"+i);
-			propertyMgmtUser.setCreateTime( new Date());
-			propertyMgmtUser.setIsAdmin(1);
-			propertyMgmtUser.setMemo("memo"+i);
-			propertyMgmtUser.setModifyBy("modifyBy"+i);
-			propertyMgmtUser.setModifyTime( new Date());
 			propertyMgmtUser.setUserId(userId);
 			propertyMgmtUserDao.addPropertyMgmtUser(propertyMgmtUser);
-			i++;
-			
 		}
 	}
 	
@@ -63,44 +53,39 @@ public class TestPropertyMgmtUserDao {
 		Map<String,String> map = new HashMap<String,String>();
 		map.put("comid", comid);
 		map.put("userId", userId);
-		PropertyMgmtUser propertyMgmtUser = propertyMgmtUserDao.getPropertyMgmtUser(map);
-		System.out.println(propertyMgmtUser);
+		propertyMgmtUserDao.getPropertyMgmtUser(map);
 	}
 	
-	@Test
-	public void testUpdatePropertyMgmtUser(){
-		Map<String,String> map = new HashMap<String,String>();
-		map.put("comid", comid);
-		map.put("userId", userId);
-		PropertyMgmtUser propertyMgmtUser = propertyMgmtUserDao.getPropertyMgmtUser(map);
-		propertyMgmtUser.setIsAdmin(0);
-		propertyMgmtUser.setMemo("memo001");
-		propertyMgmtUser.setModifyBy("modifyBy001");
-		propertyMgmtUser.setModifyTime(new Date());
-		propertyMgmtUserDao.updatePropertyMgmtUser(propertyMgmtUser);
-	}
+//	@Test
+//	public void testUpdatePropertyMgmtUser(){
+//		Map<String,String> map = new HashMap<String,String>();
+//		map.put("comid", comid);
+//		map.put("userId", userId);
+//		PropertyMgmtUser propertyMgmtUser = propertyMgmtUserDao.getPropertyMgmtUser(map);
+//		propertyMgmtUser.setIsAdmin(0);
+//		propertyMgmtUser.setMemo("memo001");
+//		propertyMgmtUser.setModifyBy("modifyBy001");
+//		propertyMgmtUser.setModifyTime(new Date());
+//		propertyMgmtUserDao.updatePropertyMgmtUser(propertyMgmtUser);
+//	}
 	
-	@Test
-	public void testDeletePropertyMgmtUser(){
-		
-		Map<String,String> map = new HashMap<String,String>();
-		map.put("comid", comid);
-		map.put("userId", userId);
-		PropertyMgmtUser propertyMgmtUser = propertyMgmtUserDao.getPropertyMgmtUser(map);
-		
-		propertyMgmtUser.setModifyBy("setModifyBy2");
-		propertyMgmtUser.setModifyTime(new Date());
-		propertyMgmtUserDao.deletePropertyMgmtUser(propertyMgmtUser);
-	}
+//	@Test
+//	public void testDeletePropertyMgmtUser(){
+//		
+//		Map<String,String> map = new HashMap<String,String>();
+//		map.put("comid", comid);
+//		map.put("userId", userId);
+//		PropertyMgmtUser propertyMgmtUser = propertyMgmtUserDao.getPropertyMgmtUser(map);
+//		
+//		propertyMgmtUser.setModifyBy("setModifyBy2");
+//		propertyMgmtUser.setModifyTime(new Date());
+//		propertyMgmtUserDao.deletePropertyMgmtUser(propertyMgmtUser);
+//	}
 	
 	@Test
 	public void testGetPropertyMgmtUserList(){
 		PropertyMgmtUser propertyMgmtUser = new PropertyMgmtUser();
-		List<PropertyMgmtUser> list = propertyMgmtUserDao.getPropertyMgmtUserList(propertyMgmtUser);
-		for(PropertyMgmtUser com : list){
-			System.out.println(com);
-		}
-		
+		propertyMgmtUserDao.getPropertyMgmtUserList(propertyMgmtUser);
 	}
 	
 	@Test
@@ -110,9 +95,6 @@ public class TestPropertyMgmtUserDao {
 		PropertyMgmtUser propertyMgmtUser = new PropertyMgmtUser();
 		List<PropertyMgmtUser> list = propertyMgmtUserDao.getPropertyMgmtUserList(propertyMgmtUser);
 		PageInfo<PropertyMgmtUser> page = new PageInfo<PropertyMgmtUser>(list);
-		List<PropertyMgmtUser> list2 = page.getList();
-		for(PropertyMgmtUser PropertyMgmtUser1 : list2){
-			System.out.println(PropertyMgmtUser1);
-		}
+		page.getList();
 	}
 }

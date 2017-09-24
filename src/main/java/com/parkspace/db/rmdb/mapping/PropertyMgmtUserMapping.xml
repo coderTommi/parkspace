@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.parkspace.db.rmdb.dao.PropertyMgmtUserDao">
+	<!-- 物业表字段 -->
+	<sql id="PropertyMgmtUser_Column">
+		p.comid
+	</sql>
+	<!-- 用户基本信息表字段 -->
+	<sql id="Baseuser_Column">
+		u.userId,u.userName,u.nickName,u.telephone,u.isAdmin,u.idtype,u.idno,u.state,u.weixinAccount,u.avator,u.memo,u.createBy,u.createTime,u.modifyBy,u.modifyTime
+	</sql>
+	
+	
 	<!-- 根据小区id和用户id获取物业信息 -->
 	<select id="getPropertyMgmtUser" parameterType="HashMap" resultType="PropertyMgmtUser">
-		select * from propertymgmtuser where comid=#{comid} and userId=#{userId}
+		select 
+			<include refid="PropertyMgmtUser_Column"/>,
+			<include refid="Baseuser_Column"/>
+		from propertymgmtuser p,Baseuser u
+		where p.userId = u.userId
+		and   p.comid  = #{comid} 
+		and   p.userId = #{userId}
 	</select>
 	<!-- 新增物业信息 -->
 	<insert id="addPropertyMgmtUser" parameterType="PropertyMgmtUser">
     	insert into propertymgmtuser(
     			comid,
-    			userId,
-    			isAdmin,
-    			memo,
-    			createBy,
-    			createTime,
-    			modifyBy,
-    			modifyTime
+    			userId
     		) 
     	 values(
     	 		#{comid},
-    	 		#{userId},
-    	 		#{isAdmin},
-    	 		#{memo},
-    	 		#{createBy},
-    	 		#{createTime},
-    	 		#{modifyBy},
-    	 		#{modifyTime}
+    	 		#{userId}
     	 	)
 	</insert>
 	
@@ -49,19 +53,25 @@
 	</update>
 	<!-- 根据具体条件查询物业信息 -->
 	<select id="getPropertyMgmtUserList" parameterType="PropertyMgmtUser" resultType="PropertyMgmtUser">
-		select * from propertymgmtuser where 1=1
+		select 
+			<include refid="PropertyMgmtUser_Column"/>,
+			<include refid="Baseuser_Column"/>
+		from propertymgmtuser p,Baseuser u
+		where p.userId = u.userId
+		      <!-- 物业基本信息过滤 -->
 			 <if test="comid != null">
-            	and comid = #{comid}
+            	and p.comid = #{comid}
         	 </if>
+        	 <!-- 用户基本信息过滤 -->
         	 <if test="userId != null">
-            	and userId = #{userId}
+            	and u.userId = #{userId}
         	 </if>
         	 <if test="isAdmin != null">
-            	and isAdmin = #{isAdmin}
+            	and u.isAdmin = #{isAdmin}
         	 </if>
         	 <if test="createTime != null">
-            	<![CDATA[ and createTime >= #{createTime} ]]>
+            	<![CDATA[ and u.createTime >= #{createTime} ]]>
         	 </if>
-        	 order by createTime desc
+        order by u.createTime desc
 	</select>
 </mapper>

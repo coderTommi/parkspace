@@ -45,7 +45,7 @@ public interface PropertyMgmtUserDao {
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:07:46</p>
 	 */
-	public void updatePropertyMgmtUser(PropertyMgmtUser propertyMgmtUser);
+//	public void updatePropertyMgmtUser(PropertyMgmtUser propertyMgmtUser);
 	/**
 	 * @Title: deletePropertyMgmtUser
 	 * <p>Description:
@@ -56,7 +56,7 @@ public interface PropertyMgmtUserDao {
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:07:19</p>
 	 */
-	public void deletePropertyMgmtUser(PropertyMgmtUser propertyMgmtUser);
+//	public void deletePropertyMgmtUser(PropertyMgmtUser propertyMgmtUser);
 	/**
 	 * @Title: getPropertyMgmtUserList
 	 * <p>Description:根据条件查询物业信息</p>
