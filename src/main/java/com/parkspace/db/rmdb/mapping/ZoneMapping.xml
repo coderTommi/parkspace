@@ -69,6 +69,13 @@
         	 <if test="isenable != null">
             	and isenable = #{isenable}
         	 </if>
+        	 <!-- 小区多状态查询 -->
+        	 <if test="isenableQuery != null">
+        	  	 and isenable in
+        	  	 	<foreach item="item" index="index" collection="isenableQuery" open="(" separator="," close=")">  
+ 						#{item}  
+					</foreach>
+        	 </if>
         	 <if test="province != null">
             	and province = #{province}
         	 </if>

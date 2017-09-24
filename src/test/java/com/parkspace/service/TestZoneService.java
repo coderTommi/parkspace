@@ -60,6 +60,7 @@ public class TestZoneService {
 	@Test
 	public void getZoneList(){
 		Zone zone = new Zone();
+		zone.setIsenableQuery(new Integer[]{1,0});
 		List<Zone> list = this.zoneService.getZoneList(zone);
 		for(Zone z : list){
 			System.out.println(z);

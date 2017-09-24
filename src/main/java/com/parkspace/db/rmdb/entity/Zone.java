@@ -1,6 +1,7 @@
 package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -26,6 +27,8 @@ public class Zone implements Serializable{
 	private String zonename;
 	//状态  0：否  1：是，-1:表示删除，默认0
 	private Integer isenable;
+	//状态查询
+	private Integer[] isenableQuery;
 	//省编码
 	private String province;
 	//市
@@ -108,10 +111,17 @@ public class Zone implements Serializable{
 	public void setModifyTime(Date modifyTime) {
 		this.modifyTime = modifyTime;
 	}
+	public Integer[] getIsenableQuery() {
+		return isenableQuery;
+	}
+	public void setIsenableQuery(Integer[] isenableQuery) {
+		this.isenableQuery = isenableQuery;
+	}
 	@Override
 	public String toString() {
-		return "Zone [zoneid=" + zoneid + ", zonename=" + zonename + ", isenable=" + isenable + ", province=" + province
-				+ ", city=" + city + ", zone=" + zone + ", memo=" + memo + ", createBy=" + createBy + ", createTime="
-				+ createTime + ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + "]";
+		return "Zone [zoneid=" + zoneid + ", zonename=" + zonename + ", isenable=" + isenable + ", isenableQuery="
+				+ Arrays.toString(isenableQuery) + ", province=" + province + ", city=" + city + ", zone=" + zone
+				+ ", memo=" + memo + ", createBy=" + createBy + ", createTime=" + createTime + ", modifyBy=" + modifyBy
+				+ ", modifyTime=" + modifyTime + "]";
 	}
 }
