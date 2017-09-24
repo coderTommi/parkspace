@@ -420,7 +420,10 @@ create table Wallet
    userId               varchar(64) comment '用户id',
    pledge               decimal(15,2) comment '押金',
    balance              decimal(15, 2) comment '余额',
-   bonus                decimal(15, 2) comment '奖金'
+   bonus                decimal(15, 2) comment '奖金', 
+   unclosedAmt			decimal(15, 2) comment '待结算金额',
+   lastTrsTime			timestamp		comment '上次交易时间',
+   openTime				timestamp		comment '开通时间'
 );
 
 alter table Wallet comment '钱包表';
