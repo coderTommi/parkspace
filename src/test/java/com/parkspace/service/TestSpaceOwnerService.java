@@ -33,21 +33,16 @@ public class TestSpaceOwnerService {
 //		spaceOwner.setSpaceno("3-001");
 //		spaceOwner.setSpaceno("3-001-0");
 //		spaceOwner.setCarno("1");
-		List<SpaceOwner> list = spaceOwnerService.getSpaceOwnerList(spaceOwner);
-		for(SpaceOwner s : list){
-			System.out.println(s);
-		}
+		spaceOwnerService.getSpaceOwnerList(spaceOwner);
 	}
 	@Test
 	public void getSpaceOwnerAllInfoList(){
 		SpaceOwner spaceOwner = new SpaceOwner();
+		spaceOwner.setIsenableQuery(new Integer[]{2});
 //		spaceOwner.setSpaceno("3-001");
 //		spaceOwner.setSpaceno("3-001-0");
 //		spaceOwner.setCarno("1");
-		List<SpaceOwner> list = spaceOwnerService.getSpaceOwnerAllInfoList(spaceOwner);
-		for(SpaceOwner s : list){
-			System.out.println(s);
-		}
+		spaceOwnerService.getSpaceOwnerAllInfoList(spaceOwner);
 	}
 	@Test
 	public void getSpaceOwnerAllInfoListForPage(){
@@ -58,15 +53,8 @@ public class TestSpaceOwnerService {
 //		spaceOwner.setSpaceno("3-001-0");
 //		spaceOwner.setCarno("1");
 		List<SpaceOwner> list = spaceOwnerService.getSpaceOwnerAllInfoList(spaceOwner);
-		for(SpaceOwner s : list){
-			System.out.println(s);
-		}
-		System.out.println("========================");
 		PageInfo<SpaceOwner> page = new PageInfo<SpaceOwner>(list);
-		List<SpaceOwner> list2 = page.getList();
-		for(SpaceOwner s1 : list2){
-			System.out.println(s1);
-		}
+		page.getList();
 	}
 	
 	@Test
@@ -82,7 +70,7 @@ public class TestSpaceOwnerService {
 	public void getBlackListAll(){
 		BlackList queryBlackList = new BlackList();
 		queryBlackList.setIsCancel(1);
-		List<BlackList> list = spaceOwnerService.getBlackListAll(queryBlackList);
+		List<BlackList> list = spaceOwnerService.getBlackListAllInfoList(queryBlackList);
 		for(BlackList b : list){
 			System.out.println(b);
 		}

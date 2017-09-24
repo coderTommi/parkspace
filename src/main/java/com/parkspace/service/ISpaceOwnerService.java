@@ -54,7 +54,7 @@ public interface ISpaceOwnerService {
 	 */
 	public BlackList addBlackList(BlackList blackList);
 	/**
-	 * @Title: getBlackListAll
+	 * @Title: getBlackListAllInfoList
 	 * <p>Description:
 	 * 查看所有加入黑名单的业主
 	 * </p>
@@ -63,5 +63,5 @@ public interface ISpaceOwnerService {
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午10:13:17</p>
 	 */
-	public List<BlackList> getBlackListAll(BlackList blackList);
+	public List<BlackList> getBlackListAllInfoList(BlackList blackList);
 }

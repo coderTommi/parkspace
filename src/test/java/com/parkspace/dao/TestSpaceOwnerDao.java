@@ -1,6 +1,5 @@
 package com.parkspace.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -43,12 +42,7 @@ public class TestSpaceOwnerDao {
 			i++;
 			SpaceOwner spaceOwner = new SpaceOwner();
 			spaceOwner.setCarno("carno" + i);
-			spaceOwner.setCreateBy("createBy"+i);
-			spaceOwner.setCreateTime(new Date());
 			spaceOwner.setIsauth(0);
-			spaceOwner.setMemo("memo"+i);
-			spaceOwner.setModifyBy("modifyBy"+i);
-			spaceOwner.setModifyTime(new Date());
 			spaceOwner.setSpaceno(p.getSpaceno());
 			spaceOwner.setUserId(userId);
 			spaceOwnerDao.addSpaceOwner(spaceOwner);
@@ -57,8 +51,7 @@ public class TestSpaceOwnerDao {
 	
 	@Test
 	public void testGetSpaceOwner(){
-		SpaceOwner spaceOwner = spaceOwnerDao.getSpaceOwner(spaceno);
-		System.out.println(spaceOwner);
+		spaceOwnerDao.getSpaceOwner(spaceno);
 	}
 	
 	@Test
@@ -66,9 +59,6 @@ public class TestSpaceOwnerDao {
 		SpaceOwner spaceOwner = spaceOwnerDao.getSpaceOwner(spaceno);
 		spaceOwner.setCarno("carno001");
 		spaceOwner.setIsauth(1);
-		spaceOwner.setMemo("memo001");
-		spaceOwner.setModifyBy("modifyBy001");
-		spaceOwner.setModifyTime(new Date());
 		spaceOwner.setUserId(userId);
 		spaceOwnerDao.updateSpaceOwner(spaceOwner);
 	}
@@ -76,8 +66,6 @@ public class TestSpaceOwnerDao {
 	@Test
 	public void testDeleteSpaceOwner(){
 		SpaceOwner spaceOwner = spaceOwnerDao.getSpaceOwner(spaceno);
-		spaceOwner.setModifyBy("setModifyBy2");
-		spaceOwner.setModifyTime(new Date());
 		spaceOwner.setIsauth(-1);
 		spaceOwnerDao.deleteSpaceOwner(spaceOwner);
 	}
@@ -87,10 +75,7 @@ public class TestSpaceOwnerDao {
 		SpaceOwner spaceOwner = new SpaceOwner();
 //		spaceOwner.setSpaceno("3-001-0");
 		spaceOwner.setCarno("4");
-		List<SpaceOwner> list = spaceOwnerDao.getSpaceOwnerList(spaceOwner);
-		for(SpaceOwner z : list){
-			System.out.println(z);
-		}
+		spaceOwnerDao.getSpaceOwnerList(spaceOwner);
 	}
 	
 	@Test
@@ -100,10 +85,7 @@ public class TestSpaceOwnerDao {
 		SpaceOwner spaceOwner = new SpaceOwner();
 		List<SpaceOwner> list = spaceOwnerDao.getSpaceOwnerList(spaceOwner);
 		PageInfo<SpaceOwner> page = new PageInfo<SpaceOwner>(list);
-		List<SpaceOwner> list2 = page.getList();
-		for(SpaceOwner SpaceOwner1 : list2){
-			System.out.println(SpaceOwner1);
-		}
+		page.getList();
 	}
 	
 	@Test
@@ -112,10 +94,8 @@ public class TestSpaceOwnerDao {
 //		spaceOwner.setSpaceno("3-001-0");
 //		spaceOwner.setCarno("4");
 //		spaceOwner.setUserName("辽");
-		spaceOwner.setZoneisenable(0);
-		List<SpaceOwner> list = spaceOwnerDao.getSpaceOwnerAllInfoList(spaceOwner);
-		for(SpaceOwner z : list){
-			System.out.println(z);
-		}
+//		spaceOwner.setZoneisenable(0);
+		spaceOwner.setIsauthQuery(new Integer[]{0});
+		spaceOwnerDao.getSpaceOwnerAllInfoList(spaceOwner);
 	}
 }

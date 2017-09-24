@@ -1,7 +1,6 @@
 package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @Title: SpaceOwner.java
@@ -14,7 +13,7 @@ import java.util.Date;
  * <p>CreateDate:2017年9月23日 下午4:04:24</p>
 */
 
-public class SpaceOwner implements Serializable{
+public class SpaceOwner extends BaseUser implements Serializable{
 
 	/**
 	 * 
@@ -22,23 +21,12 @@ public class SpaceOwner implements Serializable{
 	private static final long serialVersionUID = 1L;
 	//车位编号,形如3-101
 	private String spaceno;
-	//用户id
-	private String userId;
-	//是否认证:0未认证，1认证，默认0，-1表示禁用不在公开车位
+	//状态:0未认证，1认证，默认0，-1表示禁用不在公开车位
 	private Integer isauth;
+	//状态查询
+	private Integer[]  isauthQuery;
 	//车牌号,对于车主的车牌号只做记录，不做校验，可以不输入
 	private String carno;
-	//备注
-	private String memo;
-	//创建人
-	private String createBy;
-	//创建时间
-	private Date createTime;
-	//修改人
-	private String modifyBy;
-	//修改时间
-	private Date modifyTime;
-	
 	//车位信息
 	//小区ID
 	private String comid;
@@ -58,26 +46,7 @@ public class SpaceOwner implements Serializable{
 	private String parkPositionDes;
 	//车位登记信息：用来记录表示车位所属人员信息，手机号码或者身份证号码
 	private String spaceOwner;
-	//用户基本信息
 	
-	//用户名称
-	private String userName;
-	//昵称
-	private String nickName;
-	//'手机号码
-	private String telephone;
-	//是否是管理员 0:否  1：是
-	private Integer isAdmin;
-	//证件类型 0: 身份证
-	private Integer idtype;
-	//证件号码
-	private String idno;
-	//用户状态 0：正常	1：异常锁定,2：未交押金,3；已交押金
-	private String state;
-	//微信账号,用来汇款的账号
-	private String weixinAccount;
-	//头像
-	private String avator;
 	//小区基本信息
 	//区域ID
 	private String zoneid;
@@ -85,8 +54,10 @@ public class SpaceOwner implements Serializable{
 	private String comname;
 	//小区地址
 	private String address;
-	//是否开通  0：否  1：是,默认0，如果是2表示禁用
+	//状态  0：未开放  1：封闭式小区，2：开放式小区,默认0，如果是-1表示禁用
 	private Integer isenable;
+	//状态查询条件
+	private Integer[] isenableQuery;
 	
 	//行政区域基本信息
 	//区域名称
@@ -209,71 +180,11 @@ public class SpaceOwner implements Serializable{
 	public void setSpaceOwner(String spaceOwner) {
 		this.spaceOwner = spaceOwner;
 	}
-	public String getUserName() {
-		return userName;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	public String getNickName() {
-		return nickName;
-	}
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
-	public String getTelephone() {
-		return telephone;
-	}
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
-	public Integer getIsAdmin() {
-		return isAdmin;
-	}
-	public void setIsAdmin(Integer isAdmin) {
-		this.isAdmin = isAdmin;
-	}
-	public Integer getIdtype() {
-		return idtype;
-	}
-	public void setIdtype(Integer idtype) {
-		this.idtype = idtype;
-	}
-	public String getIdno() {
-		return idno;
-	}
-	public void setIdno(String idno) {
-		this.idno = idno;
-	}
-	public String getState() {
-		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
-	}
-	public String getWeixinAccount() {
-		return weixinAccount;
-	}
-	public void setWeixinAccount(String weixinAccount) {
-		this.weixinAccount = weixinAccount;
-	}
-	public String getAvator() {
-		return avator;
-	}
-	public void setAvator(String avator) {
-		this.avator = avator;
-	}
 	public String getSpaceno() {
 		return spaceno;
 	}
 	public void setSpaceno(String spaceno) {
 		this.spaceno = spaceno;
-	}
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
 	}
 	public Integer getIsauth() {
 		return isauth;
@@ -287,48 +198,18 @@ public class SpaceOwner implements Serializable{
 	public void setCarno(String carno) {
 		this.carno = carno;
 	}
-	public String getMemo() {
-		return memo;
+	public Integer[] getIsenableQuery() {
+		return isenableQuery;
 	}
-	public void setMemo(String memo) {
-		this.memo = memo;
+	public void setIsenableQuery(Integer[] isenableQuery) {
+		this.isenableQuery = isenableQuery;
 	}
-	public String getCreateBy() {
-		return createBy;
+	public Integer[] getIsauthQuery() {
+		return isauthQuery;
 	}
-	public void setCreateBy(String createBy) {
-		this.createBy = createBy;
+	public void setIsauthQuery(Integer[] isauthQuery) {
+		this.isauthQuery = isauthQuery;
 	}
-	public Date getCreateTime() {
-		return createTime;
-	}
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-	public String getModifyBy() {
-		return modifyBy;
-	}
-	public void setModifyBy(String modifyBy) {
-		this.modifyBy = modifyBy;
-	}
-	public Date getModifyTime() {
-		return modifyTime;
-	}
-	public void setModifyTime(Date modifyTime) {
-		this.modifyTime = modifyTime;
-	}
-	@Override
-	public String toString() {
-		return "SpaceOwner [spaceno=" + spaceno + ", userId=" + userId + ", isauth=" + isauth + ", carno=" + carno
-				+ ", memo=" + memo + ", createBy=" + createBy + ", createTime=" + createTime + ", modifyBy=" + modifyBy
-				+ ", modifyTime=" + modifyTime + ", comid=" + comid + ", parkPositionFloor=" + parkPositionFloor
-				+ ", parkPositionZone=" + parkPositionZone + ", parkPositionX=" + parkPositionX + ", parkPositionY="
-				+ parkPositionY + ", parkStatus=" + parkStatus + ", parkType=" + parkType + ", parkPositionDes="
-				+ parkPositionDes + ", spaceOwner=" + spaceOwner + ", userName=" + userName + ", nickName=" + nickName
-				+ ", telephone=" + telephone + ", isAdmin=" + isAdmin + ", idtype=" + idtype + ", idno=" + idno
-				+ ", state=" + state + ", weixinAccount=" + weixinAccount + ", avator=" + avator + ", zoneid=" + zoneid
-				+ ", comname=" + comname + ", address=" + address + ", isenable=" + isenable + ", zonename=" + zonename
-				+ ", zoneisenable=" + zoneisenable + ", province=" + province + ", city=" + city + ", zone=" + zone
-				+ "]";
-	}
+	
+	
 }

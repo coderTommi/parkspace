@@ -17,10 +17,10 @@ public class BaseUser implements Serializable{
 	private String nickName;
 	private String userPwd;
 	private String telePhone;
-	private int isAdmin;
-	private int idType;
+	private Integer isAdmin;
+	private Integer idType;
 	private String idNo;
-	private int state;
+	private Integer state;
 	private String weixinAccount;
 	private String avator;
 	private String memo;
@@ -58,16 +58,16 @@ public class BaseUser implements Serializable{
 	public void setTelePhone(String telePhone) {
 		this.telePhone = telePhone;
 	}
-	public int getIsAdmin() {
+	public Integer getIsAdmin() {
 		return isAdmin;
 	}
-	public void setIsAdmin(int isAdmin) {
+	public void setIsAdmin(Integer isAdmin) {
 		this.isAdmin = isAdmin;
 	}
-	public int getIdType() {
+	public Integer getIdType() {
 		return idType;
 	}
-	public void setIdType(int idType) {
+	public void setIdType(Integer idType) {
 		this.idType = idType;
 	}
 	public String getIdNo() {
@@ -76,10 +76,10 @@ public class BaseUser implements Serializable{
 	public void setIdNo(String idNo) {
 		this.idNo = idNo;
 	}
-	public int getState() {
+	public Integer getState() {
 		return state;
 	}
-	public void setState(int state) {
+	public void setState(Integer state) {
 		this.state = state;
 	}
 	public String getWeixinAccount() {

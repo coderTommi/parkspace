@@ -3,11 +3,11 @@
 <mapper namespace="com.parkspace.db.rmdb.dao.SpaceOwnerDao">
 	<!-- 物业车位信息字段-->
 	<sql id="Space_Owner_Column">
-		s.spaceno,s.userId,s.isauth,s.memo,s.createBy,s.createTime,s.modifyBy,s.modifyTime,s.carno
+		s.spaceno,s.isauth,s.carno
 	</sql>
 	<!-- 用户信息字段 -->
 	<sql id="Baseuser_Column">
-		u.userName,u.nickName,u.telephone,u.isAdmin,u.idtype,u.idno,u.state,u.weixinAccount,u.avator
+		u.userId,u.userName,u.nickName,u.telephone,u.isAdmin,u.idtype,u.idno,u.state,u.weixinAccount,u.avator,u.memo,u.createBy,u.createTime,u.modifyBy,u.modifyTime
 	</sql>
 	<!-- 车位信息字段 -->
 	<sql id="Parking_Space_Column">
@@ -24,7 +24,12 @@
 	
 	<!-- 根据车位编号获取车位业主信息 -->
 	<select id="getSpaceOwner" parameterType="string" resultType="SpaceOwner">
-		select * from SpaceOwner where spaceno=#{spaceno}
+		select 
+			<include refid="Space_Owner_Column"/>,
+			<include refid="Baseuser_Column"/>
+		from SpaceOwner s,Baseuser u
+		where s.userId  = u.userId
+		and   s.spaceno = #{spaceno}
 	</select>
 	<!-- 保存车位业主信息 -->
 	<insert id="addSpaceOwner" parameterType="SpaceOwner">
@@ -32,23 +37,13 @@
 				spaceno,
 				userId,
 				isauth,
-				carno,
-				memo,
-				createBy,
-				createTime,
-				modifyBy,
-				modifyTime
+				carno
     		) 
          values(
        			#{spaceno},
        			#{userId},
        			#{isauth},
-       			#{carno},
-       			#{memo},
-       			#{createBy},
-       			#{createTime},
-       			#{modifyBy},
-       			#{modifyTime}
+       			#{carno}
          )
 	</insert>
 	
@@ -57,45 +52,42 @@
     	update SpaceOwner set
     			userId     = #{userId},
     			isauth     = #{isauth},
-    			carno      = #{carno},
-    			memo       = #{memo},
-    			modifyBy   = #{modifyBy},
-    			modifyTime = #{modifyTime}
+    			carno      = #{carno}
     	where   spaceno = #{spaceno}
 	</update>
 	
 	<!-- 删除车位业主信息,修改isauth为-1,需要同时更新编辑人和编辑时间 -->
 	<update id="deleteSpaceOwner" parameterType="SpaceOwner">
     	update SpaceOwner set
-    			isauth   = -1,
-    			modifyBy   = #{modifyBy},
-    			modifyTime = #{modifyTime}
+    			isauth   = -1
     	where spaceno = #{spaceno}
 	</update>
 	<!-- 根据条件查询车位业主信息 -->
 	<select id="getSpaceOwnerList" parameterType="SpaceOwner" resultType="SpaceOwner">
 		select 
-				<include refid="Space_Owner_Column"/>
-		from SpaceOwner s where 1=1
+				<include refid="Space_Owner_Column"/>,
+				<include refid="Baseuser_Column"/>
+		from SpaceOwner s , Baseuser u
+		where s.userId = u.userId
+			 <!-- 车主信息过滤 -->
 			 <if test="spaceno != null">
             	<!-- and spaceno = #{spaceno} -->
             	and s.spaceno like CONCAT('%', #{spaceno}, '%') 
         	 </if>
-        	 <if test="userId != null">
-            	and s.userId = #{userId}
-        	 </if>
         	 <if test="isauth != null">
             	and s.isauth = #{isauth}
         	 </if>
-        	 
         	 <if test="carno != null">
             	and s.carno like CONCAT('%', #{carno}, '%') 
         	 </if>
-        	 
-        	 <if test="createTime != null">
-            	<![CDATA[ and s.createTime >= #{createTime} ]]>
+        	 <!-- 用户基本信息过滤 -->
+        	 <if test="userId != null">
+            	and u.userId = #{userId}
         	 </if>
-        	 order by s.createTime desc
+        	 <if test="createTime != null">
+            	<![CDATA[ and u.createTime >= #{createTime} ]]>
+        	 </if>
+        	 order by u.createTime desc
 	</select>
 	<!-- 根据条件查询车位业主信息，信息包括 -->
 	<!-- 车位信息、小区信息、行政区域信息、用户基本信息等 -->
@@ -132,11 +124,15 @@
         	  <if test="isauth != null">
             	 and s.isauth = #{isauth}
         	  </if>
+        	  <!-- 业主多状态查询 -->
+        	  <if test="isauthQuery != null">
+        	  	 and s.isauth in
+        	  	 	<foreach item="item" index="index" collection="isauthQuery" open="(" separator="," close=")">  
+ 						#{item}  
+					</foreach>
+        	  </if>
         	  <if test="carno != null">
             	 and s.carno like CONCAT('%', #{carno}, '%') 
-        	  </if>
-        	  <if test="createTime != null">
-            	 <![CDATA[ and s.createTime >= #{createTime} ]]>
         	  </if>
         	  <!-- 用户信息过滤 -->
         	  <if test="userName != null">
@@ -147,6 +143,9 @@
         	  </if>
         	  <if test="state != null">
             	 and u.state = #{state}
+        	  </if>
+        	  <if test="createTime != null">
+            	 <![CDATA[ and u.createTime >= #{createTime} ]]>
         	  </if>
         	  <!-- 车位信息过滤 -->
         	  <if test="comid != null">
@@ -190,6 +189,13 @@
         	  <if test="isenable != null">
             	 and c.isenable = #{isenable}
         	  </if>
+        	  <!-- 小区多状态查询 -->
+        	  <if test="isenableQuery != null">
+        	  	 and c.isenable in
+        	  	 	<foreach item="item" index="index" collection="isenableQuery" open="(" separator="," close=")">  
+ 						#{item}  
+					</foreach>
+        	  </if>
         	  <!-- 行政区域过滤条件 -->
         	  <if test="zonename != null">
             	 and z.zonename like CONCAT('%', #{zonename}, '%') 
@@ -206,6 +212,6 @@
         	  <if test="zone != null">
             	 and z.zone = #{zone}
         	  </if>
-        order by s.createTime desc
+        order by u.createTime desc
 	</select>
 </mapper>

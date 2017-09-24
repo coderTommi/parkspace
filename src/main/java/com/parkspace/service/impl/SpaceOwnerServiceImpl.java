@@ -106,7 +106,7 @@ public class SpaceOwnerServiceImpl implements ISpaceOwnerService{
 		return null;
 	}
 	/**
-	 * @Title: getBlackListAll
+	 * @Title: getBlackListAllInfoList
 	 * <p>Description:
 	 * 查看所有加入黑名单的业主
 	 * </p>
@@ -116,7 +116,7 @@ public class SpaceOwnerServiceImpl implements ISpaceOwnerService{
 	 * <p>CreateDate:2017年9月23日 下午10:13:17</p>
 	 */
 	@Override
-	public List<BlackList> getBlackListAll(BlackList blackList) {
+	public List<BlackList> getBlackListAllInfoList(BlackList blackList) {
 		List<BlackList> list = new ArrayList<BlackList>();
 		if(blackList == null){
 			blackList = new BlackList();
