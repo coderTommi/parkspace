@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.parkspace.db.rmdb.dao.CommunityDao">
+	<!-- 小区信息字段 -->
+	<sql id="Community_Column">
+		c.comid,c.zoneid,c.comname,c.address,c.isenable,c.memo,c.createBy,c.createTime,c.modifyBy,c.modifyTime
+	</sql>
+	<!-- 行政区域信息字段 -->
+	<sql id="Zone_Column">
+		z.zonename,z.isenable as zoneisenable,z.province,z.city,z.zone
+	</sql>
+	
 	<!-- 根据id查询小区信息 -->
 	<select id="getCommunity" parameterType="string" resultType="Community">
 		select * from community where comid=#{comid}
@@ -49,7 +58,7 @@
 	<!-- 根据id删除小区信息 -->
 	<update id="deleteCommunity" parameterType="Community">
     	update community set
-    			isenable   = 2,
+    			isenable   = -1,
     			modifyBy   = #{modifyBy},
     			modifyTime = #{modifyTime}
     	where comid = #{comid}
@@ -76,5 +85,66 @@
             	<![CDATA[ and createTime >= #{createTime} ]]>
         	 </if>
         	 order by createTime desc
+	</select>
+	<!-- 根据具体条件查询小区信息 -->
+	<!-- 包含行政区域信息 -->
+	<select id="getCommunityAllInfoList" parameterType="Community" resultType="Community">
+		select 
+				<include refid="Community_Column"/>,
+				<include refid="Zone_Column"/>
+		from community c,
+			 zone z
+		where 1=1
+			  and c.zoneid = z.zoneid
+			  <!-- 小区过滤条件 -->
+			  <if test="comid != null">
+            	 and c.comid = #{comid}
+        	  </if>
+        	  <if test="zoneid != null">
+            	 and c.zoneid = #{zoneid}
+        	  </if>
+        	  <if test="comname != null">
+            	 and c.comname like CONCAT('%', #{comname}, '%')  
+        	  </if>
+        	  <if test="address != null">
+            	 and c.address like CONCAT('%', #{address}, '%') 
+        	  </if>
+        	  <if test="isenable != null">
+            	 and c.isenable = #{isenable}
+        	  </if>
+        	  <!-- 小区多状态查询 -->
+        	  <if test="isenableQuery != null and isenableQuery.length > 0 ">
+        	  	 and c.isenable in
+        	  	 	<foreach item="item" index="index" collection="isenableQuery" open="(" separator="," close=")">  
+ 						#{item}  
+					</foreach>
+        	  </if>
+        	  <if test="createTime != null">
+            	 <![CDATA[ and c.createTime >= #{createTime} ]]>
+        	  </if>
+        	  <!-- 行政区域过滤条件 -->
+        	  <if test="zonename != null">
+            	 and z.zonename like CONCAT('%', #{zonename}, '%') 
+        	  </if>
+        	  <if test="zoneisenable != null">
+            	 and z.isenable = #{zoneisenable}
+        	  </if>
+        	  <!-- 行政区域多状态查询 -->
+        	  <if test="zoneIsenableQuery != null and zoneIsenableQuery.length > 0 ">
+        	  	 and z.isenable in
+        	  	 	<foreach item="item" index="index" collection="zoneIsenableQuery" open="(" separator="," close=")">  
+ 						#{item}  
+					</foreach>
+        	  </if>
+        	  <if test="province != null">
+            	 and z.province = #{province}
+        	  </if>
+        	  <if test="city != null">
+            	 and z.city = #{city}
+        	  </if>
+        	  <if test="zone != null">
+            	 and z.zone = #{zone}
+        	  </if>
+        order by c.createTime desc
 	</select>
 </mapper>

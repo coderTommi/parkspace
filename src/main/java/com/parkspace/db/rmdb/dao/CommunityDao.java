@@ -48,7 +48,7 @@ public interface CommunityDao {
 	/**
 	 * @Title: deleteCommunity
 	 * <p>Description:
-	 * 删除小区信息,修改isenable为2,需要同时更新编辑人和编辑时间
+	 * 删除小区信息,修改isenable为-1,需要同时更新编辑人和编辑时间
 	 * </p>
 	 * @param     community 小区信息
 	 * @return void    返回类型
@@ -65,4 +65,16 @@ public interface CommunityDao {
 	 * <p>CreateDate:2017年9月23日 下午9:17:00</p>
 	 */
 	public List<Community> getCommunityList(Community community);
+	
+	/**
+	 * @Title: getCommunityAllInfoList
+	 * <p>Description:根据条件查询小区信息
+	 * 包括小区的基本信息，行政区域的基本信息
+	 * </p>
+	 * @param     community 小区信息
+	 * @return List<Community>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:17:00</p>
+	 */
+	public List<Community> getCommunityAllInfoList(Community community);
 }

@@ -25,7 +25,7 @@ public class Zone implements Serializable{
 	private String zoneid;
 	//区域名称
 	private String zonename;
-	//状态  0：否  1：是，-1:表示删除，默认0
+	//状态  0：未开放  1：已开放，-1,表示删除，默认0
 	private Integer isenable;
 	//状态查询
 	private Integer[] isenableQuery;

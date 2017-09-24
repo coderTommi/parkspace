@@ -70,7 +70,7 @@
             	and isenable = #{isenable}
         	 </if>
         	 <!-- 小区多状态查询 -->
-        	 <if test="isenableQuery != null">
+        	 <if test="isenableQuery != null and isenableQuery.length > 0 ">
         	  	 and isenable in
         	  	 	<foreach item="item" index="index" collection="isenableQuery" open="(" separator="," close=")">  
  						#{item}  

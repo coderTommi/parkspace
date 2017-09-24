@@ -125,7 +125,7 @@
             	 and s.isauth = #{isauth}
         	  </if>
         	  <!-- 业主多状态查询 -->
-        	  <if test="isauthQuery != null">
+        	  <if test="isauthQuery != null and isauthQuery.length > 0 ">
         	  	 and s.isauth in
         	  	 	<foreach item="item" index="index" collection="isauthQuery" open="(" separator="," close=")">  
  						#{item}  
@@ -190,7 +190,7 @@
             	 and c.isenable = #{isenable}
         	  </if>
         	  <!-- 小区多状态查询 -->
-        	  <if test="isenableQuery != null">
+        	  <if test="isenableQuery != null and isenableQuery.length > 0 ">
         	  	 and c.isenable in
         	  	 	<foreach item="item" index="index" collection="isenableQuery" open="(" separator="," close=")">  
  						#{item}  
@@ -202,6 +202,13 @@
         	  </if>
         	  <if test="zoneisenable != null">
             	 and z.isenable = #{zoneisenable}
+        	  </if>
+        	  <!-- 行政区域多状态查询 -->
+        	  <if test="zoneIsenableQuery != null and zoneIsenableQuery.length > 0 ">
+        	  	 and z.isenable in
+        	  	 	<foreach item="item" index="index" collection="zoneIsenableQuery" open="(" separator="," close=")">  
+ 						#{item}  
+					</foreach>
         	  </if>
         	  <if test="province != null">
             	 and z.province = #{province}

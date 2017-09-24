@@ -62,8 +62,10 @@ public class SpaceOwner extends BaseUser implements Serializable{
 	//行政区域基本信息
 	//区域名称
 	private String zonename;
-	//状态  0：否  1：是，-1:表示删除，默认0
+	//状态  0：未开放  1：已开放，-1,表示删除，默认0
 	private Integer zoneisenable;
+	//行政区域状态查询
+	private Integer[] zoneIsenableQuery;
 	//省编码
 	private String province;
 	//市
@@ -210,6 +212,10 @@ public class SpaceOwner extends BaseUser implements Serializable{
 	public void setIsauthQuery(Integer[] isauthQuery) {
 		this.isauthQuery = isauthQuery;
 	}
-	
-	
+	public Integer[] getZoneIsenableQuery() {
+		return zoneIsenableQuery;
+	}
+	public void setZoneIsenableQuery(Integer[] zoneIsenableQuery) {
+		this.zoneIsenableQuery = zoneIsenableQuery;
+	}
 }

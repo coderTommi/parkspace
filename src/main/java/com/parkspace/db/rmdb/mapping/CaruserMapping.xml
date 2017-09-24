@@ -64,7 +64,7 @@
             	and car.isauth = #{isauth}
         	 </if>
         	 <!-- 车主多状态查询 -->
-        	 <if test="isauthQuery != null">
+        	 <if test="isauthQuery != null and isauthQuery.length > 0 ">
         	  	and car.isauth in
         	  	<foreach item="item" index="index" collection="isauthQuery" open="(" separator="," close=")">  
  					#{item}  

@@ -39,9 +39,11 @@ public class TestSpaceOwnerService {
 	public void getSpaceOwnerAllInfoList(){
 		SpaceOwner spaceOwner = new SpaceOwner();
 		spaceOwner.setIsenableQuery(new Integer[]{2});
+		spaceOwner.setIsauthQuery(new Integer[]{1});
 //		spaceOwner.setSpaceno("3-001");
 //		spaceOwner.setSpaceno("3-001-0");
 //		spaceOwner.setCarno("1");
+		spaceOwner.setZoneIsenableQuery(new Integer[]{1});
 		spaceOwnerService.getSpaceOwnerAllInfoList(spaceOwner);
 	}
 	@Test

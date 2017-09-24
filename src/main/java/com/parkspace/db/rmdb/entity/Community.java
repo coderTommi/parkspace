@@ -1,6 +1,7 @@
 package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -28,8 +29,10 @@ public class Community implements Serializable{
 	private String comname;
 	//小区地址
 	private String address;
-	//是否开通  0：否  1：是,默认0，如果是2表示禁用
+	//状态  0：未开放  1：封闭式小区，2：开放式小区,默认0，如果是-1表示禁用
 	private Integer isenable;
+	//状态查询条件
+	private Integer[] isenableQuery;
 	//备注
 	private String memo;
 	//创建人
@@ -40,6 +43,52 @@ public class Community implements Serializable{
 	private String modifyBy;
 	//修改时间
 	private Date modifyTime;
+	
+	//行政区域基本信息
+	//区域名称
+	private String zonename;
+	//状态  0：未开放  1：已开放，-1,表示删除，默认0
+	private Integer zoneisenable;
+	//行政区域状态查询
+	private Integer[] zoneIsenableQuery;
+	//省编码
+	private String province;
+	//市
+	private String city;
+	//区
+	private String zone;
+	
+	
+	public String getZonename() {
+		return zonename;
+	}
+	public void setZonename(String zonename) {
+		this.zonename = zonename;
+	}
+	public Integer getZoneisenable() {
+		return zoneisenable;
+	}
+	public void setZoneisenable(Integer zoneisenable) {
+		this.zoneisenable = zoneisenable;
+	}
+	public String getProvince() {
+		return province;
+	}
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getZone() {
+		return zone;
+	}
+	public void setZone(String zone) {
+		this.zone = zone;
+	}
 	public String getComid() {
 		return comid;
 	}
@@ -100,10 +149,26 @@ public class Community implements Serializable{
 	public void setModifyTime(Date modifyTime) {
 		this.modifyTime = modifyTime;
 	}
+	public Integer[] getIsenableQuery() {
+		return isenableQuery;
+	}
+	public void setIsenableQuery(Integer[] isenableQuery) {
+		this.isenableQuery = isenableQuery;
+	}
+	
+	public Integer[] getZoneIsenableQuery() {
+		return zoneIsenableQuery;
+	}
+	public void setZoneIsenableQuery(Integer[] zoneIsenableQuery) {
+		this.zoneIsenableQuery = zoneIsenableQuery;
+	}
 	@Override
 	public String toString() {
 		return "Community [comid=" + comid + ", zoneid=" + zoneid + ", comname=" + comname + ", address=" + address
-				+ ", isenable=" + isenable + ", memo=" + memo + ", createBy=" + createBy + ", createTime=" + createTime
-				+ ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + "]";
+				+ ", isenable=" + isenable + ", isenableQuery=" + Arrays.toString(isenableQuery) + ", memo=" + memo
+				+ ", createBy=" + createBy + ", createTime=" + createTime + ", modifyBy=" + modifyBy + ", modifyTime="
+				+ modifyTime + ", zonename=" + zonename + ", zoneisenable=" + zoneisenable + ", zoneIsenableQuery="
+				+ Arrays.toString(zoneIsenableQuery) + ", province=" + province + ", city=" + city + ", zone=" + zone
+				+ "]";
 	}
 }
