@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.IntegralDao">
+	<!-- 根据根据userid查询详情 -->
+	<select id="getByUserId" parameterType="java.lang.String" resultType="Integral">
+		select * from integral where userId=#{userId}
+	</select>
+	<!-- 保存车主信息 -->
+	<insert id="save" parameterType="Wallet">
+    	insert into integral(
+    			userId,
+    			val
+    		) 
+    	 values(
+    	 		#{userId},
+    	 		#{val}
+    	 	)
+	</insert>
+	
+	<!-- 根据条件查询账单 -->
+	<update id="update" parameterType="Integral" >
+		update integral set
+			 val = #{val}
+        	 where userId=#{userId}
+	</update>
+</mapper>

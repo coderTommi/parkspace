@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.BillDao">
+	<!-- 根据根据账单id查询详情 -->
+	<select id="getById" parameterType="java.lang.String" resultType="Bill">
+		select * from bill where billId=#{billId}
+	</select>
+	<!-- 保存车主信息 -->
+	<insert id="save" parameterType="Bill">
+    	insert into bill(
+    			billId,
+    			payer,
+    			payee,
+    			transDate,
+    			transTime,
+    			billType,
+    			amount,
+    			state,
+    			orderJnlno
+    		) 
+    	 values(
+    	 		#{billId},
+    	 		#{payer},
+    	 		#{payee},
+    	 		#{transDate},
+    	 		#{transTime},
+    	 		#{billType},
+    	 		#{amount},
+    	 		#{state},
+    	 		#{orderJnlno}
+    	 	)
+	</insert>
+	
+	<!-- 根据条件查询账单 -->
+	<select id="getBills" parameterType="Bill" resultType="Bill">
+		select * from bill where 1=1
+			 <if test="payer != null">
+            	and payer = #{payer}
+        	 </if>
+        	 <if test="payee != null">
+            	and payee = #{payee}
+        	 </if>
+        	 <if test="billId != null">
+            	and billId = #{billId}
+        	 </if>
+        	 <if test="billType != null">
+            	and billType = #{billType}
+        	 </if>        	 
+        	 <if test="transDate != null">
+            	and transDate = #{transDate}
+        	 </if>        	 
+        	 <if test="state != null">
+            	and state = #{state}
+        	 </if>
+        	 <if test="orderJnlno != null">
+            	and orderJnlno = #{orderJnlno}
+        	 </if>        	         	 
+        	 order by transtime desc
+	</select>
+</mapper>

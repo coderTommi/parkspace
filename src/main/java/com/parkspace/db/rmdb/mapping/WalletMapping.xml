@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.WalletDao">
+	<!-- 根据根据账单id查询详情 -->
+	<select id="getByUserId" parameterType="java.lang.String" resultType="Wallet">
+		select * from wallet where userId=#{userId}
+	</select>
+	<!-- 保存车主信息 -->
+	<insert id="save" parameterType="Wallet">
+    	insert into wallet(
+    			userId,
+    			pledge,
+    			balance,
+    			bonus,
+    			unclosedAmt,
+    			lastTrsTime,
+    			openTime
+    		) 
+    	 values(
+    	 		#{userId},
+    	 		#{pledge},
+    	 		#{balance},
+    	 		#{bonus},
+    	 		#{unclosedAmt},
+    	 		#{lastTrsTime},
+    	 		#{openTime}
+    	 	)
+	</insert>
+	
+	<!-- 根据条件查询账单 -->
+	<update id="update" parameterType="Wallet">
+		update wallet set
+			 <if test="pledge != null">
+            	pledge = #{pledge} ,
+        	 </if>
+        	 <if test="balance != null">
+            	balance = #{balance},
+        	 </if>
+        	 <if test="bonus != null">
+            	bonus = #{bonus},
+        	 </if>
+        	 <if test="unclosedAmt != null">
+            	unclosedAmt = #{unclosedAmt},
+        	 </if>        	 
+        	 <if test="lastTrsTime != null">
+            	lastTrsTime = #{lastTrsTime}
+        	 </if>        	 
+        	 where userId=#{userId}
+	</update>
+</mapper>

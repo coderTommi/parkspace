@@ -17,6 +17,10 @@
 		<typeAlias alias="Caruser" type="com.parkspace.db.rmdb.entity.Caruser"/>
 		<typeAlias alias="ParkingSpaceBill" type="com.parkspace.db.rmdb.entity.ParkingSpaceBill"/>
 		<typeAlias alias="ParkingSpaceBillHis" type="com.parkspace.db.rmdb.entity.ParkingSpaceBillHis"/>
+		<typeAlias alias="BaseUser" type="com.parkspace.db.rmdb.entity.BaseUser"/>
+		<typeAlias alias="Bill" type="com.parkspace.db.rmdb.entity.Bill"/>
+		<typeAlias alias="Wallet" type="com.parkspace.db.rmdb.entity.Wallet"/>
+		<typeAlias alias="Integral" type="com.parkspace.db.rmdb.entity.Integral"/>
 	</typeAliases>
  	<plugins>
 	 	<plugin interceptor="com.github.pagehelper.PageInterceptor">

@@ -1,5 +1,7 @@
 package com.parkspace.db.rmdb.dao;
 
+import org.mybatis.spring.annotation.MapperScan;
+
 import com.parkspace.db.rmdb.entity.BaseUser;
 
 /**
@@ -7,6 +9,7 @@ import com.parkspace.db.rmdb.entity.BaseUser;
  * @author lidongliang
  *
  */
+@MapperScan
 public interface BaseUserDao {
 	/**
 	 * 新增
@@ -15,9 +18,9 @@ public interface BaseUserDao {
 	public void save(BaseUser baseUser);
 	/**
 	 * 删除
-	 * @param baseUser
+	 * @param userId
 	 */
-	public void delete(BaseUser baseUser);
+	public void delete(String userId);
 	/**
 	 * 更新
 	 * @param baseUser

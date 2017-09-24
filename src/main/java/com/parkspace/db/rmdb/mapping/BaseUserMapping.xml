@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.BaseUserDao">
+
+	<!-- 保存用户信息 -->
+	<insert id="save" parameterType="BaseUser">
+    	insert into baseuser(
+    			userId,
+    			userName,
+    			nickName,
+    			userPwd,
+    			telePhone,
+    			isAdmin,
+    			idType,
+    			idNo,
+    			state,
+    			weixinAccount,
+    			avator,
+    			memo,
+    			createBy,
+    			createTime,
+    			modifyBy,
+    			modifyTime
+    		) 
+    	 values(
+    	 		#{userId},
+    	 		#{userName},
+    	 		#{nickName},
+    	 		#{userPwd},
+    	 		#{telePhone},
+    	 		#{isAdmin},
+    	 		#{idType},
+    	 		#{idNo},
+    	 		#{state},
+    	 		#{weixinAccount},
+    	 		#{avator},
+    	 		#{memo},
+    	 		#{createBy},
+    	 		#{createTime},
+    	 		#{modifyBy},
+    	 		#{modifyTime}
+    	 	)
+	</insert>
+	
+	<!-- 更改用户信息 -->
+	<update id="update" parameterType="BaseUser">
+    	update baseuser set
+    			state		=#{state},
+    			memo		=#{memo},
+    			modifyBy	=#{modifyBy},
+    			modifyTime	=#{modifyTime}
+    	where userId=#{userId}
+	</update>
+	
+	<!-- 删除用户信息 -->
+	<delete id="delete" parameterType="java.lang.String">
+		delete	from baseuser where userId=#{userId}
+	</delete>
+	<!-- 根据条件查询车主信息 -->
+	<select id="getById" parameterType="java.lang.String" resultType="BaseUser">
+		select * from baseuser where userId = #{userId}
+	</select>
+</mapper>
