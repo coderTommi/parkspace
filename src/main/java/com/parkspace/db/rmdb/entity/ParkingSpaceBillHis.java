@@ -1,6 +1,7 @@
 package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -36,15 +37,15 @@ public class ParkingSpaceBillHis implements Serializable{
 	//停车时长，申请停车时长，单位为小时，不能超过24小时
 	private Integer parkHours;
 	//单价，每小时计费
-	private Double unitPrice;
+	private BigDecimal unitPrice;
 	//预算：=单价*停车时长
-	private Double budgetPrice;
+	private BigDecimal budgetPrice;
 	//创建时间
 	private Date createTime;
 	//记录实际的停车时长
-	private Double actualParkHours;
+	private BigDecimal actualParkHours;
 	//预算：=单价*实际停车时长
-	private Double actualPrice;
+	private BigDecimal actualPrice;
 	//记录时间，表示该流水记录的时间
 	private Date recodeTime = new Date();
 	public String getUUID() {
@@ -89,16 +90,16 @@ public class ParkingSpaceBillHis implements Serializable{
 	public void setParkHours(Integer parkHours) {
 		this.parkHours = parkHours;
 	}
-	public Double getUnitPrice() {
+	public BigDecimal getUnitPrice() {
 		return unitPrice;
 	}
-	public void setUnitPrice(Double unitPrice) {
+	public void setUnitPrice(BigDecimal unitPrice) {
 		this.unitPrice = unitPrice;
 	}
-	public Double getBudgetPrice() {
+	public BigDecimal getBudgetPrice() {
 		return budgetPrice;
 	}
-	public void setBudgetPrice(Double budgetPrice) {
+	public void setBudgetPrice(BigDecimal budgetPrice) {
 		this.budgetPrice = budgetPrice;
 	}
 	public Date getCreateTime() {
@@ -107,16 +108,16 @@ public class ParkingSpaceBillHis implements Serializable{
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public Double getActualParkHours() {
+	public BigDecimal getActualParkHours() {
 		return actualParkHours;
 	}
-	public void setActualParkHours(Double actualParkHours) {
+	public void setActualParkHours(BigDecimal actualParkHours) {
 		this.actualParkHours = actualParkHours;
 	}
-	public Double getActualPrice() {
+	public BigDecimal getActualPrice() {
 		return actualPrice;
 	}
-	public void setActualPrice(Double actualPrice) {
+	public void setActualPrice(BigDecimal actualPrice) {
 		this.actualPrice = actualPrice;
 	}
 	public Date getRecodeTime() {
