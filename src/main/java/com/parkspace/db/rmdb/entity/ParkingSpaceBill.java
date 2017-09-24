@@ -1,6 +1,7 @@
 package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -36,9 +37,9 @@ public class ParkingSpaceBill implements Serializable{
 	//停车时长，申请停车时长，单位为小时，不能超过24小时
 	private Integer parkHours;
 	//单价，每小时计费
-	private Double unitPrice;
+	private BigDecimal unitPrice;
 	//预算：=单价*停车时长
-	private Double budgetPrice;
+	private BigDecimal budgetPrice;
 	//创建时间
 	private Date createTime;
 	public String getOrderJnlNo() {
@@ -77,16 +78,16 @@ public class ParkingSpaceBill implements Serializable{
 	public void setParkHours(Integer parkHours) {
 		this.parkHours = parkHours;
 	}
-	public Double getUnitPrice() {
+	public BigDecimal getUnitPrice() {
 		return unitPrice;
 	}
-	public void setUnitPrice(Double unitPrice) {
+	public void setUnitPrice(BigDecimal unitPrice) {
 		this.unitPrice = unitPrice;
 	}
-	public Double getBudgetPrice() {
+	public BigDecimal getBudgetPrice() {
 		return budgetPrice;
 	}
-	public void setBudgetPrice(Double budgetPrice) {
+	public void setBudgetPrice(BigDecimal budgetPrice) {
 		this.budgetPrice = budgetPrice;
 	}
 	public Date getCreateTime() {

@@ -1,5 +1,6 @@
 package com.parkspace.dao;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -44,13 +45,13 @@ public class TestParkingSpaceBillDao {
 			String orderJnlNo = UUID.randomUUID().toString();
 			ParkingSpaceBill parkingSpaceBill = new ParkingSpaceBill();
 			parkingSpaceBill.setBillStatus(1);
-			parkingSpaceBill.setBudgetPrice(10.0 * (i+1));
+			parkingSpaceBill.setBudgetPrice(new BigDecimal(10.0 * (i+1)));
 			parkingSpaceBill.setCarno(carno);
 			parkingSpaceBill.setCreateTime(new Date());
 			parkingSpaceBill.setOrderJnlNo(orderJnlNo);
 			parkingSpaceBill.setParkHours(10 * (i+1));
 			parkingSpaceBill.setSpaceno(spaceno);
-			parkingSpaceBill.setUnitPrice(2.0 * (i+1));
+			parkingSpaceBill.setUnitPrice(new BigDecimal(2.0 * (i+1)));
 			parkingSpaceBill.setUserId(userId);
 			parkingSpaceBillDao.addParkingSpaceBill(parkingSpaceBill);
 		}
@@ -72,10 +73,10 @@ public class TestParkingSpaceBillDao {
 	public void testUpdateParkingSpaceBill(){
 		ParkingSpaceBill parkingSpaceBill = parkingSpaceBillDao.getParkingSpaceBill(orderJnlNo);
 		parkingSpaceBill.setBillStatus(2);
-		parkingSpaceBill.setBudgetPrice(100.0);
+		parkingSpaceBill.setBudgetPrice(new BigDecimal(100.0));
 		parkingSpaceBill.setCreateTime(new Date());
 		parkingSpaceBill.setParkHours(11);
-		parkingSpaceBill.setUnitPrice(23.0);
+		parkingSpaceBill.setUnitPrice(new BigDecimal(23.0));
 		parkingSpaceBillDao.updateParkingSpaceBill(parkingSpaceBill);
 	}
 	
@@ -84,8 +85,8 @@ public class TestParkingSpaceBillDao {
 		ParkingSpaceBill parkingSpaceBill = parkingSpaceBillDao.getParkingSpaceBill(orderJnlNo);
 		
 		ParkingSpaceBillHis parkingSpaceBillHis = new ParkingSpaceBillHis();
-		parkingSpaceBillHis.setActualParkHours(10.00);
-		parkingSpaceBillHis.setActualPrice(20.00);
+		parkingSpaceBillHis.setActualParkHours(new BigDecimal(10.00));
+		parkingSpaceBillHis.setActualPrice(new BigDecimal(20.00));
 		parkingSpaceBillHis.setBillStatus(4);
 		parkingSpaceBillHis.setBudgetPrice(parkingSpaceBill.getBudgetPrice());
 		parkingSpaceBillHis.setCarno(parkingSpaceBill.getCarno());
