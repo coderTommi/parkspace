@@ -50,6 +50,8 @@ drop index spaceowner_ix1 on SpaceOwner;
 
 drop table if exists SpaceOwner;
 
+drop table if exists UserCommunity;
+
 drop table if exists Wallet;
 
 drop table if exists Zone;
@@ -73,6 +75,7 @@ create table Baseuser
 (
    userId               varchar(64) not null comment '用户id',
    userName             varchar(128) comment '用户名称',
+   realname             varchar(128) comment '真实姓名',
    nickName             varchar(128) comment '昵称',
    userPwd              varchar(64) not null comment '用户密码',
    telephone            varchar(11) not null comment '手机号码',
@@ -100,10 +103,11 @@ create table Bill
    billId               varchar(64) not null comment '账单ID',
    payer                varchar(64) not null comment '付款人',
    payee                varchar(64) not null comment '收款人',
-   transDate            date not null comment '交易日期',
+   transdate            date not null comment '交易日期',
+   transtime            timestamp not null comment '交易时间',
    billType             int(1) not null comment '账单类型 0：充值 1：提现  2：交押金  3：提取押金4：分配	5：入账	6：出账',
    amount               decimal(15, 2) not null comment '账单金额',
-   sate                 char(10) not null default '0' comment '0: 正常  1：失败	2：对账异常',
+   state                int(1) not null default 0 comment '0: 正常  1：失败	2：对账异常',
    orderJnlNo           varchar(64) comment '订单号',
    primary key (billId)
 );
@@ -142,12 +146,7 @@ create table Caruser
 (
    userId               varchar(64) not null comment '用户id',
    carno                varchar(16) not null comment '车牌号',
-   isauth               int(1) not null default 0 comment '是否认证 0:否 1：是，默认1，-1表示禁用',
-   memo                 varchar(256) comment '备注',
-   createBy             varchar(30) not null comment '创建人',
-   createTime           datetime not null comment '创建时间',
-   modifyBy             varchar(30) not null comment '修改人',
-   modifyTime           datetime not null comment '修改时间',
+   isauth               int(1) not null default 0 comment '状态0:未认证 1：已认证，默认1，-1表示禁用',
    primary key (userId, carno)
 );
 
@@ -170,7 +169,7 @@ create table Community
    zoneid               varchar(64) comment '区域ID',
    comname              varchar(128) not null comment '小区名称',
    address              varchar(256) comment '小区地址',
-   isenable             int(1) not null default 0 comment '是否开通  0：否  1：是,默认0，如果是2表示禁用',
+   isenable             int(1) not null default 0 comment '状态  0：未开放  1：封闭式小区，2：开放式小区,默认0，如果是-1表示禁用',
    memo                 varchar(256) comment '备注',
    createBy             varchar(30) not null comment '创建人',
    createTime           datetime not null comment '创建时间',
@@ -341,15 +340,8 @@ create index t_parking_space_bill_his_ix4 on ParkingSpaceBillHis
 /*==============================================================*/
 create table PropertyMgmtUser
 (
-   comid                varchar(64) not null comment '小区ID',
    userId               varchar(64) not null comment '用户id',
-   isAdmin              int(1) not null default 0 comment '是否是管理员 0:否  1：是,默认为0，如果为-1表示禁用',
-   memo                 varchar(256) comment '备注',
-   createBy             varchar(30) not null comment '创建人',
-   createTime           datetime not null comment '创建时间',
-   modifyBy             varchar(30) not null comment '修改人',
-   modifyTime           datetime not null comment '修改时间',
-   primary key (comid, userId)
+   primary key (userId)
 );
 
 alter table PropertyMgmtUser comment '物业人员信息表（PropertyMgmtUser）:维护物业人员的管理关系';
@@ -392,12 +384,7 @@ create table SpaceOwner
 (
    spaceno              varchar(30) not null comment '车位编号,形如3-101',
    userId               varchar(64) not null comment '用户id',
-   isauth               int(1) default 0 comment '是否认证:0未认证，1认证，默认0，-1表示禁用不在公开车位',
-   memo                 varchar(256) comment '备注',
-   createBy             varchar(30) not null comment '创建人',
-   createTime           datetime not null comment '创建时间',
-   modifyBy             varchar(30) not null comment '修改人',
-   modifyTime           datetime not null comment '修改时间',
+   isauth               int(1) default 0 comment '状态:0未认证，1认证，默认0，-1表示禁用不在公开车位',
    carno                varchar(16) comment '车牌号,对于车主的车牌号只做记录，不做校验，可以不输入',
    primary key (spaceno)
 );
@@ -413,17 +400,29 @@ create index spaceowner_ix1 on SpaceOwner
 );
 
 /*==============================================================*/
+/* Table: UserCommunity                                         */
+/*==============================================================*/
+create table UserCommunity
+(
+   comid                varchar(64) not null comment '小区ID',
+   userId               varchar(64) not null comment '用户id',
+   primary key (comid, userId)
+);
+
+alter table UserCommunity comment '小区用户关联表：记录小区与用户之间的关系';
+
+/*==============================================================*/
 /* Table: Wallet                                                */
 /*==============================================================*/
 create table Wallet
 (
    userId               varchar(64) comment '用户id',
    pledge               decimal(15,2) comment '押金',
-   balance              decimal(15, 2) comment '余额',
-   bonus                decimal(15, 2) comment '奖金', 
-   unclosedAmt			decimal(15, 2) comment '待结算金额',
-   lastTrsTime			timestamp		comment '上次交易时间',
-   openTime				timestamp		comment '开通时间'
+   balance              decimal(15,2) comment '余额',
+   bonus                decimal(15,2) comment '奖金',
+   unclosedAmt          decimal(15, 2) comment '待结算金额',
+   lastTrsTime          timestamp comment '上次交易时间',
+   openTime             timestamp comment '开通时间'
 );
 
 alter table Wallet comment '钱包表';
@@ -435,7 +434,7 @@ create table Zone
 (
    zoneid               varchar(64) not null comment '区域ID',
    zonename             varchar(128) not null comment '区域名称',
-   isenable             int(1) not null default 0 comment '状态  0：否  1：是，-1,表示删除，默认0',
+   isenable             int(1) not null default 0 comment '状态  0：未开放  1：已开放，-1,表示删除，默认0',
    province             varchar(100) not null comment '省编码',
    city                 varchar(100) not null comment '市',
    zone                 varchar(100) not null comment '区',
@@ -473,9 +472,6 @@ alter table ParkingSpaceBill add constraint FK_sb_ref_so foreign key (spaceno)
 alter table PropertyMgmtUser add constraint FK_pu_Ref_baseuser foreign key (userId)
       references Baseuser (userId) on delete restrict on update restrict;
 
-alter table PropertyMgmtUser add constraint FK_pu_Ref_community foreign key (comid)
-      references Community (comid) on delete restrict on update restrict;
-
 alter table ShareConfig add constraint FK_sc_ref_so foreign key (spaceno)
       references SpaceOwner (spaceno) on delete restrict on update restrict;
 
@@ -483,6 +479,12 @@ alter table SpaceOwner add constraint FK_so_ref_space foreign key (spaceno)
       references ParkingSpace (spaceno) on delete restrict on update restrict;
 
 alter table SpaceOwner add constraint FK_su_ref_user foreign key (userId)
+      references Baseuser (userId) on delete restrict on update restrict;
+
+alter table UserCommunity add constraint FK_UserCom_ref_com foreign key (comid)
+      references Community (comid) on delete restrict on update restrict;
+
+alter table UserCommunity add constraint FK_UserCom_ref_user foreign key (userId)
       references Baseuser (userId) on delete restrict on update restrict;
 
 alter table Wallet add constraint FK_wallet_ref_user foreign key (userId)
