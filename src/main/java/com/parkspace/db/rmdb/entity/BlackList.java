@@ -32,6 +32,80 @@ public class BlackList implements Serializable{
 	private Date createTime;
 	//修改时间
 	private Date modifyTime;
+	//用户名称
+	private String userName;
+	//昵称
+	private String nickName;
+	//'手机号码
+	private String telephone;
+	//是否是管理员 0:否  1：是
+	private Integer isAdmin;
+	//证件类型 0: 身份证
+	private Integer idtype;
+	//证件号码
+	private String idno;
+	//用户状态 0：正常	1：异常锁定,2：未交押金,3；已交押金
+	private String state;
+	//微信账号,用来汇款的账号
+	private String weixinAccount;
+	//头像
+	private String avator;
+	
+	
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+	public String getTelephone() {
+		return telephone;
+	}
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+	public Integer getIsAdmin() {
+		return isAdmin;
+	}
+	public void setIsAdmin(Integer isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+	public Integer getIdtype() {
+		return idtype;
+	}
+	public void setIdtype(Integer idtype) {
+		this.idtype = idtype;
+	}
+	public String getIdno() {
+		return idno;
+	}
+	public void setIdno(String idno) {
+		this.idno = idno;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getWeixinAccount() {
+		return weixinAccount;
+	}
+	public void setWeixinAccount(String weixinAccount) {
+		this.weixinAccount = weixinAccount;
+	}
+	public String getAvator() {
+		return avator;
+	}
+	public void setAvator(String avator) {
+		this.avator = avator;
+	}
 	public String getUUID() {
 		return UUID;
 	}
@@ -71,6 +145,8 @@ public class BlackList implements Serializable{
 	@Override
 	public String toString() {
 		return "BlackList [UUID=" + UUID + ", userId=" + userId + ", isCancel=" + isCancel + ", memo=" + memo
-				+ ", createTime=" + createTime + ", modifyTime=" + modifyTime + "]";
+				+ ", createTime=" + createTime + ", modifyTime=" + modifyTime + ", userName=" + userName + ", nickName="
+				+ nickName + ", telephone=" + telephone + ", isAdmin=" + isAdmin + ", idtype=" + idtype + ", idno="
+				+ idno + ", state=" + state + ", weixinAccount=" + weixinAccount + ", avator=" + avator + "]";
 	}
 }

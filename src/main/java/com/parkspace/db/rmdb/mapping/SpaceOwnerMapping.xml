@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.parkspace.db.rmdb.dao.SpaceOwnerDao">
+	<!-- 物业车位信息字段-->
+	<sql id="Space_Owner_Column">
+		s.spaceno,s.userId,s.isauth,s.memo,s.createBy,s.createTime,s.modifyBy,s.modifyTime,s.carno
+	</sql>
+	<!-- 用户信息字段 -->
+	<sql id="Baseuser_Column">
+		u.userName,u.nickName,u.telephone,u.isAdmin,u.idtype,u.idno,u.state,u.weixinAccount,u.avator
+	</sql>
+	<!-- 车位信息字段 -->
+	<sql id="Parking_Space_Column">
+		p.comid,p.parkPositionFloor,p.parkPositionZone,p.parkPositionX,p.parkPositionY,p.parkStatus,p.parkType,p.parkPositionDes,p.spaceOwner
+	</sql>
+	<!-- 小区信息字段 -->
+	<sql id="Community_Column">
+		c.zoneid,c.comname,c.address,c.isenable
+	</sql>
+	<!-- 行政区域信息字段 -->
+	<sql id="Zone_Column">
+		z.zonename,z.isenable as zoneisenable,z.province,z.city,z.zone
+	</sql>
+	
 	<!-- 根据车位编号获取车位业主信息 -->
 	<select id="getSpaceOwner" parameterType="string" resultType="SpaceOwner">
 		select * from SpaceOwner where spaceno=#{spaceno}
@@ -53,25 +74,138 @@
 	</update>
 	<!-- 根据条件查询车位业主信息 -->
 	<select id="getSpaceOwnerList" parameterType="SpaceOwner" resultType="SpaceOwner">
-		select * from SpaceOwner where 1=1
+		select 
+				<include refid="Space_Owner_Column"/>
+		from SpaceOwner s where 1=1
 			 <if test="spaceno != null">
             	<!-- and spaceno = #{spaceno} -->
-            	and spaceno like CONCAT('%', #{spaceno}, '%') 
+            	and s.spaceno like CONCAT('%', #{spaceno}, '%') 
         	 </if>
         	 <if test="userId != null">
-            	and userId = #{userId}
+            	and s.userId = #{userId}
         	 </if>
         	 <if test="isauth != null">
-            	and isauth = #{isauth}
+            	and s.isauth = #{isauth}
         	 </if>
         	 
         	 <if test="carno != null">
-            	and carno like CONCAT('%', #{carno}, '%') 
+            	and s.carno like CONCAT('%', #{carno}, '%') 
         	 </if>
         	 
         	 <if test="createTime != null">
-            	<![CDATA[ and createTime >= #{createTime} ]]>
+            	<![CDATA[ and s.createTime >= #{createTime} ]]>
         	 </if>
-        	 order by createTime desc
+        	 order by s.createTime desc
+	</select>
+	<!-- 根据条件查询车位业主信息，信息包括 -->
+	<!-- 车位信息、小区信息、行政区域信息、用户基本信息等 -->
+	<select id="getSpaceOwnerAllInfoList" parameterType="SpaceOwner" resultType="SpaceOwner">
+		select 
+			<include refid="Space_Owner_Column" />
+			,
+			<include refid="Baseuser_Column" />
+			,
+			<include refid="Parking_Space_Column"/>
+			,
+			<include refid="Community_Column"/>
+			,
+			<include refid="Zone_Column"/>
+		from SpaceOwner s,
+		     Baseuser u,
+		     ParkingSpace p,
+		     Community c,
+			 Zone z
+		where 1=1
+		      and s.userId  = u.userId
+		      and s.spaceno = p.spaceno
+		      and p.comid   = c.comid
+		      and c.zoneid  = z.zoneid
+		      
+		      <!-- 车位业主过滤条件 -->
+		      <if test="spaceno != null">
+		      	<!-- and spaceno = #{spaceno} -->
+		      	 and s.spaceno like CONCAT('%', #{spaceno}, '%') 
+        	  </if>
+        	  <if test="userId != null">
+            	 and s.userId = #{userId}
+        	  </if>
+        	  <if test="isauth != null">
+            	 and s.isauth = #{isauth}
+        	  </if>
+        	  <if test="carno != null">
+            	 and s.carno like CONCAT('%', #{carno}, '%') 
+        	  </if>
+        	  <if test="createTime != null">
+            	 <![CDATA[ and s.createTime >= #{createTime} ]]>
+        	  </if>
+        	  <!-- 用户信息过滤 -->
+        	  <if test="userName != null">
+            	 and u.userName like CONCAT('%', #{userName}, '%') 
+        	  </if>
+        	  <if test="nickName != null">
+            	 and u.nickName like CONCAT('%', #{nickName}, '%') 
+        	  </if>
+        	  <if test="state != null">
+            	 and u.state = #{state}
+        	  </if>
+        	  <!-- 车位信息过滤 -->
+        	  <if test="comid != null">
+            	 and p.comid = #{comid}
+        	  </if>
+        	  <if test="parkPositionFloor != null">
+            	 and p.parkPositionFloor = #{parkPositionFloor}
+        	  </if>
+        	  <if test="parkPositionZone != null">
+            	 and p.parkPositionZone = #{parkPositionZone}
+        	  </if>
+        	  <if test="parkPositionX != null">
+            	 and p.parkPositionX = #{parkPositionX}
+        	  </if>
+        	  <if test="parkPositionY != null">
+            	 and p.parkPositionY = #{parkPositionY}
+        	  </if>
+        	  <if test="parkStatus != null">
+            	 and p.parkStatus = #{parkStatus}
+        	  </if>
+        	  <if test="parkType != null">
+            	 and p.parkType = #{parkType}
+        	  </if>
+        	 
+        	  <if test="parkPositionDes != null">
+            	 and p.parkPositionDes like CONCAT('%', #{parkPositionDes}, '%') 
+        	  </if>
+        	  <if test="spaceOwner != null">
+            	 and p.spaceOwner = #{spaceOwner}
+        	  </if>
+        	  <!-- 小区过滤条件 -->
+        	  <if test="zoneid != null">
+            	 and c.zoneid = #{zoneid}
+        	  </if>
+        	  <if test="comname != null">
+            	 and c.comname like CONCAT('%', #{comname}, '%')  
+        	  </if>
+        	  <if test="address != null">
+            	 and c.address like CONCAT('%', #{address}, '%') 
+        	  </if>
+        	  <if test="isenable != null">
+            	 and c.isenable = #{isenable}
+        	  </if>
+        	  <!-- 行政区域过滤条件 -->
+        	  <if test="zonename != null">
+            	 and z.zonename like CONCAT('%', #{zonename}, '%') 
+        	  </if>
+        	  <if test="zoneisenable != null">
+            	 and z.isenable = #{zoneisenable}
+        	  </if>
+        	  <if test="province != null">
+            	 and z.province = #{province}
+        	  </if>
+        	  <if test="city != null">
+            	 and z.city = #{city}
+        	  </if>
+        	  <if test="zone != null">
+            	 and z.zone = #{zone}
+        	  </if>
+        order by s.createTime desc
 	</select>
 </mapper>

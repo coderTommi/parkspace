@@ -1,21 +1,19 @@
-package com.parkspace.db.rmdb.dao;
+package com.parkspace.service;
 
 import java.util.List;
 
 import com.parkspace.db.rmdb.entity.Zone;
 
 /**
- * @Title: ZoneDao.java
- * @Package com.parkspace.db.rmdb.dao
- * <p>Description:
- * 行政区域（Zone），记录区域的基本信息
- * </p>
+ * @Title: IZoneService.java
+ * @Package com.parkspace.service
+ * <p>Description:行政区域管理service</p>
  * @author sunld
  * @version V1.0.0 
- * <p>CreateDate:2017年9月22日 下午11:14:27</p>
+ * <p>CreateDate:2017年9月24日 上午2:57:26</p>
 */
 
-public interface ZoneDao {
+public interface IZoneService {
 	/**
 	 * @Title: getZone
 	 * <p>Description:
@@ -33,11 +31,11 @@ public interface ZoneDao {
 	 * 保存区域信息id自动生成,在service层返回主键id
 	 * </p>
 	 * @param     zone 区域信息
-	 * @return void    返回类型
+	 * @return Zone    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:00:49</p>
 	 */
-	public void addZone(Zone zone);
+	public Zone addZone(Zone zone);
 	/**
 	 * 
 	 * @Title: updateZone

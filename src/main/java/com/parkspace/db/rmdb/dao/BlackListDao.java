@@ -65,4 +65,16 @@ public interface BlackListDao {
 	 * <p>CreateDate:2017年9月23日 下午9:18:39</p>
 	 */
 	public List<BlackList> getBlackListList(BlackList blackList);
+	
+	/**
+	 * @Title: getBlackListAllInfoList
+	 * <p>Description:根据条件查询黑名单信息
+	 * 包括用户基本信息
+	 * </p>
+	 * @param     blackList 黑名单信息
+	 * @return List<BlackList>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:18:39</p>
+	 */
+	public List<BlackList> getBlackListAllInfoList(BlackList blackList);
 }

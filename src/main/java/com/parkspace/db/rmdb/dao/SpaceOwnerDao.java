@@ -76,4 +76,16 @@ public interface SpaceOwnerDao {
 	 * <p>CreateDate:2017年9月23日 下午9:04:21</p>
 	 */
 	public List<SpaceOwner> getSpaceOwnerList(SpaceOwner spaceOwner);
+	/**
+	 * @Title: getSpaceOwnerAllInfoList
+	 * <p>Description:
+	 * 根据条件查询车位业主信息，信息包括
+	 * 车位信息、小区信息、行政区域信息、用户基本信息等
+	 * </p>
+	 * @param     spaceOwner 车位业主信息
+	 * @return List<SpaceOwner>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月24日 上午1:42:12</p>
+	 */
+	public List<SpaceOwner> getSpaceOwnerAllInfoList(SpaceOwner spaceOwner);
 }

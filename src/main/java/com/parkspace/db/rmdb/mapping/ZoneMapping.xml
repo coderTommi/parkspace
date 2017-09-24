@@ -52,7 +52,7 @@
 	<!-- 根据id删除区域信息 -->
 	<update id="deleteZone" parameterType="Zone">
     	update zone set
-    			isenable   = 2,
+    			isenable   = -1,
     			modifyBy   = #{modifyBy},
     			modifyTime = #{modifyTime}
     	where zoneid = #{zoneid}

@@ -41,7 +41,7 @@ public class SpaceOwnerServiceImpl implements ISpaceOwnerService{
 	/**
 	 * @Title: getSpaceOwnerList
 	 * <p>Description:
-	 * 查询车位业主的基本信息，包括车位信息、用户信息等
+	 * 查询车位业主的基本信息
 	 * </p>
 	 * @param  spaceOwner 查询条件 
 	 * @return List<SpaceOwner>    返回类型
@@ -51,18 +51,30 @@ public class SpaceOwnerServiceImpl implements ISpaceOwnerService{
 	@Override
 	public List<SpaceOwner> getSpaceOwnerList(SpaceOwner spaceOwner) {
 		List<SpaceOwner> list = new ArrayList<SpaceOwner>();
-		if(spaceOwner != null){
-			list = spaceOwnerDao.getSpaceOwnerList(spaceOwner);
-			if(list != null && list.size() > 0){
-				for(SpaceOwner s : list){
-					//获取车位信息
-					String spaceno = s.getSpaceno();
-					if(spaceno != null && !"".equals(spaceno)){
-						s.setParkingSpace(parkingSpaceDao.getParkingSpace(spaceno));
-					}
-				}
-			}
+		if(spaceOwner == null){
+			spaceOwner = new SpaceOwner();
 		}
+		list = spaceOwnerDao.getSpaceOwnerList(spaceOwner);
+		return list;
+	}
+	/**
+	 * @Title: getSpaceOwnerAllInfoList
+	 * <p>Description:
+	 * 根据条件查询车位业主信息，信息包括
+	 * 车位信息、小区信息、行政区域信息、用户基本信息等
+	 * </p>
+	 * @param     spaceOwner 车位业主信息
+	 * @return List<SpaceOwner>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月24日 上午2:32:21</p>
+	 */
+	@Override
+	public List<SpaceOwner> getSpaceOwnerAllInfoList(SpaceOwner spaceOwner) {
+		List<SpaceOwner> list = new ArrayList<SpaceOwner>();
+		if(spaceOwner == null){
+			spaceOwner = new SpaceOwner();
+		}
+		list = spaceOwnerDao.getSpaceOwnerAllInfoList(spaceOwner);
 		return list;
 	}
 	/**
@@ -109,11 +121,7 @@ public class SpaceOwnerServiceImpl implements ISpaceOwnerService{
 		if(blackList == null){
 			blackList = new BlackList();
 		}
-		list = blackListDao.getBlackListList(blackList);
-		if(list != null && list.size() > 0){
-			//查询用户基本信息
-		}
+		list = blackListDao.getBlackListAllInfoList(blackList);
 		return list;
 	}
-
 }

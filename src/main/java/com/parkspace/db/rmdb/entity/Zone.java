@@ -21,11 +21,10 @@ public class Zone implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	//区域ID
-//	private String zoneid = UUID.randomUUID().toString();
 	private String zoneid;
 	//区域名称
 	private String zonename;
-	//是否启用  0：否  1：是，2:表示删除，默认0
+	//状态  0：否  1：是，-1:表示删除，默认0
 	private Integer isenable;
 	//省编码
 	private String province;

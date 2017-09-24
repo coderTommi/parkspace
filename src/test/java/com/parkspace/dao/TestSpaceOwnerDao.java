@@ -105,4 +105,17 @@ public class TestSpaceOwnerDao {
 			System.out.println(SpaceOwner1);
 		}
 	}
+	
+	@Test
+	public void getSpaceOwnerAllInfoList(){
+		SpaceOwner spaceOwner = new SpaceOwner();
+//		spaceOwner.setSpaceno("3-001-0");
+//		spaceOwner.setCarno("4");
+//		spaceOwner.setUserName("辽");
+		spaceOwner.setZoneisenable(0);
+		List<SpaceOwner> list = spaceOwnerDao.getSpaceOwnerAllInfoList(spaceOwner);
+		for(SpaceOwner z : list){
+			System.out.println(z);
+		}
+	}
 }

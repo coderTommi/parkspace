@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.parkspace.db.rmdb.dao.BlackListDao">
+	<!-- 黑名单信息字段 -->
+	<sql id="BlackList_Column">
+		b.UUID,b.userId,b.isCancel,b.memo,b.createTime,b.modifyTime
+	</sql>
+	<!-- 用户基本信息字段 -->
+	<!-- 用户信息字段 -->
+	<sql id="Baseuser_Column">
+		u.userName,u.nickName,u.telephone,u.isAdmin,u.idtype,u.idno,u.state,u.weixinAccount,u.avator
+	</sql>
+	
+	
 	<!-- 根据id查询黑名单信息 -->
 	<select id="getBlackList" parameterType="string" resultType="BlackList">
 		select * from BlackList where UUID=#{UUID}
@@ -58,5 +69,40 @@
             	<![CDATA[ and createTime >= #{createTime} ]]>
         	 </if>
         	 order by createTime desc
+	</select>
+	<!-- 根据具体条件查询黑名单信息，包括用户基本信息 -->
+	<select id="getBlackListAllInfoList" parameterType="BlackList" resultType="BlackList">
+		select 
+				<include refid="BlackList_Column"/>
+				,
+				<include refid="Baseuser_Column"/>
+		from BlackList b,
+		     Baseuser  u
+		where 1=1
+			  and b.userId = u.userId
+			  <!-- 黑名单基本信息过滤 -->
+			  <if test="UUID != null">
+            	 and b.UUID = #{UUID}
+        	  </if>
+        	  <if test="userId != null">
+            	 and b.userId = #{userId}
+        	  </if>
+        	  <if test="isCancel != null">
+            	 and b.isCancel = #{isCancel}
+        	  </if>
+        	  <if test="createTime != null">
+            	 <![CDATA[ and b.createTime >= #{createTime} ]]>
+        	  </if>
+        	  <!-- 用户信息过滤 -->
+        	  <if test="userName != null">
+            	 and u.userName like CONCAT('%', #{userName}, '%') 
+        	  </if>
+        	  <if test="nickName != null">
+            	 and u.nickName like CONCAT('%', #{nickName}, '%') 
+        	  </if>
+        	  <if test="state != null">
+            	 and u.state = #{state}
+        	  </if>
+        order by createTime desc
 	</select>
 </mapper>

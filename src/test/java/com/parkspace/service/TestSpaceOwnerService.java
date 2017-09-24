@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.parkspace.db.rmdb.entity.BlackList;
 import com.parkspace.db.rmdb.entity.SpaceOwner;
 
@@ -34,6 +36,36 @@ public class TestSpaceOwnerService {
 		List<SpaceOwner> list = spaceOwnerService.getSpaceOwnerList(spaceOwner);
 		for(SpaceOwner s : list){
 			System.out.println(s);
+		}
+	}
+	@Test
+	public void getSpaceOwnerAllInfoList(){
+		SpaceOwner spaceOwner = new SpaceOwner();
+//		spaceOwner.setSpaceno("3-001");
+//		spaceOwner.setSpaceno("3-001-0");
+//		spaceOwner.setCarno("1");
+		List<SpaceOwner> list = spaceOwnerService.getSpaceOwnerAllInfoList(spaceOwner);
+		for(SpaceOwner s : list){
+			System.out.println(s);
+		}
+	}
+	@Test
+	public void getSpaceOwnerAllInfoListForPage(){
+		int pageNum = 1;
+		PageHelper.startPage(pageNum, 2);
+		SpaceOwner spaceOwner = new SpaceOwner();
+//		spaceOwner.setSpaceno("3-001");
+//		spaceOwner.setSpaceno("3-001-0");
+//		spaceOwner.setCarno("1");
+		List<SpaceOwner> list = spaceOwnerService.getSpaceOwnerAllInfoList(spaceOwner);
+		for(SpaceOwner s : list){
+			System.out.println(s);
+		}
+		System.out.println("========================");
+		PageInfo<SpaceOwner> page = new PageInfo<SpaceOwner>(list);
+		List<SpaceOwner> list2 = page.getList();
+		for(SpaceOwner s1 : list2){
+			System.out.println(s1);
 		}
 	}
 	
