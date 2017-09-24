@@ -26,7 +26,7 @@ import com.parkspace.db.rmdb.entity.Zone;
 public class TestZoneService {
 	@Resource
 	private IZoneService zoneService;
-	public String zoneid = "c1a5a004-c882-4bfa-a2ff-b3f0b052d4e8";
+	public String zoneid = "4e73503c-7052-41bc-a716-b8b2d2e32e5e";
 	@Test
 	public void getZone(){
 		Zone zone = this.zoneService.getZone(zoneid);

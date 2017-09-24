@@ -3,6 +3,7 @@ package com.parkspace.service;
 import java.util.List;
 
 import com.parkspace.db.rmdb.entity.Community;
+import com.parkspace.db.rmdb.entity.PropertyMgmtUser;
 
 /**
  * @Title: ICommunityService.java
@@ -119,5 +120,37 @@ public interface ICommunityService {
 	public List<Community> getCommunityListByComName(String comName,
 			Integer[] comStatus,Integer[] zoneStatus);
 	
+	/**
+	 * @Title: getPropertyMgmtUser
+	 * <p>Description:
+	 * 根据用户id获取物业信息
+	 * </p>
+	 * @param     userId 用户id
+	 * @return PropertyMgmtUser    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:08:13</p>
+	 */
+	public PropertyMgmtUser getPropertyMgmtUser(String userId); 
 	
+	/**
+	 * @Title: addUserCommunity
+	 * <p>Description:增加用户与小区的关联关系</p>
+	 * @param     comid 小区id
+	 * @param     userId 用户id
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月24日 下午6:06:15</p>
+	 */
+	public void addUserCommunity(String comid, String userId);
+	
+	/**
+	 * @Title: deleteUserCommunity
+	 * <p>Description:删除用户与小区的关联关系</p>
+	 * @param     comid 小区id
+	 * @param     userId 用户id
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月24日 下午6:06:15</p>
+	 */
+	public void deleteUserCommunity(String comid, String userId);
 }

@@ -20,12 +20,12 @@ public class PropertyMgmtUser extends BaseUser implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	//小区ID
-	private String comid;
-	
-	public String getComid() {
-		return comid;
-	}
-	public void setComid(String comid) {
-		this.comid = comid;
-	}
+//	private String comid;
+//	
+//	public String getComid() {
+//		return comid;
+//	}
+//	public void setComid(String comid) {
+//		this.comid = comid;
+//	}
 }

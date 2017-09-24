@@ -23,9 +23,11 @@ public class TestCommunityService {
 	@Resource
 	private ICommunityService communityService;
 	
-	public String zoneid = "b01273b7-0063-47ee-afeb-47c8694e22a8";
+	public String zoneid = "4e73503c-7052-41bc-a716-b8b2d2e32e5e";
 	
-	public String comid = "3a3296ec-2449-4321-b194-c92a171e2c0b";
+	public String comid = "d2ac2ef6-acad-411a-9b2a-9732d47028b5";
+	
+	public String userId = "1";
 	
 	@Test
 	public void addCommunity(){
@@ -67,8 +69,8 @@ public class TestCommunityService {
 	@Test
 	public void getCommunityAllInfoList(){
 		Community community = new Community();
-		community.setIsenableQuery(new Integer[]{0});
-		community.setZoneIsenableQuery(new Integer[]{1});
+//		community.setIsenableQuery(new Integer[]{0});
+//		community.setZoneIsenableQuery(new Integer[]{1});
 		communityService.getCommunityAllInfoList(community);
 	}
 	
@@ -88,5 +90,20 @@ public class TestCommunityService {
 	public void getCommunityListByComName(){
 		this.communityService.getCommunityListByComName("王府",new Integer[]{1,2},
 				new Integer[]{1});
+	}
+	
+	@Test
+	public void getPropertyMgmtUser(){
+		this.communityService.getPropertyMgmtUser(userId);
+	}
+	
+	@Test
+	public void addUserCommunity(){
+		this.communityService.addUserCommunity(comid, userId);
+	}
+	
+	@Test
+	public void deleteUserCommunity(){
+		this.communityService.deleteUserCommunity(comid, userId);
 	}
 }

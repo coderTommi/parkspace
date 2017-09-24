@@ -1,7 +1,9 @@
 package com.parkspace.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -9,7 +11,9 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.parkspace.db.rmdb.dao.CommunityDao;
+import com.parkspace.db.rmdb.dao.PropertyMgmtUserDao;
 import com.parkspace.db.rmdb.entity.Community;
+import com.parkspace.db.rmdb.entity.PropertyMgmtUser;
 import com.parkspace.service.ICommunityService;
 
 /**
@@ -26,6 +30,8 @@ import com.parkspace.service.ICommunityService;
 public class CommunityServiceImpl implements ICommunityService{
 	@Resource
 	private CommunityDao communityDao;
+	@Resource
+	private PropertyMgmtUserDao propertyMgmtUserDao;
 	/**
 	 * @Title: getCommunityAllInfoList
 	 * <p>Description:根据条件查询小区信息
@@ -195,6 +201,52 @@ public class CommunityServiceImpl implements ICommunityService{
 		community.setZoneIsenableQuery(zoneStatus);
 		community.setComname(comName);
 		return this.getCommunityAllInfoList(community);
+	}
+	/**
+	 * @Title: getPropertyMgmtUser
+	 * <p>Description:
+	 * 根据用户id获取物业信息
+	 * </p>
+	 * @param     userId 用户id
+	 * @return PropertyMgmtUser    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:08:13</p>
+	 */
+	@Override
+	public PropertyMgmtUser getPropertyMgmtUser(String userId) {
+		return this.propertyMgmtUserDao.getPropertyMgmtUser(userId);
+	}
+	
+	/**
+	 * @Title: addUserCommunity
+	 * <p>Description:增加用户与小区的关联关系</p>
+	 * @param     comid 小区id
+	 * @param     userId 用户id
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月24日 下午6:06:15</p>
+	 */
+	public void addUserCommunity(String comid, String userId){
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("comid", comid);
+		map.put("userId", userId);
+		this.communityDao.addUserCommunity(map);
+	}
+	
+	/**
+	 * @Title: deleteUserCommunity
+	 * <p>Description:删除用户与小区的关联关系</p>
+	 * @param     comid 小区id
+	 * @param     userId 用户id
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月24日 下午6:06:15</p>
+	 */
+	public void deleteUserCommunity(String comid, String userId){
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("comid", comid);
+		map.put("userId", userId);
+		this.communityDao.deleteUserCommunity(map);
 	}
 
 }

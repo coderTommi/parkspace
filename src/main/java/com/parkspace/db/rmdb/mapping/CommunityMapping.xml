@@ -147,4 +147,19 @@
         	  </if>
         order by c.createTime desc
 	</select>
+	<!-- 新增小区用户关联关系信息 -->
+	<insert id="addUserCommunity" parameterType="hashmap">
+    	insert into UserCommunity(
+    			comid,
+    			userId
+    		) 
+    	 values(
+    	 		#{comid},
+    	 		#{userId}
+    	 	)
+	</insert>
+	<!-- 删除小区用户关联关系信息 -->
+	<delete id="deleteUserCommunity" parameterType="hashmap">
+    	delete from  UserCommunity where comid = #{comid} and userId = #{userId}
+	</delete>
 </mapper>

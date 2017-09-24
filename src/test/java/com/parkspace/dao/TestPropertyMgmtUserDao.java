@@ -1,8 +1,6 @@
 package com.parkspace.dao;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -15,7 +13,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.parkspace.db.rmdb.dao.CommunityDao;
 import com.parkspace.db.rmdb.dao.PropertyMgmtUserDao;
-import com.parkspace.db.rmdb.entity.Community;
 import com.parkspace.db.rmdb.entity.PropertyMgmtUser;
 
 /**
@@ -35,25 +32,35 @@ public class TestPropertyMgmtUserDao {
 	private CommunityDao communityDao;
 	
 	public String userId = "1";
-	public String comid = "34f3bf91-6c85-4591-8fd3-4db33c9f8330";
 	
+//	@Test
+//	public void testAddPropertyMgmtUser(){
+//		List<Community> conList = communityDao.getCommunityList( new Community());
+//		for(Community c : conList){
+//			PropertyMgmtUser propertyMgmtUser = new PropertyMgmtUser();
+//			propertyMgmtUser.setComid(c.getComid());
+//			propertyMgmtUser.setUserId(userId);
+//			propertyMgmtUserDao.addPropertyMgmtUser(propertyMgmtUser);
+//		}
+//	}
 	@Test
-	public void testAddPropertyMgmtUser(){
-		List<Community> conList = communityDao.getCommunityList( new Community());
-		for(Community c : conList){
-			PropertyMgmtUser propertyMgmtUser = new PropertyMgmtUser();
-			propertyMgmtUser.setComid(c.getComid());
-			propertyMgmtUser.setUserId(userId);
-			propertyMgmtUserDao.addPropertyMgmtUser(propertyMgmtUser);
-		}
+	public void addPropertyMgmtUser(){
+		PropertyMgmtUser propertyMgmtUser = new PropertyMgmtUser();
+		propertyMgmtUser.setUserId(userId);
+		propertyMgmtUserDao.addPropertyMgmtUser(propertyMgmtUser);
 	}
 	
+//	@Test
+//	public void testGetPropertyMgmtUser(){
+//		Map<String,String> map = new HashMap<String,String>();
+//		map.put("comid", comid);
+//		map.put("userId", userId);
+//		propertyMgmtUserDao.getPropertyMgmtUser(map);
+//	}
+	
 	@Test
-	public void testGetPropertyMgmtUser(){
-		Map<String,String> map = new HashMap<String,String>();
-		map.put("comid", comid);
-		map.put("userId", userId);
-		propertyMgmtUserDao.getPropertyMgmtUser(map);
+	public void getPropertyMgmtUser(){
+		propertyMgmtUserDao.getPropertyMgmtUser(userId);
 	}
 	
 //	@Test

@@ -1,6 +1,7 @@
 package com.parkspace.db.rmdb.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.parkspace.db.rmdb.entity.Community;
 
@@ -77,4 +78,29 @@ public interface CommunityDao {
 	 * <p>CreateDate:2017年9月23日 下午9:17:00</p>
 	 */
 	public List<Community> getCommunityAllInfoList(Community community);
+	/**
+	 * @Title: addUserCommunity
+	 * <p>Description:增加用户与小区的关联关系</p>
+	 * @param     comidAndUserIdMap 
+	 * 使用map构建条件   
+	 * comid 小区id
+	 * userId 用户id
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月24日 下午6:06:15</p>
+	 */
+	public void addUserCommunity(Map<String,String> comidAndUserIdMap);
+	
+	/**
+	 * @Title: deleteUserCommunity
+	 * <p>Description:删除用户与小区的关联关系</p>
+	 * @param     comidAndUserIdMap 
+	 * 使用map构建条件   
+	 * comid 小区id
+	 * userId 用户id
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月24日 下午6:06:15</p>
+	 */
+	public void deleteUserCommunity(Map<String,String> comidAndUserIdMap);
 }

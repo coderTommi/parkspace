@@ -1,7 +1,6 @@
 package com.parkspace.db.rmdb.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import com.parkspace.db.rmdb.entity.PropertyMgmtUser;
 
@@ -20,14 +19,14 @@ public interface PropertyMgmtUserDao {
 	/**
 	 * @Title: getPropertyMgmtUser
 	 * <p>Description:
-	 * 根据小区id和用户id获取物业信息
+	 * 根据用户id获取物业信息
 	 * </p>
-	 * @param     comidAndUserIdMap 构建hashmap comid和userId
+	 * @param     userId 用户ID
 	 * @return PropertyMgmtUser    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:08:13</p>
 	 */
-	public PropertyMgmtUser getPropertyMgmtUser(Map<String,String> comidAndUserIdMap);
+	public PropertyMgmtUser getPropertyMgmtUser(String userId);
 	/**
 	 * @Title: addPropertyMgmtUser
 	 * <p>Description:保存物业信息</p>
