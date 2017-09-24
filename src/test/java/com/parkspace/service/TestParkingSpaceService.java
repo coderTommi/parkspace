@@ -22,9 +22,15 @@ import com.parkspace.db.rmdb.entity.ParkingSpace;
 public class TestParkingSpaceService {
 	@Resource
 	private IParkingSpaceService parkingSpaceService;
+	
+	public String spaceno = "1";
 	@Test
-	public void testGetParkingSpace(){
-		ParkingSpace parkingSpace = parkingSpaceService.getParkingSpace("1");
+	public void addParkingSpace(){
+		
+	}
+	@Test
+	public void getParkingSpace(){
+		ParkingSpace parkingSpace = parkingSpaceService.getParkingSpace(spaceno);
 		System.out.println(parkingSpace);
 	}
 }

@@ -32,10 +32,12 @@ public class ParkingSpace implements Serializable{
 	private String parkPositionX;
 	//车位纵坐标
 	private String parkPositionY;
-	//车位状态，1占用，0空闲，N不对外开放，默认为N
-	private String parkStatus = "N";
+	//车位状态，1占用，0空闲，-1不对外开放
+	private String parkStatus;
+	private String[] parkStatusQuery;
 	//车位类型：P:物业、O:业主、E:其他，未知车位类型
 	private String parkType;
+	private String[] parkTypeQuery;
 	//位置描述,形如：靠近X号楼X单元
 	private String parkPositionDes;
 	//车位登记信息：用来记录表示车位所属人员信息，手机号码或者身份证号码
@@ -141,12 +143,16 @@ public class ParkingSpace implements Serializable{
 		this.modifyTime = modifyTime;
 	}
 	
-	@Override
-	public String toString() {
-		return "ParkingSpace [spaceno=" + spaceno + ", comid=" + comid + ", parkPositionFloor=" + parkPositionFloor
-				+ ", parkPositionZone=" + parkPositionZone + ", parkPositionX=" + parkPositionX + ", parkPositionY="
-				+ parkPositionY + ", parkStatus=" + parkStatus + ", parkType=" + parkType + ", parkPositionDes="
-				+ parkPositionDes + ", spaceOwner=" + spaceOwner + ", memo=" + memo + ", createBy=" + createBy
-				+ ", createTime=" + createTime + ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + "]";
+	public String[] getParkStatusQuery() {
+		return parkStatusQuery;
+	}
+	public void setParkStatusQuery(String[] parkStatusQuery) {
+		this.parkStatusQuery = parkStatusQuery;
+	}
+	public String[] getParkTypeQuery() {
+		return parkTypeQuery;
+	}
+	public void setParkTypeQuery(String[] parkTypeQuery) {
+		this.parkTypeQuery = parkTypeQuery;
 	}
 }

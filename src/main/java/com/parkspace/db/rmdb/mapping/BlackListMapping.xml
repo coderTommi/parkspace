@@ -38,11 +38,21 @@
 	
 	<!-- 更新黑名单信息 -->
 	<update id="updateBlackList" parameterType="BlackList">
-    	update BlackList set
-    			userId     = #{userId},
-    			isCancel   = #{isCancel},
-    			memo       = #{memo},
-    			modifyTime = #{modifyTime}
+		update BlackList
+		<trim prefix="set" suffixOverrides=",">		
+			<if test="userId != null">
+				userId   = #{userId},
+			</if>
+			<if test="isCancel != null">
+				isCancel   = #{isCancel},
+			</if>
+			<if test="memo != null">
+				memo   = #{memo},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime   = #{modifyTime}
+			</if>
+		</trim>
     	where UUID = #{UUID}
 	</update>
 	

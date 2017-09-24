@@ -49,10 +49,18 @@
 	
 	<!-- 更改车位业主信息 -->
 	<update id="updateSpaceOwner" parameterType="SpaceOwner">
-    	update SpaceOwner set
-    			userId     = #{userId},
-    			isauth     = #{isauth},
-    			carno      = #{carno}
+    	update SpaceOwner 
+    	<trim prefix="set" suffixOverrides=",">		
+			<if test="userId != null">
+				userId     = #{userId},
+			</if>
+			<if test="isauth != null">
+				isauth     = #{isauth},
+			</if>
+			<if test="carno != null">
+				carno      = #{carno}
+			</if>
+		</trim>
     	where   spaceno = #{spaceno}
 	</update>
 	

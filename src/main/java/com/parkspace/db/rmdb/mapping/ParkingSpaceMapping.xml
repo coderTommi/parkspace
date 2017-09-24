@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.parkspace.db.rmdb.dao.ParkingSpaceDao">
+	<!-- 车位字段信息 -->
+	<sql id="ParkingSpace_Column">
+		ps.spaceno,ps.comid,ps.parkPositionFloor,ps.parkPositionZone,ps.parkPositionX,
+		ps.parkPositionY,ps.parkStatus,ps.parkType,ps.parkPositionDes,ps.spaceOwner,
+		ps.memo,ps.createBy,ps.createTime,ps.modifyBy,ps.modifyTime
+	</sql>
 	<!-- 根据id查询车位信息 -->
 	<select id="getParkingSpace" parameterType="string" resultType="ParkingSpace">
-		select * from parkingspace where spaceno=#{spaceno}
+		select <include refid="ParkingSpace_Column"/> from parkingspace ps where ps.spaceno=#{spaceno}
 	</select>
 	<!-- 新增车位信息 -->
 	<insert id="addParkingSpace" parameterType="ParkingSpace">
@@ -45,67 +51,108 @@
 	
 	<!-- 更新车位信息 -->
 	<update id="updateParkingSpace" parameterType="ParkingSpace">
-    	update ParkingSpace set
-    			comid                    = #{comid},
-    			parkPositionFloor        = #{parkPositionFloor},
-    			parkPositionZone         = #{parkPositionZone},
-    			parkPositionX            = #{parkPositionX},
-    			parkPositionY            = #{parkPositionY},
-    			parkStatus               = #{parkStatus},
-    			parkType                 = #{parkType},
-    			parkPositionDes          = #{parkPositionDes},
-    			spaceOwner               = #{spaceOwner},
-    			memo                     = #{memo},
-    			modifyBy                 = #{modifyBy},
-    			modifyTime               = #{modifyTime}
+    	update ParkingSpace 
+    	<trim prefix="set" suffixOverrides=",">		
+			<if test="comid != null">
+				comid                    = #{comid},
+			</if>
+			<if test="parkPositionFloor != null">
+				parkPositionFloor        = #{parkPositionFloor},
+			</if>
+			<if test="parkPositionZone != null">
+				parkPositionZone         = #{parkPositionZone},
+			</if>
+			<if test="parkPositionX != null">
+				parkPositionX            = #{parkPositionX},
+			</if>
+			<if test="parkPositionY != null">
+				parkPositionY            = #{parkPositionY},
+			</if>
+			<if test="parkStatus != null">
+				parkStatus               = #{parkStatus},
+			</if>
+			<if test="parkType != null">
+				parkType                 = #{parkType},
+			</if>
+			<if test="parkPositionDes != null">
+				parkPositionDes          = #{parkPositionDes},
+			</if>
+			<if test="spaceOwner != null">
+				spaceOwner               = #{spaceOwner},
+			</if>
+			<if test="memo != null">
+				memo                     = #{memo},
+			</if>
+			<if test="modifyBy != null">
+				modifyBy                 = #{modifyBy},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime               = #{modifyTime}
+			</if>
+		</trim>
     	where spaceno = #{spaceno}
 	</update>
 	
 	<!-- 根据id删除车位信息 -->
 	<update id="deleteParkingSpace" parameterType="ParkingSpace">
     	update ParkingSpace set
-    			parkStatus   = 'N',
+    			parkStatus   = '-1',
     			modifyBy     = #{modifyBy},
     			modifyTime   = #{modifyTime}
     	where comid = #{comid}
 	</update>
 	<!-- 根据具体条件查询车位信息 -->
 	<select id="getParkingSpaceList" parameterType="ParkingSpace" resultType="ParkingSpace">
-		select * from ParkingSpace where 1=1
+		select 
+			<include refid="ParkingSpace_Column"/>
+		from ParkingSpace ps
+		where 1=1
 			 <if test="spaceno != null">
-            	and spaceno = #{spaceno}
+            	and ps.spaceno = #{spaceno}
         	 </if>
         	 <if test="comid != null">
-            	and comid = #{comid}
+            	and ps.comid = #{comid}
         	 </if>
         	 <if test="parkPositionFloor != null">
-            	and parkPositionFloor = #{parkPositionFloor}
+            	and ps.parkPositionFloor = #{parkPositionFloor}
         	 </if>
         	 <if test="parkPositionZone != null">
-            	and parkPositionZone = #{parkPositionZone}
+            	and ps.parkPositionZone = #{parkPositionZone}
         	 </if>
         	 <if test="parkPositionX != null">
-            	and parkPositionX = #{parkPositionX}
+            	and ps.parkPositionX = #{parkPositionX}
         	 </if>
         	 <if test="parkPositionY != null">
-            	and parkPositionY = #{parkPositionY}
+            	and ps.parkPositionY = #{parkPositionY}
         	 </if>
         	 <if test="parkStatus != null">
-            	and parkStatus = #{parkStatus}
+            	and ps.parkStatus = #{parkStatus}
+        	 </if>
+        	 <if test="parkStatusQuery != null and parkStatusQuery.length > 0 ">
+        	  	and ps.parkStatus in
+        	  	 <foreach item="item" index="index" collection="parkStatusQuery" open="(" separator="," close=")">  
+ 					#{item}  
+				 </foreach>
         	 </if>
         	 <if test="parkType != null">
-            	and parkType = #{parkType}
+            	and ps.parkType = #{parkType}
+        	 </if>
+        	 <if test="parkTypeQuery != null and parkTypeQuery.length > 0 ">
+        	  	and ps.parkType in
+        	  	 <foreach item="item" index="index" collection="parkTypeQuery" open="(" separator="," close=")">  
+ 					#{item}  
+				 </foreach>
         	 </if>
         	 
         	 <if test="parkPositionDes != null">
-            	and parkPositionDes like CONCAT('%', #{parkPositionDes}, '%') 
+            	and ps.parkPositionDes like CONCAT('%', #{parkPositionDes}, '%') 
         	 </if>
         	 <if test="spaceOwner != null">
-            	and spaceOwner = #{spaceOwner}
+            	and ps.spaceOwner = #{spaceOwner}
         	 </if>
         	 <if test="createTime != null">
-            	<![CDATA[ and createTime >= #{createTime} ]]>
+            	<![CDATA[ and ps.createTime >= #{createTime} ]]>
         	 </if>
-        	 order by createTime desc
+        	 order by ps.createTime desc
 	</select>
 </mapper>

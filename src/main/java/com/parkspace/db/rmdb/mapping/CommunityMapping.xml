@@ -44,14 +44,30 @@
 	
 	<!-- 更新小区信息 -->
 	<update id="updateCommunity" parameterType="Community">
-    	update community set
-    			zoneid         = #{zoneid},
-    			comname        = #{comname},
-    			address        = #{address},
-    			isenable       = #{isenable},
-    			memo           = #{memo},
-    			modifyBy       = #{modifyBy},
-    			modifyTime     = #{modifyTime}
+    	update community 
+    	<trim prefix="set" suffixOverrides=",">		
+			<if test="zoneid != null">
+				zoneid         = #{zoneid},
+			</if>
+			<if test="comname != null">
+				comname        = #{comname},
+			</if>
+			<if test="address != null">
+				address        = #{address},
+			</if>
+			<if test="isenable != null">
+				isenable       = #{isenable},
+			</if>
+			<if test="memo != null">
+				memo           = #{memo},
+			</if>
+			<if test="modifyBy != null">
+				modifyBy       = #{modifyBy},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime     = #{modifyTime}
+			</if>
+		</trim>
     	where comid = #{comid}
 	</update>
 	

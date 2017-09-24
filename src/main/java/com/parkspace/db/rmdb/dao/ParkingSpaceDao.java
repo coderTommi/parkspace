@@ -49,7 +49,7 @@ public interface ParkingSpaceDao {
 	/**
 	 * @Title: deleteParkingSpace
 	 * <p>Description:
-	 * 删除车位信息,修改parkStatus为N（表示不对外开放）,需要同时更新编辑人和编辑时间
+	 * 删除车位信息,修改parkStatus为-1（表示不对外开放）,需要同时更新编辑人和编辑时间
 	 * </p>
 	 * @param     parkingSpace 车位信息
 	 * @return void    返回类型

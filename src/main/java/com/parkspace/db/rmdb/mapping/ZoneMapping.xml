@@ -37,24 +37,48 @@
 	
 	<!-- 更新区域信息 -->
 	<update id="updateZone" parameterType="Zone">
-    	update zone set
-    			zonename   = #{zonename},
-    			isenable   = #{isenable},
-    			province   = #{province},
-    			city       = #{city},
-    			zone       = #{zone},
-    			memo       = #{memo},
-    			modifyBy   = #{modifyBy},
-    			modifyTime = #{modifyTime}
+		update zone
+		<trim prefix="set" suffixOverrides=",">		
+			<if test="zonename != null">
+				zonename   = #{zonename},
+			</if>
+			<if test="isenable != null">
+				isenable   = #{isenable},
+			</if>
+			<if test="province != null">
+				province   = #{province},
+			</if>
+			<if test="city != null">
+				city   = #{city},
+			</if>
+			<if test="zone != null">
+				zone   = #{zone},
+			</if>
+			<if test="memo != null">
+				memo   = #{memo},
+			</if>
+			<if test="modifyBy != null">
+				modifyBy   = #{modifyBy},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime   = #{modifyTime}
+			</if>
+		</trim>
     	where zoneid = #{zoneid}
 	</update>
 	
 	<!-- 根据id删除区域信息 -->
 	<update id="deleteZone" parameterType="Zone">
-    	update zone set
-    			isenable   = -1,
-    			modifyBy   = #{modifyBy},
-    			modifyTime = #{modifyTime}
+    	update zone 
+    	<trim prefix="set" suffixOverrides=",">	
+    		isenable   = -1,	
+			<if test="modifyBy != null">
+				modifyBy   = #{modifyBy},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime   = #{modifyTime}
+			</if>
+		</trim>
     	where zoneid = #{zoneid}
 	</update>
 	<!-- 根据具体条件查询区域信息 -->

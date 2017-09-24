@@ -37,15 +37,33 @@
 	
 	<!-- 更改车位共享信息 -->
 	<update id="updateShareConfig" parameterType="ShareConfig">
-    	update ShareConfig set
-    			spaceno      = #{spaceno},
-    			isOpen       = #{isOpen},
-    			shareType    = #{shareType},
-    			startTime    = #{startTime},
-    			endTime      = #{endTime},
-    			internalDate = #{internalDate},
-    			modifyBy     = #{modifyBy},
-    			modifyTime   = #{modifyTime}
+    	update ShareConfig 
+    	<trim prefix="set" suffixOverrides=",">	
+    		<if test="spaceno != null">
+				spaceno      = #{spaceno},
+			</if>	
+			<if test="isOpen != null">
+				isOpen       = #{isOpen},
+			</if>
+			<if test="shareType != null">
+				shareType    = #{shareType},
+			</if>
+			<if test="startTime != null">
+				startTime    = #{startTime},
+			</if>
+			<if test="endTime != null">
+				endTime      = #{endTime},
+			</if>
+			<if test="internalDate != null">
+				internalDate = #{internalDate},
+			</if>
+			<if test="modifyBy != null">
+				modifyBy     = #{modifyBy},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime   = #{modifyTime}
+			</if>
+		</trim>
     	where   UUID = #{UUID}
 	</update>
 	
