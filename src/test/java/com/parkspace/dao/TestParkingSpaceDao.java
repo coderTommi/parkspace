@@ -14,6 +14,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.parkspace.db.rmdb.dao.ParkingSpaceDao;
 import com.parkspace.db.rmdb.entity.ParkingSpace;
+import com.parkspace.db.rmdb.entity.ShareConfig;
 
 /**
  * @Title: TestParkingSpaceDao.java
@@ -111,5 +112,15 @@ public class TestParkingSpaceDao {
 		for(ParkingSpace ParkingSpace1 : list2){
 			System.out.println(ParkingSpace1);
 		}
+	}
+	
+	@Test
+	public void getParkingSpaceEnableBillList() {
+		ParkingSpace parkingSpace = new ParkingSpace();
+		ShareConfig shareConfig = new ShareConfig();
+		shareConfig.setIsOpen(1);
+		
+		parkingSpace.setShareConfig(shareConfig);
+		this.parkingSpaceDao.getParkingSpaceEnableBillList(parkingSpace);
 	}
 }

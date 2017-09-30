@@ -50,7 +50,7 @@ public interface ShareConfigDao {
 	/**
 	 * @Title: deleteShareConfig
 	 * <p>Description:
-	 * 删除车位共享信息,修改isOpen为0,需要同时更新编辑人和编辑时间
+	 * 删除车位共享信息,修改isOpen为-1,需要同时更新编辑人和编辑时间
 	 * </p>
 	 * @param     shareConfig 车位共享信息
 	 * @return void    返回类型

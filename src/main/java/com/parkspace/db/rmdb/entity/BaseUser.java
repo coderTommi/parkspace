@@ -28,6 +28,14 @@ public class BaseUser implements Serializable{
 	private Timestamp createTime;
 	private String modifyBy;
 	private Timestamp modifyTime;
+	private String realName;
+	
+	public String getRealName() {
+		return realName;
+	}
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
 	public String getUserName() {
 		return userName;
 	}
@@ -123,5 +131,13 @@ public class BaseUser implements Serializable{
 	}
 	public void setModifyTime(Timestamp modifyTime) {
 		this.modifyTime = modifyTime;
+	}
+	@Override
+	public String toString() {
+		return "BaseUser [userId=" + userId + ", userName=" + userName + ", nickName=" + nickName + ", userPwd="
+				+ userPwd + ", telePhone=" + telePhone + ", isAdmin=" + isAdmin + ", idType=" + idType + ", idNo="
+				+ idNo + ", state=" + state + ", weixinAccount=" + weixinAccount + ", avator=" + avator + ", memo="
+				+ memo + ", createBy=" + createBy + ", createTime=" + createTime + ", modifyBy=" + modifyBy
+				+ ", modifyTime=" + modifyTime + ", realName=" + realName + "]";
 	}
 }

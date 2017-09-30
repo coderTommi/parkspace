@@ -8,9 +8,24 @@
 	<!-- 用户基本信息字段 -->
 	<!-- 用户信息字段 -->
 	<sql id="Baseuser_Column">
-		u.userName,u.nickName,u.telephone,u.isAdmin,u.idtype,u.idno,u.state,u.weixinAccount,u.avator
+		u.userId 			as "baseUser.userId",
+		u.userName 			as "baseUser.userName",
+		u.realname 			as "baseUser.realName",
+		u.nickName 			as "baseUser.nickName",
+		u.userPwd 			as "baseUser.userPwd",
+		u.telephone 		as "baseUser.telephone",
+		u.isAdmin 			as "baseUser.isAdmin",
+		u.idtype 			as "baseUser.idtype",
+		u.idno 				as "baseUser.idno",
+		u.state 			as "baseUser.state",
+		u.weixinAccount 	as "baseUser.weixinAccount",
+		u.avator 			as "baseUser.avator",
+		u.memo 				as "baseUser.memo",
+		u.createBy 			as "baseUser.createBy",
+		u.createTime 		as "baseUser.createTime",
+		u.modifyBy 			as "baseUser.modifyBy",
+		u.modifyTime 		as "baseUser.modifyTime"
 	</sql>
-	
 	
 	<!-- 根据id查询黑名单信息 -->
 	<select id="getBlackList" parameterType="string" resultType="BlackList">
@@ -104,15 +119,18 @@
             	 <![CDATA[ and b.createTime >= #{createTime} ]]>
         	  </if>
         	  <!-- 用户信息过滤 -->
-        	  <if test="userName != null">
-            	 and u.userName like CONCAT('%', #{userName}, '%') 
+        	  <if test="baseUser != null">
+        	  	  <if test="baseUser.userName != null">
+	            	 and u.userName like CONCAT('%', #{baseUser.userName}, '%') 
+	        	  </if>
+	        	  <if test="baseUser.nickName != null">
+	            	 and u.nickName like CONCAT('%', #{baseUser.nickName}, '%') 
+	        	  </if>
+	        	  <if test="baseUser.state != null">
+	            	 and u.state = #{baseUser.state}
+	        	  </if>
         	  </if>
-        	  <if test="nickName != null">
-            	 and u.nickName like CONCAT('%', #{nickName}, '%') 
-        	  </if>
-        	  <if test="state != null">
-            	 and u.state = #{state}
-        	  </if>
+        	  
         order by createTime desc
 	</select>
 </mapper>

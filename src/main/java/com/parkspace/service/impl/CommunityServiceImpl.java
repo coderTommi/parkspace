@@ -14,6 +14,7 @@ import com.parkspace.db.rmdb.dao.CommunityDao;
 import com.parkspace.db.rmdb.dao.PropertyMgmtUserDao;
 import com.parkspace.db.rmdb.entity.Community;
 import com.parkspace.db.rmdb.entity.PropertyMgmtUser;
+import com.parkspace.db.rmdb.entity.Zone;
 import com.parkspace.service.ICommunityService;
 
 /**
@@ -65,9 +66,13 @@ public class CommunityServiceImpl implements ICommunityService{
 	public List<Community> getCommunityListByCity(String city,
 			Integer[] comStatus,Integer[] zoneStatus) {
 		Community community = new Community();
-		community.setCity(city);
+		
+		Zone zone = new Zone();
+		zone.setCity(city);
+		zone.setIsenableQuery(zoneStatus);
+		
 		community.setIsenableQuery(comStatus);
-		community.setZoneIsenableQuery(zoneStatus);
+		community.setZone(zone);
 		return this.getCommunityAllInfoList(community);
 	}
 	/**
@@ -176,9 +181,13 @@ public class CommunityServiceImpl implements ICommunityService{
 	public List<Community> getCommunityListByZoneId(String zoneid,
 			Integer[] comStatus,Integer[] zoneStatus) {
 		Community community = new Community();
+		
+		Zone zone = new Zone();
+		zone.setIsenableQuery(zoneStatus);
+		
 		community.setIsenableQuery(comStatus);
-		community.setZoneIsenableQuery(zoneStatus);
 		community.setZoneid(zoneid);
+		community.setZone(zone);
 		return this.getCommunityAllInfoList(community);
 	}
 	/**
@@ -197,9 +206,13 @@ public class CommunityServiceImpl implements ICommunityService{
 	public List<Community> getCommunityListByComName(String comName, 
 			Integer[] comStatus, Integer[] zoneStatus) {
 		Community community = new Community();
+		
+		Zone zone = new Zone();
+		zone.setIsenableQuery(zoneStatus);
+		
 		community.setIsenableQuery(comStatus);
-		community.setZoneIsenableQuery(zoneStatus);
 		community.setComname(comName);
+		community.setZone(zone);
 		return this.getCommunityAllInfoList(community);
 	}
 	/**

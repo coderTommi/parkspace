@@ -1,5 +1,7 @@
 package com.parkspace.service;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -44,7 +46,9 @@ public class TestCommunityService {
 	
 	@Test
 	public void getCommunity(){
-		this.communityService.getCommunity(comid);
+		Community community = this.communityService.getCommunity(comid);
+		System.out.println(community);
+		
 	}
 	
 	@Test
@@ -63,7 +67,11 @@ public class TestCommunityService {
 	@Test
 	public void getCommunityList(){
 		Community community = new Community();
-		this.communityService.getCommunityList(community);
+		List<Community> list = this.communityService.getCommunityList(community);
+		for(Community c : list) {
+			System.out.println(c);
+		}
+		
 	}
 	
 	@Test
@@ -71,25 +79,38 @@ public class TestCommunityService {
 		Community community = new Community();
 //		community.setIsenableQuery(new Integer[]{0});
 //		community.setZoneIsenableQuery(new Integer[]{1});
-		communityService.getCommunityAllInfoList(community);
+		List<Community> list = communityService.getCommunityAllInfoList(community);
+		for(Community c : list) {
+			System.out.println(c);
+		}
+		
 	}
 	
 	@Test
 	public void getCommunityListByCity(){
-		this.communityService.getCommunityListByCity("济南",new Integer[]{1,2},
+		List<Community> list = this.communityService.getCommunityListByCity("济南",new Integer[]{1,2},
 				new Integer[]{1});
+		for(Community c : list) {
+			System.out.println(c);
+		}
 	}
 	
 	@Test
 	public void getCommunityListByZoneId(){
-		this.communityService.getCommunityListByZoneId(zoneid,new Integer[]{1,2},
+		List<Community> list = this.communityService.getCommunityListByZoneId(zoneid,new Integer[]{1,2},
 				new Integer[]{1});
+		for(Community c : list) {
+			System.out.println(c);
+		}
 	}
 	
 	@Test
 	public void getCommunityListByComName(){
-		this.communityService.getCommunityListByComName("王府",new Integer[]{1,2},
+		List<Community> list = this.communityService.getCommunityListByComName("王府",new Integer[]{1,2},
 				new Integer[]{1});
+		for(Community c : list) {
+			System.out.println(c);
+		}
 	}
 	
 	@Test

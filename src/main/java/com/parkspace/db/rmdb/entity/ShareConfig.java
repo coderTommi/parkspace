@@ -1,6 +1,7 @@
 package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -24,17 +25,27 @@ public class ShareConfig implements Serializable{
 	private String UUID;
 	//车位编号,形如3-101
 	private String spaceno;
-	//是否开启，1：开启，0未开启；默认开启
+	//状态，1：开启，0未开启；默认开启,-1表示删除
 	private Integer isOpen;
+	
+	//状态查询条件
+	private Integer[] isOpenQuery;
+	
 	//共享类型：1周期性时间段，0自定义时间段
 	private Integer shareType;
+	//是否全天：1是，0否，如果是全天对应的开始时间为00:00:00，截至时间23:59:59
+	private Integer isAllDay;
+	//开始日期，格式（YYYY-MM-DD）2017-09-10，共享类型为自定义时记录该日期
+	private String startDate;
 	//开始时间，格式（24h）13:24:00
 	private String startTime;
+	//截至日期，格式（YYYY-MM-DD）2017-09-10，共享类型为自定义时记录该日期
+	private String endDate;
 	//截至时间，格式（24h）14:24:00
 	private String endTime;
-	//日期（中间使用英文逗号分割）
-    //周期性时间段：0,1,2,3,4,5,6；表示星期天到星期六
-    //自定义时间：2017-01-01,2017-02-03表示开始日期到截止日期
+	//周期（中间使用英文逗号分割），记录共享类型为周期性的星期数据
+    //周期性时间段：1,2,3,4,5,6,7；表示星期天到星期六,使用mysql函数DAYOFWEEK处理
+	//注意：如果同时选择星期六和星期天需要在最好增加星期天的编号，形成环路
 	private String internalDate;
 	//创建人
 	private String createBy;
@@ -44,6 +55,26 @@ public class ShareConfig implements Serializable{
 	private String modifyBy;
 	//修改时间
 	private Date modifyTime;
+	
+	//查询日期:格式2017-09-10
+	private String queryDate;
+	//查询时间：13:23:10
+	private String queryTime;
+	
+	
+	
+	public String getQueryDate() {
+		return queryDate;
+	}
+	public void setQueryDate(String queryDate) {
+		this.queryDate = queryDate;
+	}
+	public String getQueryTime() {
+		return queryTime;
+	}
+	public void setQueryTime(String queryTime) {
+		this.queryTime = queryTime;
+	}
 	public String getUUID() {
 		return UUID;
 	}
@@ -110,11 +141,37 @@ public class ShareConfig implements Serializable{
 	public void setModifyTime(Date modifyTime) {
 		this.modifyTime = modifyTime;
 	}
+	public Integer[] getIsOpenQuery() {
+		return isOpenQuery;
+	}
+	public void setIsOpenQuery(Integer[] isOpenQuery) {
+		this.isOpenQuery = isOpenQuery;
+	}
+	public Integer getIsAllDay() {
+		return isAllDay;
+	}
+	public void setIsAllDay(Integer isAllDay) {
+		this.isAllDay = isAllDay;
+	}
+	public String getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
 	@Override
 	public String toString() {
-		return "ShareConfig [UUID=" + UUID + ", spaceno=" + spaceno + ", isOpen=" + isOpen + ", shareType=" + shareType
-				+ ", startTime=" + startTime + ", endTime=" + endTime + ", internalDate=" + internalDate + ", createBy="
-				+ createBy + ", createTime=" + createTime + ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime
-				+ "]";
+		return "ShareConfig [UUID=" + UUID + ", spaceno=" + spaceno + ", isOpen=" + isOpen + ", isOpenQuery="
+				+ Arrays.toString(isOpenQuery) + ", shareType=" + shareType + ", isAllDay=" + isAllDay + ", startDate="
+				+ startDate + ", startTime=" + startTime + ", endDate=" + endDate + ", endTime=" + endTime
+				+ ", internalDate=" + internalDate + ", createBy=" + createBy + ", createTime=" + createTime
+				+ ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + ", queryDate=" + queryDate + ", queryTime="
+				+ queryTime + "]";
 	}
 }

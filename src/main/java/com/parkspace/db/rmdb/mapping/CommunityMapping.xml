@@ -7,7 +7,17 @@
 	</sql>
 	<!-- 行政区域信息字段 -->
 	<sql id="Zone_Column">
-		z.zonename,z.isenable as zoneisenable,z.province,z.city,z.zone
+		z.zoneid   		as "zone.zoneid",
+		z.zonename 		as "zone.zonename",
+		z.isenable 		as "zone.isenable",
+		z.province 		as "zone.province",
+		z.city     		as "zone.city",
+		z.zone     		as "zone.zone",
+		z.memo     		as "zone.memo",
+		z.createBy 		as "zone.createBy",
+		z.createTime 	as "zone.createTime",
+		z.modifyBy 		as "zone.modifyBy",
+		z.modifyTime 	as "zone.modifyTime"
 	</sql>
 	
 	<!-- 根据id查询小区信息 -->
@@ -139,27 +149,29 @@
             	 <![CDATA[ and c.createTime >= #{createTime} ]]>
         	  </if>
         	  <!-- 行政区域过滤条件 -->
-        	  <if test="zonename != null">
-            	 and z.zonename like CONCAT('%', #{zonename}, '%') 
-        	  </if>
-        	  <if test="zoneisenable != null">
-            	 and z.isenable = #{zoneisenable}
-        	  </if>
-        	  <!-- 行政区域多状态查询 -->
-        	  <if test="zoneIsenableQuery != null and zoneIsenableQuery.length > 0 ">
-        	  	 and z.isenable in
-        	  	 	<foreach item="item" index="index" collection="zoneIsenableQuery" open="(" separator="," close=")">  
- 						#{item}  
-					</foreach>
-        	  </if>
-        	  <if test="province != null">
-            	 and z.province = #{province}
-        	  </if>
-        	  <if test="city != null">
-            	 and z.city = #{city}
-        	  </if>
         	  <if test="zone != null">
-            	 and z.zone = #{zone}
+        	  	  <if test="zone.zonename != null">
+	            	 and z.zonename like CONCAT('%', #{zone.zonename}, '%') 
+	        	  </if>
+	        	  <if test="zone.isenable != null">
+	            	 and z.isenable = #{zone.isenable}
+	        	  </if>
+	        	  <!-- 行政区域多状态查询 -->
+	        	  <if test="zone.isenableQuery != null and zone.isenableQuery.length > 0 ">
+	        	  	 and z.isenable in
+	        	  	 	<foreach item="item" index="index" collection="zone.isenableQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+	        	  <if test="zone.province != null">
+	            	 and z.province = #{zone.province}
+	        	  </if>
+	        	  <if test="zone.city != null">
+	            	 and z.city = #{zone.city}
+	        	  </if>
+	        	  <if test="zone.zone != null">
+	            	 and z.zone = #{zone.zone}
+	        	  </if>
         	  </if>
         order by c.createTime desc
 	</select>

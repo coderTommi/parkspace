@@ -49,7 +49,7 @@ public interface ParkingSpaceDao {
 	/**
 	 * @Title: deleteParkingSpace
 	 * <p>Description:
-	 * 删除车位信息,修改parkStatus为-1（表示不对外开放）,需要同时更新编辑人和编辑时间
+	 * 删除车位信息,修改parkStatus为N（表示不对外开放）,需要同时更新编辑人和编辑时间
 	 * </p>
 	 * @param     parkingSpace 车位信息
 	 * @return void    返回类型
@@ -66,4 +66,37 @@ public interface ParkingSpaceDao {
 	 * <p>CreateDate:2017年9月23日 下午9:09:07</p>
 	 */
 	public List<ParkingSpace> getParkingSpaceList(ParkingSpace parkingSpace);
+	
+	/**
+	 * @Title: getParkingSpaceALLInfoList
+	 * <p>Description:根据条件查询车位信息
+	 * 主要是车位基本信息、小区信息和行政区域信息
+	 * </p>
+	 * @param     parkingSpace 车位信息
+	 * @return List<ParkingSpace>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:09:07</p>
+	 */
+	public List<ParkingSpace> getParkingSpaceALLInfoList(ParkingSpace parkingSpace);
+	/**
+	 * @Title: getParkingSpaceCount
+	 * <p>Description:
+	 * 根据具体条件查询车位的数量
+	 * 包含空闲、占用、未共享的车位
+	 * </p>
+	 * @param     parkingSpace 车位信息
+	 * @return int    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月27日 上午9:16:23</p>
+	 */
+	public int getParkingSpaceCount(ParkingSpace parkingSpace);
+	/**
+	 * @Title: getParkingSpaceEnableBillList
+	 * <p>Description:查询可预订的车位信息</p>
+	 * @param     parkingSpace 查询条件
+	 * @return List<ParkingSpace>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月28日 下午6:25:46</p>
+	 */
+	public List<ParkingSpace> getParkingSpaceEnableBillList(ParkingSpace parkingSpace);
 }

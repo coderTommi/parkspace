@@ -8,7 +8,10 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.parkspace.db.rmdb.dao.ParkingSpaceDao;
+import com.parkspace.db.rmdb.dao.SpaceOwnerDao;
 import com.parkspace.db.rmdb.entity.ParkingSpace;
+import com.parkspace.db.rmdb.entity.ShareConfig;
+import com.parkspace.db.rmdb.entity.SpaceOwner;
 import com.parkspace.service.IParkingSpaceService;
 
 /**
@@ -21,6 +24,8 @@ import com.parkspace.service.IParkingSpaceService;
 */
 @Service("parkingSpaceService")
 public class ParkingSpaceServiceImpl implements IParkingSpaceService{
+	@Resource
+	private SpaceOwnerDao spaceOwnerDao;
 	@Resource
 	private ParkingSpaceDao parkingSpaceDao;
 	/**
@@ -50,8 +55,8 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		if(parkingSpace != null){
 			parkingSpace.setCreateTime(new Date());
 			parkingSpace.setModifyTime(new Date());
-			//空闲状态
-			parkingSpace.setParkStatus("0");
+			//不对外开放
+			parkingSpace.setParkStatus("N");
 			//默认属于物业
 			parkingSpace.setParkType("P");
 			this.parkingSpaceDao.addParkingSpace(parkingSpace);
@@ -74,10 +79,46 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 			this.parkingSpaceDao.updateParkingSpace(parkingSpace);
 		}
 	}
+	
+	/**
+	 * @Title: enableParkingSpace
+	 * <p>Description:开放某个车位</p>
+	 * @param     spaceno 车位编号
+	 * @param     modifyBy 启用人
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月26日 下午4:10:30</p>
+	 */
+	public void enableParkingSpace(String spaceno, String modifyBy) {
+		ParkingSpace parkingSpace = new ParkingSpace();
+		parkingSpace.setSpaceno(spaceno);
+		parkingSpace.setModifyBy(modifyBy);
+		//空闲
+		parkingSpace.setParkStatus("0");
+		this.parkingSpaceDao.updateParkingSpace(parkingSpace);
+	}
+	/**
+	 * @Title: disableParkingSpace
+	 * <p>Description:禁用某个车位</p>
+	 * @param     spaceno 车位编号
+	 * @param     modifyBy 禁用人
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月26日 下午4:10:30</p>
+	 */
+	public void disableParkingSpace(String spaceno, String modifyBy) {
+		ParkingSpace parkingSpace = new ParkingSpace();
+		parkingSpace.setSpaceno(spaceno);
+		parkingSpace.setModifyBy(modifyBy);
+		//空闲
+		parkingSpace.setParkStatus("N");
+		this.parkingSpaceDao.updateParkingSpace(parkingSpace);
+	}
+	
 	/**
 	 * @Title: deleteParkingSpace
 	 * <p>Description:
-	 * 删除车位信息,修改parkStatus为-1表示不对外开放）
+	 * 删除车位信息,修改parkStatus为N表示不对外开放）
 	 * ,需要同时更新编辑人和编辑时间
 	 * </p>
 	 * @param     parkingSpace 车位信息
@@ -104,5 +145,119 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 			parkingSpace = new ParkingSpace();
 		}
 		return this.parkingSpaceDao.getParkingSpaceList(parkingSpace);
+	}
+	
+	/**
+	 * 
+	 * @Title: getParkingSpaceListIncludeComAndZone
+	 * <p>Description:
+	 * 查询车位信息主要包含车位的基本信息、小区信息、行政区域信息
+	 * 和业主的基本信息（包括用户名和id）
+	 * </p>
+	 * @param     parkingSpace 查询条件
+	 * @return List<ParkingSpace>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月26日 下午4:37:47</p>
+	 */
+	public List<ParkingSpace> getParkingSpaceListIncludeComAndZone(ParkingSpace parkingSpace){
+		if(parkingSpace == null) {
+			parkingSpace = new ParkingSpace();
+		}
+		List<ParkingSpace> list = this.parkingSpaceDao.getParkingSpaceALLInfoList(parkingSpace);
+		if(list != null && list.size() > 0) {
+			//获取用户的基本信息
+			for(ParkingSpace p : list) {
+				String spaceno = p.getSpaceno();
+				SpaceOwner so = spaceOwnerDao.getSpaceOwner(spaceno);
+				if(so != null) {
+//					p.setUserId(so.getUserId());
+//					p.setUserName(so.getUserName());
+//					p.setTelePhone(so.getTelePhone());
+//					p.setIdNo(so.getIdNo());
+//					p.setRealName(so.getRealName());
+//					p.setNickName(so.getNickName());
+//					p.setWeixinAccount(so.getWeixinAccount());
+//					p.setAvator(so.getAvator());
+					p.setSpaceOwnerUser(so);
+				}
+			}
+		}
+		return list;
+	}
+	/**
+	 * @Title: getFreeParkingSpaceCount
+	 * <p>Description:获取空闲车位数量</p>
+	 * @param     参数
+	 * @return int    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月27日 上午9:18:06</p>
+	 */
+	public int getFreeParkingSpaceCount() {
+		ParkingSpace parkingSpace = new ParkingSpace();
+		parkingSpace.setParkStatusQuery(new String[] {"0"});
+		return this.parkingSpaceDao.getParkingSpaceCount(parkingSpace);
+	}
+	/**
+	 * @Title: getEnableParkingSpaceCount
+	 * <p>Description:获取共享的车位数量包括占用和空闲</p>
+	 * @param     参数
+	 * @return int    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月27日 上午9:18:39</p>
+	 */
+	public int getEnableParkingSpaceCount() {
+		ParkingSpace parkingSpace = new ParkingSpace();
+		parkingSpace.setParkStatusQuery(new String[] {"0","1"});
+		return this.parkingSpaceDao.getParkingSpaceCount(parkingSpace);
+	}
+	
+	/**
+	 * @Title: getParkingSpaceListBySpacenoLike
+	 * <p>Description:通过车位号模糊查询车位信息</p>
+	 * @param     spaceno 车位号
+	 * @return List<ParkingSpace>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月27日 下午4:38:06</p>
+	 */
+	public List<ParkingSpace> getParkingSpaceListBySpacenoLike(String spaceno){
+		ParkingSpace parkingSpace = new ParkingSpace();
+		parkingSpace.setSpacenoLikeQuery(spaceno);
+		return this.parkingSpaceDao.getParkingSpaceALLInfoList(parkingSpace);
+	}
+	
+	/**
+	 * @Title: getParkingSpaceOnParkingList
+	 * <p>Description:查询正在被使用的车位</p>
+	 * @param     参数
+	 * @return List<ParkingSpace>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月27日 下午4:41:45</p>
+	 */
+	public List<ParkingSpace> getParkingSpaceOnParkingList(){
+		return null;
+	}
+	/**
+	 * @Title: getParkingSpaceListByComidAndParkHours
+	 * <p>Description:根据小区编号和停车时长获取该小区可预订的车位信息</p>
+	 * @param     comid 小区编号
+	 * @param     parkHours 停车时长
+	 * @return List<ParkingSpace>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月28日 下午6:25:46</p>
+	 */
+	public List<ParkingSpace> getParkingSpaceListByComidAndParkHours(String comid, 
+			Integer parkHours){
+		ParkingSpace parkingSpace = new ParkingSpace();
+		ShareConfig shareConfig = new ShareConfig();
+		//获取共享的车位
+		shareConfig.setIsOpen(1);
+		
+		parkingSpace.setComid(comid);
+		parkingSpace.setParkHours(parkHours);
+		parkingSpace.setShareConfig(shareConfig);
+		//空闲的车位
+		parkingSpace.setParkStatus("0");
+		
+		return this.parkingSpaceDao.getParkingSpaceEnableBillList(parkingSpace);
 	}
 }

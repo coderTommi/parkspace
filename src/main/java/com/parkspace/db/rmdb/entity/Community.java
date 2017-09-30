@@ -23,6 +23,7 @@ public class Community implements Serializable{
 	private static final long serialVersionUID = 1L;
 	//小区ID
 	private String comid;
+	private String[] comidQuery;
 	//区域ID
 	private String zoneid;
 	//小区名称
@@ -45,50 +46,20 @@ public class Community implements Serializable{
 	private Date modifyTime;
 	
 	//行政区域基本信息
+	private Zone zone;
 	//区域名称
-	private String zonename;
+//	private String zonename;
 	//状态  0：未开放  1：已开放，-1,表示删除，默认0
-	private Integer zoneisenable;
+//	private Integer zoneisenable;
 	//行政区域状态查询
-	private Integer[] zoneIsenableQuery;
+//	private Integer[] zoneIsenableQuery;
 	//省编码
-	private String province;
+//	private String province;
 	//市
-	private String city;
+//	private String city;
 	//区
-	private String zone;
+//	private String zone;
 	
-	
-	public String getZonename() {
-		return zonename;
-	}
-	public void setZonename(String zonename) {
-		this.zonename = zonename;
-	}
-	public Integer getZoneisenable() {
-		return zoneisenable;
-	}
-	public void setZoneisenable(Integer zoneisenable) {
-		this.zoneisenable = zoneisenable;
-	}
-	public String getProvince() {
-		return province;
-	}
-	public void setProvince(String province) {
-		this.province = province;
-	}
-	public String getCity() {
-		return city;
-	}
-	public void setCity(String city) {
-		this.city = city;
-	}
-	public String getZone() {
-		return zone;
-	}
-	public void setZone(String zone) {
-		this.zone = zone;
-	}
 	public String getComid() {
 		return comid;
 	}
@@ -155,20 +126,23 @@ public class Community implements Serializable{
 	public void setIsenableQuery(Integer[] isenableQuery) {
 		this.isenableQuery = isenableQuery;
 	}
-	
-	public Integer[] getZoneIsenableQuery() {
-		return zoneIsenableQuery;
+	public Zone getZone() {
+		return zone;
 	}
-	public void setZoneIsenableQuery(Integer[] zoneIsenableQuery) {
-		this.zoneIsenableQuery = zoneIsenableQuery;
+	public void setZone(Zone zone) {
+		this.zone = zone;
+	}
+	public String[] getComidQuery() {
+		return comidQuery;
+	}
+	public void setComidQuery(String[] comidQuery) {
+		this.comidQuery = comidQuery;
 	}
 	@Override
 	public String toString() {
-		return "Community [comid=" + comid + ", zoneid=" + zoneid + ", comname=" + comname + ", address=" + address
-				+ ", isenable=" + isenable + ", isenableQuery=" + Arrays.toString(isenableQuery) + ", memo=" + memo
-				+ ", createBy=" + createBy + ", createTime=" + createTime + ", modifyBy=" + modifyBy + ", modifyTime="
-				+ modifyTime + ", zonename=" + zonename + ", zoneisenable=" + zoneisenable + ", zoneIsenableQuery="
-				+ Arrays.toString(zoneIsenableQuery) + ", province=" + province + ", city=" + city + ", zone=" + zone
-				+ "]";
+		return "Community [comid=" + comid + ", comidQuery=" + Arrays.toString(comidQuery) + ", zoneid=" + zoneid
+				+ ", comname=" + comname + ", address=" + address + ", isenable=" + isenable + ", isenableQuery="
+				+ Arrays.toString(isenableQuery) + ", memo=" + memo + ", createBy=" + createBy + ", createTime="
+				+ createTime + ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + ", zone=" + zone + "]";
 	}
 }

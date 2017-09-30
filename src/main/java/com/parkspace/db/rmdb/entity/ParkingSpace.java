@@ -1,6 +1,7 @@
 package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -22,6 +23,8 @@ public class ParkingSpace implements Serializable{
 	private static final long serialVersionUID = 1L;
 	//车位编号,形如3-101
 	private String spaceno;
+	//车位号模糊查询条件
+	private String spacenoLikeQuery;
 	//小区ID
 	private String comid;
 	//车位楼层,用来标记车位所在的楼层比如：地面0，地下-1，地下-2等
@@ -52,6 +55,81 @@ public class ParkingSpace implements Serializable{
 	private String modifyBy;
 	//修改时间
 	private Date modifyTime;
+	//小区基本信息
+	private Community community;
+	//区域ID
+//	private String zoneid;
+	//小区名称
+//	private String comname;
+	//小区地址
+//	private String address;
+	//状态  0：未开放  1：封闭式小区，2：开放式小区,默认0，如果是-1表示禁用
+//	private Integer isenable;
+	//状态查询条件
+//	private Integer[] isenableQuery;
+	
+	//行政区域基本信息
+	private Zone zone;
+	//区域名称
+//	private String zonename;
+	//状态  0：未开放  1：已开放，-1,表示删除，默认0
+//	private Integer zoneisenable;
+	//行政区域状态查询
+//	private Integer[] zoneIsenableQuery;
+	//省编码
+//	private String province;
+	//市
+//	private String city;
+	//区
+//	private String zone;
+	
+	//用户的基本信息
+	private SpaceOwner spaceOwnerUser;
+	//用户ID
+//	private String userId;
+	//用户名称
+//	private String userName;
+	//真实姓名
+//	private String realName;
+	//昵称
+//	private String nickName;
+	//电话
+//	private String telePhone;
+	//证件类型
+//	private String idNo;
+	//微信
+//	private String weixinAccount;
+	//头像
+//	private String avator;
+	//停车时长
+	private Integer parkHours;
+	//转化为字符串，停车时长,格式00:00:00
+	private String parkHoursString;
+	//共享信息
+	private ShareConfig shareConfig;
+	
+	
+	
+	public String getParkHoursString() {
+		return parkHoursString;
+	}
+	public void setParkHoursString(String parkHoursString) {
+		if(parkHours != null) {
+			if(parkHours < 10) {
+				this.parkHoursString = "0" + parkHours + ":00:00";;
+			}else {
+				this.parkHoursString = parkHours+":00:00";
+			}
+		}else {
+			this.parkHoursString = parkHoursString;
+		}
+	}
+	public ShareConfig getShareConfig() {
+		return shareConfig;
+	}
+	public void setShareConfig(ShareConfig shareConfig) {
+		this.shareConfig = shareConfig;
+	}
 	public String getSpaceno() {
 		return spaceno;
 	}
@@ -94,11 +172,23 @@ public class ParkingSpace implements Serializable{
 	public void setParkStatus(String parkStatus) {
 		this.parkStatus = parkStatus;
 	}
+	public String[] getParkStatusQuery() {
+		return parkStatusQuery;
+	}
+	public void setParkStatusQuery(String[] parkStatusQuery) {
+		this.parkStatusQuery = parkStatusQuery;
+	}
 	public String getParkType() {
 		return parkType;
 	}
 	public void setParkType(String parkType) {
 		this.parkType = parkType;
+	}
+	public String[] getParkTypeQuery() {
+		return parkTypeQuery;
+	}
+	public void setParkTypeQuery(String[] parkTypeQuery) {
+		this.parkTypeQuery = parkTypeQuery;
 	}
 	public String getParkPositionDes() {
 		return parkPositionDes;
@@ -142,17 +232,47 @@ public class ParkingSpace implements Serializable{
 	public void setModifyTime(Date modifyTime) {
 		this.modifyTime = modifyTime;
 	}
+	public Community getCommunity() {
+		return community;
+	}
+	public void setCommunity(Community community) {
+		this.community = community;
+	}
+	public Zone getZone() {
+		return zone;
+	}
+	public void setZone(Zone zone) {
+		this.zone = zone;
+	}
 	
-	public String[] getParkStatusQuery() {
-		return parkStatusQuery;
+	public SpaceOwner getSpaceOwnerUser() {
+		return spaceOwnerUser;
 	}
-	public void setParkStatusQuery(String[] parkStatusQuery) {
-		this.parkStatusQuery = parkStatusQuery;
+	public void setSpaceOwnerUser(SpaceOwner spaceOwnerUser) {
+		this.spaceOwnerUser = spaceOwnerUser;
 	}
-	public String[] getParkTypeQuery() {
-		return parkTypeQuery;
+	public String getSpacenoLikeQuery() {
+		return spacenoLikeQuery;
 	}
-	public void setParkTypeQuery(String[] parkTypeQuery) {
-		this.parkTypeQuery = parkTypeQuery;
+	public void setSpacenoLikeQuery(String spacenoLikeQuery) {
+		this.spacenoLikeQuery = spacenoLikeQuery;
+	}
+	@Override
+	public String toString() {
+		return "ParkingSpace [spaceno=" + spaceno + ", spacenoLikeQuery=" + spacenoLikeQuery + ", comid=" + comid
+				+ ", parkPositionFloor=" + parkPositionFloor + ", parkPositionZone=" + parkPositionZone
+				+ ", parkPositionX=" + parkPositionX + ", parkPositionY=" + parkPositionY + ", parkStatus=" + parkStatus
+				+ ", parkStatusQuery=" + Arrays.toString(parkStatusQuery) + ", parkType=" + parkType
+				+ ", parkTypeQuery=" + Arrays.toString(parkTypeQuery) + ", parkPositionDes=" + parkPositionDes
+				+ ", spaceOwner=" + spaceOwner + ", memo=" + memo + ", createBy=" + createBy + ", createTime="
+				+ createTime + ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + ", community=" + community
+				+ ", zone=" + zone + ", spaceOwnerUser=" + spaceOwnerUser + ", parkHours=" + parkHours
+				+ ", parkHoursString=" + parkHoursString + ", shareConfig=" + shareConfig + "]";
+	}
+	public Integer getParkHours() {
+		return parkHours;
+	}
+	public void setParkHours(Integer parkHours) {
+		this.parkHours = parkHours;
 	}
 }

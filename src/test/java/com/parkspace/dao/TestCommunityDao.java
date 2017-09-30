@@ -15,6 +15,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.parkspace.db.rmdb.dao.CommunityDao;
 import com.parkspace.db.rmdb.entity.Community;
+import com.parkspace.db.rmdb.entity.Zone;
 
 /**
  * @Title: TestCommunityDao.java
@@ -101,6 +102,19 @@ public class TestCommunityDao {
 		List<Community> list2 = page.getList();
 		for(Community community1 : list2){
 			System.out.println(community1);
+		}
+	}
+	
+	@Test
+	public void getCommunityAllInfoList() {
+		Community community = new Community();
+		Zone zone = new Zone();
+		zone.setZonename("天桥");
+		zone.setIsenableQuery(new Integer[] {1});
+		community.setZone(zone);
+		List<Community> list = communityDao.getCommunityAllInfoList(community);
+		for(Community com : list){
+			System.out.println(com);
 		}
 	}
 }

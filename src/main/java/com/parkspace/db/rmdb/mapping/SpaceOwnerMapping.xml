@@ -7,19 +7,52 @@
 	</sql>
 	<!-- 用户信息字段 -->
 	<sql id="Baseuser_Column">
-		u.userId,u.userName,u.nickName,u.telephone,u.isAdmin,u.idtype,u.idno,u.state,u.weixinAccount,u.avator,u.memo,u.createBy,u.createTime,u.modifyBy,u.modifyTime
+		u.userId,u.userName,u.nickName,u.telephone,u.isAdmin,u.idtype,u.idno,u.state,u.weixinAccount,u.avator,u.memo,u.createBy,u.createTime,u.modifyBy,u.modifyTime,u.realname
 	</sql>
 	<!-- 车位信息字段 -->
 	<sql id="Parking_Space_Column">
-		p.comid,p.parkPositionFloor,p.parkPositionZone,p.parkPositionX,p.parkPositionY,p.parkStatus,p.parkType,p.parkPositionDes,p.spaceOwner
+		p.spaceno 				as "parkingSpace.spaceno",
+		p.comid 				as "parkingSpace.comid",
+		p.parkPositionFloor 	as "parkingSpace.parkPositionFloor",
+		p.parkPositionZone 		as "parkingSpace.parkPositionZone",
+		p.parkPositionX 		as "parkingSpace.parkPositionX",
+		p.parkPositionY 		as "parkingSpace.parkPositionY",
+		p.parkStatus 			as "parkingSpace.parkStatus",
+		p.parkType 				as "parkingSpace.parkType",
+		p.parkPositionDes 		as "parkingSpace.parkPositionDes",
+		p.spaceOwner 			as "parkingSpace.spaceOwner",
+		p.memo 					as "parkingSpace.memo",
+		p.createBy 				as "parkingSpace.createBy",
+		p.createTime 			as "parkingSpace.createTime",
+		p.modifyBy 				as "parkingSpace.modifyBy",
+		p.modifyTime 			as "parkingSpace.modifyTime"
 	</sql>
 	<!-- 小区信息字段 -->
 	<sql id="Community_Column">
-		c.zoneid,c.comname,c.address,c.isenable
+		c.comid 		as "community.comid",
+		c.zoneid 		as "community.zoneid",
+		c.comname 		as "community.comname",
+		c.address 		as "community.address",
+		c.isenable 		as "community.isenable",
+		c.memo 			as "community.memo",
+		c.createBy 		as "community.createBy",
+		c.createTime 	as "community.createTime",
+		c.modifyBy 		as "community.modifyBy",
+		c.modifyTime 	as "community.modifyTime"
 	</sql>
 	<!-- 行政区域信息字段 -->
 	<sql id="Zone_Column">
-		z.zonename,z.isenable as zoneisenable,z.province,z.city,z.zone
+		z.zoneid   		as "zone.zoneid",
+		z.zonename 		as "zone.zonename",
+		z.isenable 		as "zone.isenable",
+		z.province 		as "zone.province",
+		z.city     		as "zone.city",
+		z.zone     		as "zone.zone",
+		z.memo     		as "zone.memo",
+		z.createBy 		as "zone.createBy",
+		z.createTime 	as "zone.createTime",
+		z.modifyBy 		as "zone.modifyBy",
+		z.modifyTime 	as "zone.modifyTime"
 	</sql>
 	
 	<!-- 根据车位编号获取车位业主信息 -->
@@ -156,76 +189,90 @@
             	 <![CDATA[ and u.createTime >= #{createTime} ]]>
         	  </if>
         	  <!-- 车位信息过滤 -->
-        	  <if test="comid != null">
-            	 and p.comid = #{comid}
+        	  <if test="parkingSpace != null">
+        	  	  <if test="parkingSpace.comid != null">
+	            	 and p.comid = #{parkingSpace.comid}
+	        	  </if>
+	        	  <if test="parkingSpace.parkPositionFloor != null">
+	            	 and p.parkPositionFloor = #{parkingSpace.parkPositionFloor}
+	        	  </if>
+	        	  <if test="parkingSpace.parkPositionZone != null">
+	            	 and p.parkPositionZone = #{parkingSpace.parkPositionZone}
+	        	  </if>
+	        	  <if test="parkingSpace.parkPositionX != null">
+	            	 and p.parkPositionX = #{parkingSpace.parkPositionX}
+	        	  </if>
+	        	  <if test="parkingSpace.parkPositionY != null">
+	            	 and p.parkPositionY = #{parkingSpace.parkPositionY}
+	        	  </if>
+	        	  <if test="parkingSpace.parkStatus != null">
+	            	 and p.parkStatus = #{parkingSpace.parkStatus}
+	        	  </if>
+	        	  <if test="parkingSpace.parkType != null">
+	            	 and p.parkType = #{parkingSpace.parkType}
+	        	  </if>
+	        	 
+	        	  <if test="parkingSpace.parkPositionDes != null">
+	            	 and p.parkPositionDes like CONCAT('%', #{parkingSpace.parkPositionDes}, '%') 
+	        	  </if>
+	        	  <if test="parkingSpace.spaceOwner != null">
+	            	 and p.spaceOwner = #{parkingSpace.spaceOwner}
+	        	  </if>
         	  </if>
-        	  <if test="parkPositionFloor != null">
-            	 and p.parkPositionFloor = #{parkPositionFloor}
-        	  </if>
-        	  <if test="parkPositionZone != null">
-            	 and p.parkPositionZone = #{parkPositionZone}
-        	  </if>
-        	  <if test="parkPositionX != null">
-            	 and p.parkPositionX = #{parkPositionX}
-        	  </if>
-        	  <if test="parkPositionY != null">
-            	 and p.parkPositionY = #{parkPositionY}
-        	  </if>
-        	  <if test="parkStatus != null">
-            	 and p.parkStatus = #{parkStatus}
-        	  </if>
-        	  <if test="parkType != null">
-            	 and p.parkType = #{parkType}
-        	  </if>
-        	 
-        	  <if test="parkPositionDes != null">
-            	 and p.parkPositionDes like CONCAT('%', #{parkPositionDes}, '%') 
-        	  </if>
-        	  <if test="spaceOwner != null">
-            	 and p.spaceOwner = #{spaceOwner}
-        	  </if>
+        	  
         	  <!-- 小区过滤条件 -->
-        	  <if test="zoneid != null">
-            	 and c.zoneid = #{zoneid}
-        	  </if>
-        	  <if test="comname != null">
-            	 and c.comname like CONCAT('%', #{comname}, '%')  
-        	  </if>
-        	  <if test="address != null">
-            	 and c.address like CONCAT('%', #{address}, '%') 
-        	  </if>
-        	  <if test="isenable != null">
-            	 and c.isenable = #{isenable}
-        	  </if>
-        	  <!-- 小区多状态查询 -->
-        	  <if test="isenableQuery != null and isenableQuery.length > 0 ">
-        	  	 and c.isenable in
-        	  	 	<foreach item="item" index="index" collection="isenableQuery" open="(" separator="," close=")">  
- 						#{item}  
-					</foreach>
+        	  <if test="community != null">
+        	  	  <if test="community.zoneid != null">
+	            	 and c.zoneid = #{community.zoneid}
+	        	  </if>
+	        	  <!-- 小区多条件过滤 -->
+	        	  <if test="community.comidQuery != null and community.comidQuery.length > 0 ">
+	        	  	 and c.comid in
+	        	  	 	<foreach item="item" index="index" collection="community.comidQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+	        	  <if test="community.comname != null">
+	            	 and c.comname like CONCAT('%', #{community.comname}, '%')  
+	        	  </if>
+	        	  <if test="community.address != null">
+	            	 and c.address like CONCAT('%', #{community.address}, '%') 
+	        	  </if>
+	        	  <if test="community.isenable != null">
+	            	 and c.isenable = #{community.isenable}
+	        	  </if>
+	        	  <!-- 小区多状态查询 -->
+	        	  <if test="community.isenableQuery != null and community.isenableQuery.length > 0 ">
+	        	  	 and c.isenable in
+	        	  	 	<foreach item="item" index="index" collection="community.isenableQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
         	  </if>
         	  <!-- 行政区域过滤条件 -->
-        	  <if test="zonename != null">
-            	 and z.zonename like CONCAT('%', #{zonename}, '%') 
-        	  </if>
-        	  <if test="zoneisenable != null">
-            	 and z.isenable = #{zoneisenable}
-        	  </if>
-        	  <!-- 行政区域多状态查询 -->
-        	  <if test="zoneIsenableQuery != null and zoneIsenableQuery.length > 0 ">
-        	  	 and z.isenable in
-        	  	 	<foreach item="item" index="index" collection="zoneIsenableQuery" open="(" separator="," close=")">  
- 						#{item}  
-					</foreach>
-        	  </if>
-        	  <if test="province != null">
-            	 and z.province = #{province}
-        	  </if>
-        	  <if test="city != null">
-            	 and z.city = #{city}
-        	  </if>
         	  <if test="zone != null">
-            	 and z.zone = #{zone}
+        	  	  <if test="zone.zonename != null">
+	            	 and z.zonename like CONCAT('%', #{zone.zonename}, '%') 
+	        	  </if>
+	        	  <if test="zone.isenable != null">
+	            	 and z.isenable = #{zone.isenable}
+	        	  </if>
+	        	  <!-- 行政区域多状态查询 -->
+	        	  <if test="zone.isenableQuery != null and zone.isenableQuery.length > 0 ">
+	        	  	 and z.isenable in
+	        	  	 	<foreach item="item" index="index" collection="zone.senableQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+	        	  <if test="zone.province != null">
+	            	 and z.province = #{zone.province}
+	        	  </if>
+	        	  <if test="zone.city != null">
+	            	 and z.city = #{zone.city}
+	        	  </if>
+	        	  <if test="zone.zone != null">
+	            	 and z.zone = #{zone.zone}
+	        	  </if>
         	  </if>
         order by u.createTime desc
 	</select>

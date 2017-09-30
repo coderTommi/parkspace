@@ -10,9 +10,12 @@
     	insert into ShareConfig(
 				UUID,
 				spaceno,
+				isAllDay,
 				isOpen,
 				shareType,
+				startDate,
 				startTime,
+				endDate,
 				endTime,
 				internalDate,
 				createBy,
@@ -23,9 +26,12 @@
          values(
        			#{UUID},
        			#{spaceno},
+       			#{isAllDay},
        			#{isOpen},
        			#{shareType},
+       			#{startDate},
        			#{startTime},
+       			#{endDate},
        			#{endTime},
        			#{internalDate},
        			#{createBy},
@@ -42,14 +48,23 @@
     		<if test="spaceno != null">
 				spaceno      = #{spaceno},
 			</if>	
+			<if test="isAllDay != null">
+				isAllDay       = #{isAllDay},
+			</if>
 			<if test="isOpen != null">
 				isOpen       = #{isOpen},
 			</if>
 			<if test="shareType != null">
 				shareType    = #{shareType},
 			</if>
+			<if test="startDate != null">
+				startDate    = #{startDate},
+			</if>
 			<if test="startTime != null">
 				startTime    = #{startTime},
+			</if>
+			<if test="endDate != null">
+				endDate    = #{endDate},
 			</if>
 			<if test="endTime != null">
 				endTime      = #{endTime},
@@ -67,10 +82,10 @@
     	where   UUID = #{UUID}
 	</update>
 	
-	<!-- 删除车位共享信息,修改isOpen为0,需要同时更新编辑人和编辑时间-->
+	<!-- 删除车位共享信息,修改isOpen为-1,需要同时更新编辑人和编辑时间-->
 	<update id="deleteShareConfig" parameterType="ShareConfig">
     	update ShareConfig set
-    			isOpen     = 0,
+    			isOpen     = -1,
     			modifyBy   = #{modifyBy},
     			modifyTime = #{modifyTime}
     	where   UUID = #{UUID}
@@ -84,17 +99,30 @@
         	 <if test="spaceno != null">
             	and spaceno = #{spaceno}
         	 </if>
+        	 <if test="isAllDay != null">
+            	and isAllDay = #{isAllDay}
+        	 </if>
         	 <if test="isOpen != null">
             	and isOpen = #{isOpen}
         	 </if>
+        	 <!-- 多状态查询 -->
+        	 <if test="isOpenQuery != null and isOpenQuery.length > 0 ">
+        	  	 and isOpen in
+        	  	 	<foreach item="item" index="index" collection="isOpenQuery" open="(" separator="," close=")">  
+ 						#{item}  
+					</foreach>
+        	  </if>
         	 <if test="shareType != null">
             	and shareType = #{shareType}
         	 </if>
-        	 <if test="startTime != null">
-            	<![CDATA[ and startTime >= #{startTime} ]]>
+        	 <if test="queryTime != null">
+        	 	<![CDATA[ and startTime <= #{queryTime} ]]>
+        	 	<![CDATA[ and endTime >= #{queryTime} ]]>
+        	 	
         	 </if>
-        	 <if test="endTime != null">
-            	<![CDATA[ and endTime <= #{endTime} ]]>
+        	 <if test="queryDate != null">
+            	<![CDATA[ and startDate <= #{queryTime} ]]>
+        	 	<![CDATA[ and endDate >= #{queryTime} ]]>
         	 </if>
         	 <if test="createTime != null">
             	<![CDATA[ and createTime >= #{createTime} ]]>

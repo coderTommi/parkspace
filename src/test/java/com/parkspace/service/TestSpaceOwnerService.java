@@ -12,7 +12,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.parkspace.db.rmdb.entity.BlackList;
+import com.parkspace.db.rmdb.entity.Community;
+import com.parkspace.db.rmdb.entity.ParkingSpace;
 import com.parkspace.db.rmdb.entity.SpaceOwner;
+import com.parkspace.db.rmdb.entity.Zone;
 
 /**
  * @Title: TestSpaceOwnerService.java
@@ -28,7 +31,7 @@ public class TestSpaceOwnerService {
 	@Resource
 	private ISpaceOwnerService spaceOwnerService;
 	@Test
-	public void testGetSpaceOwnerList(){
+	public void getSpaceOwnerList(){
 		SpaceOwner spaceOwner = new SpaceOwner();
 //		spaceOwner.setSpaceno("3-001");
 //		spaceOwner.setSpaceno("3-001-0");
@@ -38,13 +41,30 @@ public class TestSpaceOwnerService {
 	@Test
 	public void getSpaceOwnerAllInfoList(){
 		SpaceOwner spaceOwner = new SpaceOwner();
-		spaceOwner.setIsenableQuery(new Integer[]{2});
-		spaceOwner.setIsauthQuery(new Integer[]{1});
+		//小区
+		Community community = new Community();
+		community.setIsenableQuery(new Integer[] {1});
+		community.setComidQuery(new String[] {"d2ac2ef6-acad-411a-9b2a-9732d47028b5"});
+		//行政区域
+		Zone zone = new Zone();
+		zone.setIsenableQuery(new Integer[]{1});
+		//车位
+		ParkingSpace parkingSpace = new ParkingSpace();
+		
+		spaceOwner.setIsauthQuery(new Integer[]{0});
 //		spaceOwner.setSpaceno("3-001");
 //		spaceOwner.setSpaceno("3-001-0");
 //		spaceOwner.setCarno("1");
-		spaceOwner.setZoneIsenableQuery(new Integer[]{1});
-		spaceOwnerService.getSpaceOwnerAllInfoList(spaceOwner);
+		
+		
+		spaceOwner.setParkingSpace(parkingSpace);
+		spaceOwner.setZone(zone);
+		spaceOwner.setCommunity(community);
+		
+		List<SpaceOwner> list = spaceOwnerService.getSpaceOwnerAllInfoList(spaceOwner);
+		for(SpaceOwner s : list) {
+			System.out.println(s);
+		}
 	}
 	@Test
 	public void getSpaceOwnerAllInfoListForPage(){
@@ -71,7 +91,7 @@ public class TestSpaceOwnerService {
 	@Test
 	public void getBlackListAll(){
 		BlackList queryBlackList = new BlackList();
-		queryBlackList.setIsCancel(1);
+//		queryBlackList.setIsCancel(1);
 		List<BlackList> list = spaceOwnerService.getBlackListAllInfoList(queryBlackList);
 		for(BlackList b : list){
 			System.out.println(b);

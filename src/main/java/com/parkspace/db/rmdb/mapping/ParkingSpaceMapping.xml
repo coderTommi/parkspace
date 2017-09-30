@@ -7,6 +7,51 @@
 		ps.parkPositionY,ps.parkStatus,ps.parkType,ps.parkPositionDes,ps.spaceOwner,
 		ps.memo,ps.createBy,ps.createTime,ps.modifyBy,ps.modifyTime
 	</sql>
+	<!-- 小区信息字段 -->
+	<sql id="Community_Column">
+		c.comid 		as "community.comid",
+		c.zoneid 		as "community.zoneid",
+		c.comname 		as "community.comname",
+		c.address 		as "community.address",
+		c.isenable 		as "community.isenable",
+		c.memo 			as "community.memo",
+		c.createBy 		as "community.createBy",
+		c.createTime 	as "community.createTime",
+		c.modifyBy 		as "community.modifyBy",
+		c.modifyTime 	as "community.modifyTime"
+	</sql>
+	<!-- 行政区域信息字段 -->
+	<sql id="Zone_Column">
+		z.zoneid   		as "zone.zoneid",
+		z.zonename 		as "zone.zonename",
+		z.isenable 		as "zone.isenable",
+		z.province 		as "zone.province",
+		z.city     		as "zone.city",
+		z.zone     		as "zone.zone",
+		z.memo     		as "zone.memo",
+		z.createBy 		as "zone.createBy",
+		z.createTime 	as "zone.createTime",
+		z.modifyBy 		as "zone.modifyBy",
+		z.modifyTime 	as "zone.modifyTime"
+	</sql>
+	<!-- 共享信息 -->
+	<sql id="ShareConfig_Column">
+		sc.UUID   			as "shareConfig.UUID",
+		sc.spaceno 			as "shareConfig.spaceno",
+		sc.isAllDay 		as "shareConfig.isAllDay",
+		sc.isOpen 			as "shareConfig.isOpen",
+		sc.shareType    	as "shareConfig.shareType",
+		sc.startDate    	as "shareConfig.startDate",
+		sc.startTime    	as "shareConfig.startTime",
+		sc.endDate 			as "shareConfig.endDate",
+		sc.endTime 	    	as "shareConfig.endTime",
+		sc.internalDate 	as "shareConfig.internalDate",
+		sc.createBy 		as "shareConfig.createBy",
+		sc.modifyBy 		as "shareConfig.modifyBy",
+		sc.createTime 		as "shareConfig.createTime",
+		sc.modifyTime 		as "shareConfig.modifyTime"
+	</sql>
+	
 	<!-- 根据id查询车位信息 -->
 	<select id="getParkingSpace" parameterType="string" resultType="ParkingSpace">
 		select <include refid="ParkingSpace_Column"/> from parkingspace ps where ps.spaceno=#{spaceno}
@@ -96,7 +141,7 @@
 	<!-- 根据id删除车位信息 -->
 	<update id="deleteParkingSpace" parameterType="ParkingSpace">
     	update ParkingSpace set
-    			parkStatus   = '-1',
+    			parkStatus   = 'N',
     			modifyBy     = #{modifyBy},
     			modifyTime   = #{modifyTime}
     	where comid = #{comid}
@@ -154,5 +199,264 @@
             	<![CDATA[ and ps.createTime >= #{createTime} ]]>
         	 </if>
         	 order by ps.createTime desc
+	</select>
+	<!-- 根据具体条件查询车位信息 -->
+	<!-- 主要是车位基本信息、小区信息和行政区域信息 -->
+	<select id="getParkingSpaceALLInfoList" parameterType="ParkingSpace" resultType="ParkingSpace">
+		select 
+			<include refid="ParkingSpace_Column"/>,
+			<include refid="Community_Column"/>,
+			<include refid="Zone_Column"/>
+		from ParkingSpace ps,
+			 Community    c,
+			 Zone         z
+		where 1=1
+		  and ps.comid = c.comid
+		  and c.zoneid = z.zoneid
+		  <!-- 车位基本信息过滤条件 -->
+			 <if test="spaceno != null">
+            	and ps.spaceno = #{spaceno}
+        	 </if>
+        	 <!-- 根据车位号码模糊查询 -->
+        	 <if test="spacenoLikeQuery != null">
+            	and ps.spaceno like CONCAT('%', #{spacenoLikeQuery}, '%') 
+        	 </if>
+        	 <if test="comid != null">
+            	and ps.comid = #{comid}
+        	 </if>
+        	 <if test="parkPositionFloor != null">
+            	and ps.parkPositionFloor = #{parkPositionFloor}
+        	 </if>
+        	 <if test="parkPositionZone != null">
+            	and ps.parkPositionZone = #{parkPositionZone}
+        	 </if>
+        	 <if test="parkPositionX != null">
+            	and ps.parkPositionX = #{parkPositionX}
+        	 </if>
+        	 <if test="parkPositionY != null">
+            	and ps.parkPositionY = #{parkPositionY}
+        	 </if>
+        	 <if test="parkStatus != null">
+            	and ps.parkStatus = #{parkStatus}
+        	 </if>
+        	 <if test="parkStatusQuery != null and parkStatusQuery.length > 0 ">
+        	  	and ps.parkStatus in
+        	  	 <foreach item="item" index="index" collection="parkStatusQuery" open="(" separator="," close=")">  
+ 					#{item}  
+				 </foreach>
+        	 </if>
+        	 <if test="parkType != null">
+            	and ps.parkType = #{parkType}
+        	 </if>
+        	 <if test="parkTypeQuery != null and parkTypeQuery.length > 0 ">
+        	  	and ps.parkType in
+        	  	 <foreach item="item" index="index" collection="parkTypeQuery" open="(" separator="," close=")">  
+ 					#{item}  
+				 </foreach>
+        	 </if>
+        	 
+        	 <if test="parkPositionDes != null">
+            	and ps.parkPositionDes like CONCAT('%', #{parkPositionDes}, '%') 
+        	 </if>
+        	 <if test="spaceOwner != null">
+            	and ps.spaceOwner = #{spaceOwner}
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and ps.createTime >= #{createTime} ]]>
+        	 </if>
+        	 
+        	  <!-- 小区过滤条件 -->
+        	  <if test="community != null">
+        	  	  <if test="community.zoneid != null">
+	            	 and c.zoneid = #{community.zoneid}
+	        	  </if>
+	        	  <!-- 小区多条件过滤 -->
+	        	  <if test="community.comidQuery != null and community.comidQuery.length > 0 ">
+	        	  	 and c.comid in
+	        	  	 	<foreach item="item" index="index" collection="community.comidQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+	        	  <if test="community.comname != null">
+	            	 and c.comname like CONCAT('%', #{community.comname}, '%')  
+	        	  </if>
+	        	  <if test="community.address != null">
+	            	 and c.address like CONCAT('%', #{community.address}, '%') 
+	        	  </if>
+	        	  <if test="community.isenable != null">
+	            	 and c.isenable = #{community.isenable}
+	        	  </if>
+	        	  <!-- 小区多状态查询 -->
+	        	  <if test="community.isenableQuery != null and community.isenableQuery.length > 0 ">
+	        	  	 and c.isenable in
+	        	  	 	<foreach item="item" index="index" collection="community.isenableQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+        	  </if>
+        	  <!-- 行政区域过滤条件 -->
+        	  <if test="zone != null">
+        	  	  <if test="zone.zoneid != null">
+	            	 and z.zoneid = #{zone.zoneid}
+	        	  </if>
+        	  	  <if test="zone.zonename != null">
+	            	 and z.zonename like CONCAT('%', #{zone.zonename}, '%') 
+	        	  </if>
+	        	  <if test="zone.isenable != null">
+	            	 and z.isenable = #{zone.isenable}
+	        	  </if>
+	        	  <!-- 行政区域多状态查询 -->
+	        	  <if test="zone.isenableQuery != null and zone.isenableQuery.length > 0 ">
+	        	  	 and z.isenable in
+	        	  	 	<foreach item="item" index="index" collection="zone.isenableQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+	        	  <if test="zone.province != null">
+	            	 and z.province = #{zone.province}
+	        	  </if>
+	        	  <if test="zone.city != null">
+	            	 and z.city = #{zone.city}
+	        	  </if>
+	        	  <if test="zone.zone != null">
+	            	 and z.zone = #{zone.zone}
+	        	  </if>
+        	  </if>
+        	 order by ps.createTime desc
+	</select>
+	<!-- 根据具体条件查询车位的数量 -->
+	<!-- 包含空闲、占用、未共享的车位 -->
+	<select id="getParkingSpaceCount" parameterType="ParkingSpace" resultType="int">
+		select count(ps.spaceno)
+		from ParkingSpace ps
+		where 1=1
+		  <!-- 车位基本信息过滤条件 -->
+			 <if test="spaceno != null">
+            	and ps.spaceno = #{spaceno}
+        	 </if>
+        	 <if test="comid != null">
+            	and ps.comid = #{comid}
+        	 </if>
+        	 <if test="parkPositionFloor != null">
+            	and ps.parkPositionFloor = #{parkPositionFloor}
+        	 </if>
+        	 <if test="parkPositionZone != null">
+            	and ps.parkPositionZone = #{parkPositionZone}
+        	 </if>
+        	 <if test="parkPositionX != null">
+            	and ps.parkPositionX = #{parkPositionX}
+        	 </if>
+        	 <if test="parkPositionY != null">
+            	and ps.parkPositionY = #{parkPositionY}
+        	 </if>
+        	 <if test="parkStatus != null">
+            	and ps.parkStatus = #{parkStatus}
+        	 </if>
+        	 <if test="parkStatusQuery != null and parkStatusQuery.length > 0 ">
+        	  	and ps.parkStatus in
+        	  	 <foreach item="item" index="index" collection="parkStatusQuery" open="(" separator="," close=")">  
+ 					#{item}  
+				 </foreach>
+        	 </if>
+        	 <if test="parkType != null">
+            	and ps.parkType = #{parkType}
+        	 </if>
+        	 <if test="parkTypeQuery != null and parkTypeQuery.length > 0 ">
+        	  	and ps.parkType in
+        	  	 <foreach item="item" index="index" collection="parkTypeQuery" open="(" separator="," close=")">  
+ 					#{item}  
+				 </foreach>
+        	 </if>
+        	 
+        	 <if test="parkPositionDes != null">
+            	and ps.parkPositionDes like CONCAT('%', #{parkPositionDes}, '%') 
+        	 </if>
+        	 <if test="spaceOwner != null">
+            	and ps.spaceOwner = #{spaceOwner}
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and ps.createTime >= #{createTime} ]]>
+        	 </if>
+	</select>
+	<!-- 查询可预订的车位信息 -->
+	<select id="getParkingSpaceEnableBillList" parameterType="ParkingSpace" resultType="ParkingSpace">
+		select 
+			<include refid="ParkingSpace_Column"/>
+		from ParkingSpace ps,
+		     (	select * 
+		        from ShareConfig s 
+		      	where 1=1
+		      	   	  <if test="shareConfig != null">
+		      	   	  	<if test="shareConfig.isOpen != null">
+            				and s.isOpen = #{shareConfig.isOpen}
+        		 		</if>
+		      	   	  </if>
+		      	   	  <!-- 根据共享类型shareType 0自定义，1周期，进行过滤数据 -->
+		      	   	  and (
+		      	   	  		(
+		      	   	  				s.shareType = 0
+		      	   	  			<![CDATA[ 
+		      	   	  				and CONCAT(s.startDate,' ',s.startTime) <= now()
+		      	   	  				and CONCAT(s.startDate,' ',s.startTime) >= now()
+		      	   	  			]]>
+		      	   	  		) 
+		      	   	  		or 
+		      	   	  		(
+		      	   	  			s.shareType = 1
+		      	   	  		)
+		      	   	  	)
+		      ) as sc
+		where 1=1
+			 <!-- 车位基本信息过滤条件 -->
+			 <if test="spaceno != null">
+            	and ps.spaceno = #{spaceno}
+        	 </if>
+        	 <!-- 根据车位号码模糊查询 -->
+        	 <if test="spacenoLikeQuery != null">
+            	and ps.spaceno like CONCAT('%', #{spacenoLikeQuery}, '%') 
+        	 </if>
+        	 <if test="comid != null">
+            	and ps.comid = #{comid}
+        	 </if>
+        	 <if test="parkPositionFloor != null">
+            	and ps.parkPositionFloor = #{parkPositionFloor}
+        	 </if>
+        	 <if test="parkPositionZone != null">
+            	and ps.parkPositionZone = #{parkPositionZone}
+        	 </if>
+        	 <if test="parkPositionX != null">
+            	and ps.parkPositionX = #{parkPositionX}
+        	 </if>
+        	 <if test="parkPositionY != null">
+            	and ps.parkPositionY = #{parkPositionY}
+        	 </if>
+        	 <if test="parkStatus != null">
+            	and ps.parkStatus = #{parkStatus}
+        	 </if>
+        	 <if test="parkStatusQuery != null and parkStatusQuery.length > 0 ">
+        	  	and ps.parkStatus in
+        	  	 <foreach item="item" index="index" collection="parkStatusQuery" open="(" separator="," close=")">  
+ 					#{item}  
+				 </foreach>
+        	 </if>
+        	 <if test="parkType != null">
+            	and ps.parkType = #{parkType}
+        	 </if>
+        	 <if test="parkTypeQuery != null and parkTypeQuery.length > 0 ">
+        	  	and ps.parkType in
+        	  	 <foreach item="item" index="index" collection="parkTypeQuery" open="(" separator="," close=")">  
+ 					#{item}  
+				 </foreach>
+        	 </if>
+        	 
+        	 <if test="parkPositionDes != null">
+            	and ps.parkPositionDes like CONCAT('%', #{parkPositionDes}, '%') 
+        	 </if>
+        	 <if test="spaceOwner != null">
+            	and ps.spaceOwner = #{spaceOwner}
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and ps.createTime >= #{createTime} ]]>
+        	 </if>
 	</select>
 </mapper>
