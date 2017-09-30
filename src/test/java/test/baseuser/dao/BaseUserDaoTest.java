@@ -1,4 +1,4 @@
-package test.baseuser;
+package test.baseuser.dao;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -28,7 +28,7 @@ public class BaseUserDaoTest {
 	public void testsave(){
 		BaseUser user = new BaseUser();
 		user.setUserId(UUID.randomUUID().toString());
-		user.setUserName("test01");
+		user.setUserName("test02");
 		user.setNickName("test01_nickName");
 		user.setUserPwd("123456a?");
 		user.setTelePhone("15300201276");

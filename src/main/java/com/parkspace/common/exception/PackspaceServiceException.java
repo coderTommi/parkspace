@@ -2,7 +2,7 @@ package com.parkspace.common.exception;
 
 import java.io.Serializable;
 
-public class PackspaceServiceException extends Exception implements Serializable {
+public class PackspaceServiceException extends RuntimeException implements Serializable {
     /**
 	 * 
 	 */

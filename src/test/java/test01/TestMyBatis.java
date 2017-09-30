@@ -22,8 +22,8 @@ public class TestMyBatis {
 	private IUserService userService = null;
 	@Test
 	public void test1(){
-		BaseUser user = userService.getUser(1);
-		System.out.println(user.getUserName());
+//		BaseUser user = userService.getUser(1);
+//		System.out.println(user.getUserName());
 	}
 
 }

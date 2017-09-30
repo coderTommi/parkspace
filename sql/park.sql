@@ -86,9 +86,9 @@ create table Baseuser
    weixinAccount        varchar(100) not null comment '微信账号,用来汇款的账号',
    avator               varchar(256) comment '头像',
    memo                 varchar(256) comment '备注',
-   createBy             varchar(30) not null comment '创建人',
+   createBy             varchar(64) not null comment '创建人',
    createTime           datetime not null comment '创建时间',
-   modifyBy             varchar(30) not null comment '修改人',
+   modifyBy             varchar(64) not null comment '修改人',
    modifyTime           datetime not null comment '修改时间',
    primary key (userId)
 );

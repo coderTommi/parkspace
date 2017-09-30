@@ -8,6 +8,7 @@
     			userId,
     			userName,
     			nickName,
+    			realName,
     			userPwd,
     			telePhone,
     			isAdmin,
@@ -26,6 +27,7 @@
     	 		#{userId},
     	 		#{userName},
     	 		#{nickName},
+    	 		#{realName},
     	 		#{userPwd},
     	 		#{telePhone},
     	 		#{isAdmin},
@@ -45,10 +47,27 @@
 	<!-- 更改用户信息 -->
 	<update id="update" parameterType="BaseUser">
     	update baseuser set
-    			state		=#{state},
-    			memo		=#{memo},
-    			modifyBy	=#{modifyBy},
-    			modifyTime	=#{modifyTime}
+		    	<if test="state != null">
+		    		state		=#{state},
+		    	</if>
+		    	<if test="realName != null">
+		    		realName		=#{realName},
+		    	</if>
+		    	<if test="idNo != null">
+		    		idNo		=#{idNo},
+		    	</if>	
+		    	<if test="idType != null">
+		    		idType		=#{idType},
+		    	</if>
+		    	<if test="memo != null">
+		    		memo		=#{memo},
+		    	</if>
+		    	<if test="modifyBy != null">
+		    		modifyBy		=#{modifyBy},
+		    	</if>		  
+		    	<if test="modifyTime != null">
+		    		modifyTime		=#{modifyTime}
+		    	</if>	
     	where userId=#{userId}
 	</update>
 	
@@ -60,4 +79,8 @@
 	<select id="getById" parameterType="java.lang.String" resultType="BaseUser">
 		select * from baseuser where userId = #{userId}
 	</select>
+	<!-- 根据手機查询车主信息 -->
+	<select id="getByTelphone" parameterType="java.lang.String" resultType="BaseUser">
+		select * from baseuser where telePhone = #{telePhone}
+	</select>	
 </mapper>

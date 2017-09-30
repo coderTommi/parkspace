@@ -1,4 +1,4 @@
-package test.baseuser;
+package test.baseuser.dao;
 
 import java.math.BigDecimal;
 import java.sql.Date;

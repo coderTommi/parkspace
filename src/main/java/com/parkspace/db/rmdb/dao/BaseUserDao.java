@@ -32,4 +32,10 @@ public interface BaseUserDao {
 	 * @return
 	 */
 	public BaseUser getById(String userId);
+	/**
+	 * 根據手機號查詢
+	 * @param telePhone
+	 * @return
+	 */
+	public BaseUser getByTelphone(String telePhone);
 }
