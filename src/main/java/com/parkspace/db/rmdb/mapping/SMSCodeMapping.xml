@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.SMSCodeDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="SMSCode">
+    	insert into smsCode(
+				telePhone,
+				smscode,
+				createTime
+    		) 
+         values(
+       			#{telePhone},
+       			#{smsCode},
+       			#{createTime}
+         )
+	</insert>
+	<!-- 根據手機查詢最新短信驗證碼 -->
+	<select id="getNewestCodeByPhone" parameterType="string" resultType="SMSCode">
+		select * from smscode where telePhone=#{telePhone} order by createTime desc limit 1
+	</select>
+	
+</mapper>

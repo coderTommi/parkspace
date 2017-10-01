@@ -2,14 +2,26 @@ package com.parkspace.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 public class CommonUtils {
+	
+	/**
+	 * 生成短信驗證碼
+	 * @return
+	 */
+	public static Integer generateSMSCode() {
+		Random random = new Random();
+		Integer code = random.nextInt(899999);
+		return code + 100000;
+	}
+	
 	/** md5加密 **/
 	public static String encodingByMd5(String str) throws NoSuchAlgorithmException {
 		return getMD5Str(str);
 	}
 	
-    public static String getMD5Str(String message) {  
+    public static String getMD5Str(String message) {
         String md5 = "";  
         try {  
             MessageDigest md = MessageDigest.getInstance("MD5");  // 创建一个md5算法对象  
@@ -38,7 +50,4 @@ public class CommonUtils {
         }  
         return hexStr.toString().toUpperCase();  
     }
-    public static void main(String[] args) throws NoSuchAlgorithmException {
-		System.out.println(encodingByMd5("123"));
-	}
 }
