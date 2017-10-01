@@ -2,6 +2,7 @@ package com.parkspace.service;
 
 import java.util.List;
 
+import com.parkspace.common.exception.PackspaceServiceException;
 import com.parkspace.db.rmdb.entity.ShareConfig;
 
 /**
@@ -95,8 +96,9 @@ public interface IShareConfigService {
 	 * </p>
 	 * @param     spaceno 车位编号
 	 * @return List<ShareConfig>    返回类型
-	 * @throws
+	 * @throws PackspaceServiceException
 	 * <p>CreateDate:2017年9月28日 下午6:02:54</p>
 	 */
-	public List<ShareConfig> getShareConfigListBySpaceno(String spaceno);
+	public List<ShareConfig> getShareConfigListBySpaceno(String spaceno) 
+			throws PackspaceServiceException;
 }

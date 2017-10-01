@@ -17,7 +17,11 @@ public class Constants {
 		PARAM_IS_NULL(10003), 
 		/** 手機號或密碼錯誤 **/
 		PHONE_OR_PWD_ERROR(10004), 
-		SMSCODE_IS_ERROR(10005);
+		SMSCODE_IS_ERROR(10005),
+		/** 车位编号为不能空 **/
+		SPACENO_IS_NOT_NULL(20001);
+		
+		
 		/** 错误码 **/
 		private int value;
 

@@ -3,7 +3,7 @@
 <mapper namespace="com.parkspace.db.rmdb.dao.CommunityDao">
 	<!-- 小区信息字段 -->
 	<sql id="Community_Column">
-		c.comid,c.zoneid,c.comname,c.address,c.isenable,c.memo,c.createBy,c.createTime,c.modifyBy,c.modifyTime
+		c.comid,c.zoneid,c.comname,c.address,c.isenable,c.memo,c.createBy,c.createTime,c.modifyBy,c.modifyTime,c.price
 	</sql>
 	<!-- 行政区域信息字段 -->
 	<sql id="Zone_Column">
@@ -36,7 +36,8 @@
     			createBy,
     			createTime,
     			modifyBy,
-    			modifyTime
+    			modifyTime,
+    			price
     		) 
     	 values(
     	 		#{comid},
@@ -48,7 +49,8 @@
     	 		#{createBy},
     	 		#{createTime},
     	 		#{modifyBy},
-    	 		#{modifyTime}
+    	 		#{modifyTime},
+    	 		#{price}
     	 	)
 	</insert>
 	
@@ -76,6 +78,9 @@
 			</if>
 			<if test="modifyTime != null">
 				modifyTime     = #{modifyTime}
+			</if>
+			<if test="price != null">
+				price     = #{price}
 			</if>
 		</trim>
     	where comid = #{comid}
@@ -107,6 +112,9 @@
         	 <if test="isenable != null">
             	and isenable = #{isenable}
         	 </if>
+        	 <if test="price != null">
+            	and price = #{price}
+        	 </if>
         	 <if test="createTime != null">
             	<![CDATA[ and createTime >= #{createTime} ]]>
         	 </if>
@@ -132,6 +140,9 @@
         	  <if test="comname != null">
             	 and c.comname like CONCAT('%', #{comname}, '%')  
         	  </if>
+        	  <if test="price != null">
+            	and c.price = #{price}
+        	 </if>
         	  <if test="address != null">
             	 and c.address like CONCAT('%', #{address}, '%') 
         	  </if>

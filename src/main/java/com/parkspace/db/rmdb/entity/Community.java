@@ -1,6 +1,7 @@
 package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -44,7 +45,15 @@ public class Community implements Serializable{
 	private String modifyBy;
 	//修改时间
 	private Date modifyTime;
+	//单价
+	private BigDecimal price;
 	
+	public BigDecimal getPrice() {
+		return price;
+	}
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
 	//行政区域基本信息
 	private Zone zone;
 	//区域名称
@@ -143,6 +152,7 @@ public class Community implements Serializable{
 		return "Community [comid=" + comid + ", comidQuery=" + Arrays.toString(comidQuery) + ", zoneid=" + zoneid
 				+ ", comname=" + comname + ", address=" + address + ", isenable=" + isenable + ", isenableQuery="
 				+ Arrays.toString(isenableQuery) + ", memo=" + memo + ", createBy=" + createBy + ", createTime="
-				+ createTime + ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + ", zone=" + zone + "]";
+				+ createTime + ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + ", price=" + price + ", zone="
+				+ zone + "]";
 	}
 }
