@@ -7,10 +7,15 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import com.parkspace.common.exception.PackspaceServiceException;
 import com.parkspace.db.rmdb.dao.ShareConfigDao;
 import com.parkspace.db.rmdb.entity.ShareConfig;
 import com.parkspace.service.IShareConfigService;
+import com.parkspace.util.Constants;
 
 /**
  * @Title: ShareConfigServiceImpl.java
@@ -47,6 +52,7 @@ public class ShareConfigServiceImpl implements IShareConfigService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:05:09</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public ShareConfig addShareConfig(ShareConfig shareConfig) {
 		shareConfig.setUUID(UUID.randomUUID().toString());
 		shareConfig.setCreateTime(new Date());
@@ -87,6 +93,7 @@ public class ShareConfigServiceImpl implements IShareConfigService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:05:35</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void updateShareConfig(ShareConfig shareConfig) {
 		if(shareConfig != null) {
 			shareConfig.setModifyTime(new Date());
@@ -124,6 +131,7 @@ public class ShareConfigServiceImpl implements IShareConfigService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:06:12</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void deleteShareConfig(ShareConfig shareConfig) {
 		if(shareConfig != null) {
 			shareConfig.setModifyTime(new Date());
@@ -139,6 +147,7 @@ public class ShareConfigServiceImpl implements IShareConfigService{
 	 * @throws
 	 * <p>CreateDate:2017年9月27日 下午6:03:20</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void disableShareConfig(String UUID,String modifyBy) {
 		ShareConfig shareConfig = new ShareConfig();
 		shareConfig.setUUID(UUID);
@@ -157,6 +166,7 @@ public class ShareConfigServiceImpl implements IShareConfigService{
 	 * @throws
 	 * <p>CreateDate:2017年9月27日 下午6:03:20</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void enableShareConfig(String UUID,String modifyBy) {
 		ShareConfig shareConfig = new ShareConfig();
 		shareConfig.setUUID(UUID);
@@ -188,10 +198,15 @@ public class ShareConfigServiceImpl implements IShareConfigService{
 	 * </p>
 	 * @param     spaceno 车位编号
 	 * @return List<ShareConfig>    返回类型
-	 * @throws
+	 * @throws PackspaceServiceException
 	 * <p>CreateDate:2017年9月28日 下午6:02:54</p>
 	 */
-	public List<ShareConfig> getShareConfigListBySpaceno(String spaceno){
+	public List<ShareConfig> getShareConfigListBySpaceno(String spaceno) 
+			throws PackspaceServiceException{
+		if(StringUtils.isEmpty(spaceno)) {
+			throw new PackspaceServiceException(Constants.ERRORCODE.SPACENO_IS_NOT_NULL.toString(), 
+					"车位编号不能为空");
+		}
 		ShareConfig shareConfig = new ShareConfig();
 		shareConfig.setSpaceno(spaceno);
 		//查询未开启和开启的共享信息
