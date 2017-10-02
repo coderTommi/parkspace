@@ -65,4 +65,13 @@ public interface PropertyMgmtUserDao {
 	 * <p>CreateDate:2017年9月23日 下午9:06:49</p>
 	 */
 	public List<PropertyMgmtUser> getPropertyMgmtUserList(PropertyMgmtUser propertyMgmtUser);
+	/**
+	 * @Title: getPropertyMgmtUserCount
+	 * <p>Description:根据条件查询物业的数量</p>
+	 * @param     propertyMgmtUser 物业管理员信息
+	 * @return int    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:06:49</p>
+	 */
+	public int getPropertyMgmtUserCount(PropertyMgmtUser propertyMgmtUser);
 }

@@ -20,7 +20,11 @@ public class Constants {
 		/** 短信验证码错误 **/
 		SMSCODE_IS_ERROR(10005),
 		/** 车位编号为不能空 **/
-		SPACENO_IS_NOT_NULL(20001);
+		SPACENO_IS_NOT_NULL(20001),
+		/** 小区编号为不能空 **/
+		COMID_IS_NOT_NULL(20002),
+		/** 行政区域编号为不能空 **/
+		ZONEID_IS_NOT_NULL(20003);
 		
 		
 		/** 错误码 **/

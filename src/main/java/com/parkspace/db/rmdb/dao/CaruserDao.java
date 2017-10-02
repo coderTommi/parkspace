@@ -31,39 +31,49 @@ public interface CaruserDao {
 	/**
 	 * @Title: addCaruser
 	 * <p>Description:保存车主信息</p>
-	 * @param     Caruser 车主信息
+	 * @param     caruser 车主信息
 	 * @return void    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:20:53</p>
 	 */
-	public void addCaruser(Caruser Caruser);
+	public void addCaruser(Caruser caruser);
 	/**
 	 * @Title: updateCaruser
 	 * <p>Description:更改车主信息</p>
-	 * @param     Caruser 车主信息
+	 * @param     caruser 车主信息
 	 * @return void    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:20:47</p>
 	 */
-	public void updateCaruser(Caruser Caruser);
+	public void updateCaruser(Caruser caruser);
 	/**
 	 * @Title: deleteCaruser
 	 * <p>Description:
 	 * 删除车主信息,修改isauth为-1,需要同时更新编辑人和编辑时间
 	 * </p>
-	 * @param     Caruser 车主信息
+	 * @param     caruser 车主信息
 	 * @return void    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:20:39</p>
 	 */
-	public void deleteCaruser(Caruser Caruser);
+	public void deleteCaruser(Caruser caruser);
 	/**
 	 * @Title: getCaruserList
 	 * <p>Description:根据条件查询车主信息</p>
-	 * @param     Caruser 车主信息
+	 * @param     caruser 车主信息
 	 * @return List<Caruser>    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:20:10</p>
 	 */
-	public List<Caruser> getCaruserList(Caruser Caruser);
+	public List<Caruser> getCaruserList(Caruser caruser);
+	/**
+	 * @Title: getCaruserCount
+	 * <p>Description:根据条件查询车主数量</p>
+	 * @param     caruser 车主信息
+	 * @return int    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:20:10</p>
+	 */
+	public int getCaruserCount(Caruser caruser);
+	
 }

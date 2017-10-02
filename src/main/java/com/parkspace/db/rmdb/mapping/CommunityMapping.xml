@@ -77,7 +77,7 @@
 				modifyBy       = #{modifyBy},
 			</if>
 			<if test="modifyTime != null">
-				modifyTime     = #{modifyTime}
+				modifyTime     = #{modifyTime},
 			</if>
 			<if test="price != null">
 				price     = #{price}
@@ -161,6 +161,9 @@
         	  </if>
         	  <!-- 行政区域过滤条件 -->
         	  <if test="zone != null">
+        	  	  <if test="zone.zoneid != null">
+            	 	 and z.zoneid = #{zone.zoneid}
+        	  	  </if>
         	  	  <if test="zone.zonename != null">
 	            	 and z.zonename like CONCAT('%', #{zone.zonename}, '%') 
 	        	  </if>

@@ -9,13 +9,18 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import com.parkspace.common.exception.PackspaceServiceException;
 import com.parkspace.db.rmdb.dao.CommunityDao;
 import com.parkspace.db.rmdb.dao.PropertyMgmtUserDao;
 import com.parkspace.db.rmdb.entity.Community;
 import com.parkspace.db.rmdb.entity.PropertyMgmtUser;
 import com.parkspace.db.rmdb.entity.Zone;
 import com.parkspace.service.ICommunityService;
+import com.parkspace.util.Constants;
 
 /**
  * @Title: CommunityServiceImpl.java
@@ -99,6 +104,7 @@ public class CommunityServiceImpl implements ICommunityService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:17:58</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public Community addCommunity(Community community){
 		if(community != null){
 			Community newCommunity = new Community();
@@ -114,6 +120,7 @@ public class CommunityServiceImpl implements ICommunityService{
 			newCommunity.setModifyBy(community.getModifyBy());
 			newCommunity.setModifyTime(new Date());
 			newCommunity.setZoneid(community.getZoneid());
+			newCommunity.setPrice(community.getPrice());
 			
 			this.communityDao.addCommunity(newCommunity);
 			return newCommunity;
@@ -129,6 +136,7 @@ public class CommunityServiceImpl implements ICommunityService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:17:44</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void updateCommunity(Community community){
 		if(community != null){
 			community.setModifyTime(new Date());
@@ -145,6 +153,7 @@ public class CommunityServiceImpl implements ICommunityService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:17:26</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void deleteCommunity(Community community){
 		if(community != null){
 			community.setModifyTime(new Date());
@@ -231,6 +240,33 @@ public class CommunityServiceImpl implements ICommunityService{
 	}
 	
 	/**
+	 * @Title: getPropertyMgmtUserByComid
+	 * <p>Description:根据小区id获取小区的物业信息
+	 * 目前一个小区只有一个物业人员
+	 * </p>
+	 * @param     comid 小区id
+	 * @return PropertyMgmtUser    返回类型
+	 * @throws PackspaceServiceException
+	 * <p>CreateDate:2017年10月1日 下午5:26:09</p>
+	 */
+	@Override
+	public PropertyMgmtUser getPropertyMgmtUserByComid(String comid) 
+			throws PackspaceServiceException{
+		if(StringUtils.isEmpty(comid)) {
+			throw new PackspaceServiceException(Constants.ERRORCODE.COMID_IS_NOT_NULL.toString(), 
+					"小区编号不能为空");
+		}
+		PropertyMgmtUser propertyMgmtUser = new PropertyMgmtUser();
+		propertyMgmtUser.setComid(comid);
+		List<PropertyMgmtUser> list = propertyMgmtUserDao.getPropertyMgmtUserList(propertyMgmtUser);
+		if(list != null && list.size() > 0) {
+			return list.get(0);
+		}else {
+			return null;
+		}
+	}
+	
+	/**
 	 * @Title: addUserCommunity
 	 * <p>Description:增加用户与小区的关联关系</p>
 	 * @param     comid 小区id
@@ -239,6 +275,8 @@ public class CommunityServiceImpl implements ICommunityService{
 	 * @throws
 	 * <p>CreateDate:2017年9月24日 下午6:06:15</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
 	public void addUserCommunity(String comid, String userId){
 		Map<String,String> map = new HashMap<String,String>();
 		map.put("comid", comid);
@@ -255,11 +293,28 @@ public class CommunityServiceImpl implements ICommunityService{
 	 * @throws
 	 * <p>CreateDate:2017年9月24日 下午6:06:15</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
 	public void deleteUserCommunity(String comid, String userId){
 		Map<String,String> map = new HashMap<String,String>();
 		map.put("comid", comid);
 		map.put("userId", userId);
 		this.communityDao.deleteUserCommunity(map);
 	}
-
+	
+	/**
+	 * @Title: getPropertyMgmtUserCount
+	 * <p>Description:根据条件查询物业的数量</p>
+	 * @param     propertyMgmtUser 物业管理员信息
+	 * @return int    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:06:49</p>
+	 */
+	@Override
+	public int getPropertyMgmtUserCount(PropertyMgmtUser propertyMgmtUser) {
+		if(propertyMgmtUser == null) {
+			propertyMgmtUser = new PropertyMgmtUser();
+		}
+		return this.propertyMgmtUserDao.getPropertyMgmtUserCount(propertyMgmtUser);
+	}
 }

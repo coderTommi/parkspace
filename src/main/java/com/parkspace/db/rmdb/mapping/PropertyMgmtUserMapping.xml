@@ -52,13 +52,17 @@
 	<select id="getPropertyMgmtUserList" parameterType="PropertyMgmtUser" resultType="PropertyMgmtUser">
 		select 
 			<!-- <include refid="PropertyMgmtUser_Column"/>, -->
-			<include refid="Baseuser_Column"/>
-		from propertymgmtuser p,Baseuser u
+			<include refid="Baseuser_Column"/>,
+			uc.comid
+		from propertymgmtuser p,
+		     Baseuser u,
+		     UserCommunity uc
 		where p.userId = u.userId
-		      <!-- 物业基本信息过滤 -->
-			 <!-- <if test="comid != null">
-            	and p.comid = #{comid}
-        	 </if> -->
+		and   p.userId = uc.userId
+		     <!-- 物业基本信息过滤 -->
+			 <if test="comid != null">
+            	and uc.comid = #{comid}
+        	 </if>
         	 <!-- 用户基本信息过滤 -->
         	 <if test="userId != null">
             	and u.userId = #{userId}
@@ -70,5 +74,29 @@
             	<![CDATA[ and u.createTime >= #{createTime} ]]>
         	 </if>
         order by u.createTime desc
+	</select>
+	<!-- 根据具体条件查询物业数量 -->
+	<select id="getPropertyMgmtUserCount" parameterType="PropertyMgmtUser" resultType="int">
+		select 
+			count(distinct p.userId)
+		from propertymgmtuser p,
+		     Baseuser u,
+		     UserCommunity uc
+		where p.userId = u.userId
+		and   p.userId = uc.userId
+		     <!-- 物业基本信息过滤 -->
+			 <if test="comid != null">
+            	and uc.comid = #{comid}
+        	 </if>
+        	 <!-- 用户基本信息过滤 -->
+        	 <if test="userId != null">
+            	and u.userId = #{userId}
+        	 </if>
+        	 <if test="isAdmin != null">
+            	and u.isAdmin = #{isAdmin}
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and u.createTime >= #{createTime} ]]>
+        	 </if>
 	</select>
 </mapper>

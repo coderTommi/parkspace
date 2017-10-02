@@ -6,6 +6,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.parkspace.db.rmdb.dao.ParkingSpaceDao;
 import com.parkspace.db.rmdb.dao.SpaceOwnerDao;
@@ -51,6 +53,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:10:04</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public ParkingSpace addParkingSpace(ParkingSpace parkingSpace){
 		if(parkingSpace != null){
 			parkingSpace.setCreateTime(new Date());
@@ -73,6 +76,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:09:51</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void updateParkingSpace(ParkingSpace parkingSpace){
 		if(parkingSpace != null){
 			parkingSpace.setModifyTime(new Date());
@@ -89,6 +93,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	 * @throws
 	 * <p>CreateDate:2017年9月26日 下午4:10:30</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void enableParkingSpace(String spaceno, String modifyBy) {
 		ParkingSpace parkingSpace = new ParkingSpace();
 		parkingSpace.setSpaceno(spaceno);
@@ -106,6 +111,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	 * @throws
 	 * <p>CreateDate:2017年9月26日 下午4:10:30</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void disableParkingSpace(String spaceno, String modifyBy) {
 		ParkingSpace parkingSpace = new ParkingSpace();
 		parkingSpace.setSpaceno(spaceno);
@@ -126,6 +132,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:09:28</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void deleteParkingSpace(ParkingSpace parkingSpace){
 		if(parkingSpace != null){
 			parkingSpace.setModifyTime(new Date());

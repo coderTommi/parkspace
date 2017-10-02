@@ -2,6 +2,7 @@ package com.parkspace.service;
 
 import java.util.List;
 
+import com.parkspace.common.exception.PackspaceServiceException;
 import com.parkspace.db.rmdb.entity.Community;
 import com.parkspace.db.rmdb.entity.PropertyMgmtUser;
 
@@ -131,6 +132,18 @@ public interface ICommunityService {
 	 * <p>CreateDate:2017年9月23日 下午9:08:13</p>
 	 */
 	public PropertyMgmtUser getPropertyMgmtUser(String userId); 
+	/**
+	 * @Title: getPropertyMgmtUserByComid
+	 * <p>Description:根据小区id获取小区的物业信息
+	 * 目前一个小区只有一个物业人员
+	 * </p>
+	 * @param     comid 小区id
+	 * @return PropertyMgmtUser    返回类型
+	 * @throws PackspaceServiceException
+	 * <p>CreateDate:2017年10月1日 下午5:26:09</p>
+	 */
+	public PropertyMgmtUser getPropertyMgmtUserByComid(String comid) 
+			throws PackspaceServiceException; 
 	
 	/**
 	 * @Title: addUserCommunity
@@ -153,4 +166,14 @@ public interface ICommunityService {
 	 * <p>CreateDate:2017年9月24日 下午6:06:15</p>
 	 */
 	public void deleteUserCommunity(String comid, String userId);
+	
+	/**
+	 * @Title: getPropertyMgmtUserCount
+	 * <p>Description:根据条件查询物业的数量</p>
+	 * @param     propertyMgmtUser 物业管理员信息
+	 * @return int    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:06:49</p>
+	 */
+	public int getPropertyMgmtUserCount(PropertyMgmtUser propertyMgmtUser);
 }
