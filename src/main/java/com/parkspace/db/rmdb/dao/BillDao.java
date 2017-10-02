@@ -26,7 +26,7 @@ public interface BillDao {
 	public Bill getById(String billId);
 	/**
 	 * 根据用户查询列表
-	 * @param userId
+	 * @param bill
 	 * @return
 	 */
 	public List<Bill> getBills(Bill bill);
