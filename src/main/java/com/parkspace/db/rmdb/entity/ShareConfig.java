@@ -60,9 +60,31 @@ public class ShareConfig implements Serializable{
 	private String queryDate;
 	//查询时间：13:23:10
 	private String queryTime;
+	//当前日期是星期几：1,2,3,4,5,6,7；表示星期天到星期六
+	private Integer nowWeek;
+	//第二个是星期几
+	private Integer nowNextWeek;
+	//可停留的时间：A表示长期无限制，其他格式形如100:10:20（表示100个小时10分钟20秒）
+	private String parkHourString;
 	
-	
-	
+	public Integer getNowWeek() {
+		return nowWeek;
+	}
+	public void setNowWeek(Integer nowWeek) {
+		this.nowWeek = nowWeek;
+	}
+	public Integer getNowNextWeek() {
+		return nowNextWeek;
+	}
+	public void setNowNextWeek(Integer nowNextWeek) {
+		this.nowNextWeek = nowNextWeek;
+	}
+	public String getParkHourString() {
+		return parkHourString;
+	}
+	public void setParkHourString(String parkHourString) {
+		this.parkHourString = parkHourString;
+	}
 	public String getQueryDate() {
 		return queryDate;
 	}
@@ -172,6 +194,7 @@ public class ShareConfig implements Serializable{
 				+ startDate + ", startTime=" + startTime + ", endDate=" + endDate + ", endTime=" + endTime
 				+ ", internalDate=" + internalDate + ", createBy=" + createBy + ", createTime=" + createTime
 				+ ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + ", queryDate=" + queryDate + ", queryTime="
-				+ queryTime + "]";
+				+ queryTime + ", nowWeek=" + nowWeek + ", nowNextWeek=" + nowNextWeek + ", parkHourString="
+				+ parkHourString + "]";
 	}
 }

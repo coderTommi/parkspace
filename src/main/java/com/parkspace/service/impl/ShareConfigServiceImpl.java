@@ -213,4 +213,22 @@ public class ShareConfigServiceImpl implements IShareConfigService{
 		shareConfig.setIsOpenQuery(new Integer[] {0,1});
 		return this.shareConfigDao.getShareConfigList(shareConfig);
 	}
+	
+	/**
+	 * @Title: getEnableShareConfigList
+	 * <p>Description:根据条件查询车位共享信息
+	 * 查询的信息表示从当时间预约，可预约的车位共享信息
+	 * </p>
+	 * @param     shareConfig 车位共享信息
+	 * @return List<ShareConfig>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:05:58</p>
+	 */
+	@Override
+	public List<ShareConfig> getEnableShareConfigList(ShareConfig shareConfig){
+		if(shareConfig == null) {
+			shareConfig = new ShareConfig();
+		}
+		return shareConfigDao.getEnableShareConfigList(shareConfig);
+	}
 }

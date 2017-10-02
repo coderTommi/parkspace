@@ -378,6 +378,61 @@
             	<![CDATA[ and ps.createTime >= #{createTime} ]]>
         	 </if>
 	</select>
+	<!-- 根据具体条件查询车位的数量 -->
+	<!-- 空闲 -->
+	<select id="getNoUseingParkingSpaceCount" parameterType="ParkingSpace" resultType="int">
+		select count(ps.spaceno)
+		from ParkingSpace ps
+		where 1=1
+				and exists(select * from vEnableBillShareConfig e where e.spaceno = ps.spaceno)
+		  <!-- 车位基本信息过滤条件 -->
+			 <if test="spaceno != null">
+            	and ps.spaceno = #{spaceno}
+        	 </if>
+        	 <if test="comid != null">
+            	and ps.comid = #{comid}
+        	 </if>
+        	 <if test="parkPositionFloor != null">
+            	and ps.parkPositionFloor = #{parkPositionFloor}
+        	 </if>
+        	 <if test="parkPositionZone != null">
+            	and ps.parkPositionZone = #{parkPositionZone}
+        	 </if>
+        	 <if test="parkPositionX != null">
+            	and ps.parkPositionX = #{parkPositionX}
+        	 </if>
+        	 <if test="parkPositionY != null">
+            	and ps.parkPositionY = #{parkPositionY}
+        	 </if>
+        	 <if test="parkStatus != null">
+            	and ps.parkStatus = #{parkStatus}
+        	 </if>
+        	 <if test="parkStatusQuery != null and parkStatusQuery.length > 0 ">
+        	  	and ps.parkStatus in
+        	  	 <foreach item="item" index="index" collection="parkStatusQuery" open="(" separator="," close=")">  
+ 					#{item}  
+				 </foreach>
+        	 </if>
+        	 <if test="parkType != null">
+            	and ps.parkType = #{parkType}
+        	 </if>
+        	 <if test="parkTypeQuery != null and parkTypeQuery.length > 0 ">
+        	  	and ps.parkType in
+        	  	 <foreach item="item" index="index" collection="parkTypeQuery" open="(" separator="," close=")">  
+ 					#{item}  
+				 </foreach>
+        	 </if>
+        	 
+        	 <if test="parkPositionDes != null">
+            	and ps.parkPositionDes like CONCAT('%', #{parkPositionDes}, '%') 
+        	 </if>
+        	 <if test="spaceOwner != null">
+            	and ps.spaceOwner = #{spaceOwner}
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and ps.createTime >= #{createTime} ]]>
+        	 </if>
+	</select>
 	<!-- 查询可预订的车位信息 -->
 	<select id="getParkingSpaceEnableBillList" parameterType="ParkingSpace" resultType="ParkingSpace">
 		select 

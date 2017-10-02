@@ -22,6 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
  * @version V1.0.0 
  * <p>CreateDate:2017年10月1日 上午10:38:14</p>
 */
+@SuppressWarnings("deprecation")
 @RunWith(SpringJUnit4ClassRunner.class)
 //单元测试的时候真实的开启一个web服务  
 @WebAppConfiguration

@@ -16,7 +16,9 @@ import com.parkspace.db.rmdb.entity.ParkingSpace;
 public interface IParkingSpaceService {
 	/**
 	 * @Title: getParkingSpace
-	 * <p>Description:根据车位编号查询车位信息</p>
+	 * <p>Description:根据车位编号查询车位信息
+	 * 包含共享信息
+	 * </p>
 	 * @param     spaceno 车位编号
 	 * @return ParkingSpace    返回类型
 	 * @throws
@@ -79,7 +81,9 @@ public interface IParkingSpaceService {
 	public void deleteParkingSpace(ParkingSpace parkingSpace);
 	/**
 	 * @Title: getParkingSpaceList
-	 * <p>Description:根据条件查询车位信息</p>
+	 * <p>Description:根据条件查询车位信息
+	 * 包含共享信息
+	 * </p>
 	 * @param     parkingSpace 车位信息
 	 * @return List<ParkingSpace>    返回类型
 	 * @throws
@@ -111,21 +115,31 @@ public interface IParkingSpaceService {
 	/**
 	 * @Title: getEnableParkingSpaceCount
 	 * <p>Description:获取共享的车位数量包括占用和空闲</p>
-	 * @param     参数
+	 * @param     parkingSpace 过滤条件
 	 * @return int    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年9月27日 上午9:18:39</p>
 	 */
-	public int getEnableParkingSpaceCount();
+	public int getEnableParkingSpaceCount(ParkingSpace parkingSpace);
 	/**
-	 * @Title: getEnableParkingSpaceCountByComid
-	 * <p>Description:通过小区id获取共享的车位数量包括占用和空闲</p>
-	 * @param     comid 小区id
+	 * @Title: getNoUseingParkingSpaceCount
+	 * <p>Description:获取共享的车位数量：空闲</p>
+	 * @param     parkingSpace 过滤条件
 	 * @return int    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年9月27日 上午9:18:39</p>
 	 */
-	public int getEnableParkingSpaceCountByComid(String comid);
+	public int getNoUseingParkingSpaceCount(ParkingSpace parkingSpace);
+	
+//	/**
+//	 * @Title: getEnableParkingSpaceCountByComid
+//	 * <p>Description:通过小区id获取共享的车位数量包括占用和空闲</p>
+//	 * @param     comid 小区id
+//	 * @return int    返回类型
+//	 * @throws
+//	 * <p>CreateDate:2017年9月27日 上午9:18:39</p>
+//	 */
+//	public int getEnableParkingSpaceCountByComid(String comid);
 	
 	/**
 	 * @Title: getParkingSpaceListBySpacenoLike

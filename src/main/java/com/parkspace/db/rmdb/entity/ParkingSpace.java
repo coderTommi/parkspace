@@ -3,6 +3,7 @@ package com.parkspace.db.rmdb.entity;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Title: ParkingSpace.java
@@ -106,9 +107,7 @@ public class ParkingSpace implements Serializable{
 	//转化为字符串，停车时长,格式00:00:00
 	private String parkHoursString;
 	//共享信息
-	private ShareConfig shareConfig;
-	
-	
+	private List<ShareConfig> shareConfigList;
 	
 	public String getParkHoursString() {
 		return parkHoursString;
@@ -124,11 +123,12 @@ public class ParkingSpace implements Serializable{
 			this.parkHoursString = parkHoursString;
 		}
 	}
-	public ShareConfig getShareConfig() {
-		return shareConfig;
+	
+	public List<ShareConfig> getShareConfigList() {
+		return shareConfigList;
 	}
-	public void setShareConfig(ShareConfig shareConfig) {
-		this.shareConfig = shareConfig;
+	public void setShareConfigList(List<ShareConfig> shareConfigList) {
+		this.shareConfigList = shareConfigList;
 	}
 	public String getSpaceno() {
 		return spaceno;
@@ -267,7 +267,7 @@ public class ParkingSpace implements Serializable{
 				+ ", spaceOwner=" + spaceOwner + ", memo=" + memo + ", createBy=" + createBy + ", createTime="
 				+ createTime + ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + ", community=" + community
 				+ ", zone=" + zone + ", spaceOwnerUser=" + spaceOwnerUser + ", parkHours=" + parkHours
-				+ ", parkHoursString=" + parkHoursString + ", shareConfig=" + shareConfig + "]";
+				+ ", parkHoursString=" + parkHoursString + ", shareConfigList=" + shareConfigList + "]";
 	}
 	public Integer getParkHours() {
 		return parkHours;
