@@ -8,6 +8,8 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.parkspace.db.rmdb.dao.ZoneDao;
 import com.parkspace.db.rmdb.entity.Zone;
@@ -51,6 +53,7 @@ public class ZoneServiceImpl implements IZoneService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:00:49</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public Zone addZone(Zone zone){
 		Zone returnZone = new Zone();
 		if(zone != null){
@@ -81,6 +84,7 @@ public class ZoneServiceImpl implements IZoneService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:01:18</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void updateZone(Zone zone){
 		if(zone != null){
 			zone.setModifyTime(new Date());
@@ -98,6 +102,7 @@ public class ZoneServiceImpl implements IZoneService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:01:50</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void deleteZone(Zone zone){
 		if(zone != null){
 			zone.setIsenable(-1);

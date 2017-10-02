@@ -276,4 +276,141 @@
         	  </if>
         order by u.createTime desc
 	</select>
+	
+	<!-- 根据条件查询车位业主数量-->
+	<select id="getSpaceOwnerCount" parameterType="SpaceOwner" resultType="int">
+		select 
+			count(distinct s.userId)
+		from SpaceOwner s,
+		     Baseuser u,
+		     ParkingSpace p,
+		     Community c,
+			 Zone z
+		where 1=1
+		      and s.userId  = u.userId
+		      and s.spaceno = p.spaceno
+		      and p.comid   = c.comid
+		      and c.zoneid  = z.zoneid
+		      
+		      <!-- 车位业主过滤条件 -->
+		      <if test="spaceno != null">
+		      	<!-- and spaceno = #{spaceno} -->
+		      	 and s.spaceno like CONCAT('%', #{spaceno}, '%') 
+        	  </if>
+        	  <if test="userId != null">
+            	 and s.userId = #{userId}
+        	  </if>
+        	  <if test="isauth != null">
+            	 and s.isauth = #{isauth}
+        	  </if>
+        	  <!-- 业主多状态查询 -->
+        	  <if test="isauthQuery != null and isauthQuery.length > 0 ">
+        	  	 and s.isauth in
+        	  	 	<foreach item="item" index="index" collection="isauthQuery" open="(" separator="," close=")">  
+ 						#{item}  
+					</foreach>
+        	  </if>
+        	  <if test="carno != null">
+            	 and s.carno like CONCAT('%', #{carno}, '%') 
+        	  </if>
+        	  <!-- 用户信息过滤 -->
+        	  <if test="userName != null">
+            	 and u.userName like CONCAT('%', #{userName}, '%') 
+        	  </if>
+        	  <if test="nickName != null">
+            	 and u.nickName like CONCAT('%', #{nickName}, '%') 
+        	  </if>
+        	  <if test="state != null">
+            	 and u.state = #{state}
+        	  </if>
+        	  <if test="createTime != null">
+            	 <![CDATA[ and u.createTime >= #{createTime} ]]>
+        	  </if>
+        	  <!-- 车位信息过滤 -->
+        	  <if test="parkingSpace != null">
+        	  	  <if test="parkingSpace.comid != null">
+	            	 and p.comid = #{parkingSpace.comid}
+	        	  </if>
+	        	  <if test="parkingSpace.parkPositionFloor != null">
+	            	 and p.parkPositionFloor = #{parkingSpace.parkPositionFloor}
+	        	  </if>
+	        	  <if test="parkingSpace.parkPositionZone != null">
+	            	 and p.parkPositionZone = #{parkingSpace.parkPositionZone}
+	        	  </if>
+	        	  <if test="parkingSpace.parkPositionX != null">
+	            	 and p.parkPositionX = #{parkingSpace.parkPositionX}
+	        	  </if>
+	        	  <if test="parkingSpace.parkPositionY != null">
+	            	 and p.parkPositionY = #{parkingSpace.parkPositionY}
+	        	  </if>
+	        	  <if test="parkingSpace.parkStatus != null">
+	            	 and p.parkStatus = #{parkingSpace.parkStatus}
+	        	  </if>
+	        	  <if test="parkingSpace.parkType != null">
+	            	 and p.parkType = #{parkingSpace.parkType}
+	        	  </if>
+	        	 
+	        	  <if test="parkingSpace.parkPositionDes != null">
+	            	 and p.parkPositionDes like CONCAT('%', #{parkingSpace.parkPositionDes}, '%') 
+	        	  </if>
+	        	  <if test="parkingSpace.spaceOwner != null">
+	            	 and p.spaceOwner = #{parkingSpace.spaceOwner}
+	        	  </if>
+        	  </if>
+        	  
+        	  <!-- 小区过滤条件 -->
+        	  <if test="community != null">
+        	  	  <if test="community.zoneid != null">
+	            	 and c.zoneid = #{community.zoneid}
+	        	  </if>
+	        	  <!-- 小区多条件过滤 -->
+	        	  <if test="community.comidQuery != null and community.comidQuery.length > 0 ">
+	        	  	 and c.comid in
+	        	  	 	<foreach item="item" index="index" collection="community.comidQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+	        	  <if test="community.comname != null">
+	            	 and c.comname like CONCAT('%', #{community.comname}, '%')  
+	        	  </if>
+	        	  <if test="community.address != null">
+	            	 and c.address like CONCAT('%', #{community.address}, '%') 
+	        	  </if>
+	        	  <if test="community.isenable != null">
+	            	 and c.isenable = #{community.isenable}
+	        	  </if>
+	        	  <!-- 小区多状态查询 -->
+	        	  <if test="community.isenableQuery != null and community.isenableQuery.length > 0 ">
+	        	  	 and c.isenable in
+	        	  	 	<foreach item="item" index="index" collection="community.isenableQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+        	  </if>
+        	  <!-- 行政区域过滤条件 -->
+        	  <if test="zone != null">
+        	  	  <if test="zone.zonename != null">
+	            	 and z.zonename like CONCAT('%', #{zone.zonename}, '%') 
+	        	  </if>
+	        	  <if test="zone.isenable != null">
+	            	 and z.isenable = #{zone.isenable}
+	        	  </if>
+	        	  <!-- 行政区域多状态查询 -->
+	        	  <if test="zone.isenableQuery != null and zone.isenableQuery.length > 0 ">
+	        	  	 and z.isenable in
+	        	  	 	<foreach item="item" index="index" collection="zone.senableQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+	        	  <if test="zone.province != null">
+	            	 and z.province = #{zone.province}
+	        	  </if>
+	        	  <if test="zone.city != null">
+	            	 and z.city = #{zone.city}
+	        	  </if>
+	        	  <if test="zone.zone != null">
+	            	 and z.zone = #{zone.zone}
+	        	  </if>
+        	  </if>
+	</select>
 </mapper>

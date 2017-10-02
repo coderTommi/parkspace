@@ -25,6 +25,7 @@ import com.parkspace.service.IShareConfigService;
 public class TestShareConfigController extends TestBaseController{
 	@Resource
 	private IShareConfigService shareConfigService;
+	public String comid = "1d93e91d-ae0b-4c5f-b0cc-0e6e711357ff";
 	@Test
 	public void getAllShareConfig() {
 		try {
@@ -44,7 +45,7 @@ public class TestShareConfigController extends TestBaseController{
 	@Test
 	public void disableShareConfig() {
 		try {
-			mvc.perform(MockMvcRequestBuilders.post("/v1/shareconfig/disableshareconfig/1d93e91d-ae0b-4c5f-b0cc-0e6e711357ff"))
+			mvc.perform(MockMvcRequestBuilders.post("/v1/shareconfig/disableshareconfig/"+comid))
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk());
 		} catch (Exception e) {
@@ -55,7 +56,7 @@ public class TestShareConfigController extends TestBaseController{
 	@Test 
 	public void enableShareConfig() {
 		try {
-			mvc.perform(MockMvcRequestBuilders.post("/v1/shareconfig/enableshareconfig/1d93e91d-ae0b-4c5f-b0cc-0e6e711357ff"))
+			mvc.perform(MockMvcRequestBuilders.post("/v1/shareconfig/enableshareconfig/"+comid))
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk());
 		} catch (Exception e) {
@@ -66,7 +67,7 @@ public class TestShareConfigController extends TestBaseController{
 	@Test
 	public void deleteShareConfig() {
 		try {
-			mvc.perform(MockMvcRequestBuilders.post("/v1/shareconfig/deleteshareconfig/1d93e91d-ae0b-4c5f-b0cc-0e6e711357ff"))
+			mvc.perform(MockMvcRequestBuilders.post("/v1/shareconfig/deleteshareconfig/"+comid))
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk());
 		} catch (Exception e) {
@@ -108,7 +109,7 @@ public class TestShareConfigController extends TestBaseController{
 	@Test
 	public void updateShareConfig() {
 		
-		ShareConfig shareConfig = this.shareConfigService.getShareConfig("1d93e91d-ae0b-4c5f-b0cc-0e6e711357ff");
+		ShareConfig shareConfig = this.shareConfigService.getShareConfig(comid);
 		
 		ObjectMapper mapper = new ObjectMapper(); 
 		
@@ -129,7 +130,7 @@ public class TestShareConfigController extends TestBaseController{
 	@Test
 	public void getShareConfig() {
 		try {
-			mvc.perform(MockMvcRequestBuilders.get("/v1/shareconfig/getshareconfig/1d93e91d-ae0b-4c5f-b0cc-0e6e711357ff"))
+			mvc.perform(MockMvcRequestBuilders.get("/v1/shareconfig/getshareconfig/"+comid))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andDo(print());
 		} catch (Exception e) {

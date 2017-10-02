@@ -8,6 +8,8 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.parkspace.db.rmdb.dao.BlackListDao;
 import com.parkspace.db.rmdb.dao.ParkingSpaceDao;
@@ -86,6 +88,7 @@ public class SpaceOwnerServiceImpl implements ISpaceOwnerService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午10:04:16</p>
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
 	public BlackList addBlackList(BlackList blackList) {
 		//获取主键信息
@@ -123,5 +126,22 @@ public class SpaceOwnerServiceImpl implements ISpaceOwnerService{
 		}
 		list = blackListDao.getBlackListAllInfoList(blackList);
 		return list;
+	}
+	/**
+	 * @Title: getSpaceOwnerCount
+	 * <p>Description:
+	 * 根据条件查询车位业主数量
+	 * </p>
+	 * @param     spaceOwner 车位业主信息
+	 * @return List<SpaceOwner>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月24日 上午1:42:12</p>
+	 */
+	@Override
+	public int getSpaceOwnerCount(SpaceOwner spaceOwner) {
+		if(spaceOwner == null) {
+			spaceOwner = new SpaceOwner();
+		}
+		return this.spaceOwnerDao.getSpaceOwnerCount(spaceOwner);
 	}
 }

@@ -60,7 +60,7 @@ public class ShareConfigController {
             @PathVariable String spaceno,
             HttpServletRequest request) {
 		OperationResult res = new OperationResult();
-		PageHelper.startPage(pageSize, page);
+		PageHelper.startPage(page, pageSize);
 		try {
 			List<ShareConfig> list = shareConfigService.getShareConfigListBySpaceno(spaceno);
 			res.setFlag(true);
@@ -124,7 +124,7 @@ public class ShareConfigController {
             @PathVariable String UUID,
             HttpServletRequest request) {
 		OperationResult res = new OperationResult();
-		BaseUser baseUser = (BaseUser) request.getAttribute("baseUser");
+		BaseUser baseUser = (BaseUser)request.getSession().getAttribute("_USER");
 		try {
 			String userName = "";
 			if(baseUser != null) {
@@ -147,7 +147,7 @@ public class ShareConfigController {
 	}
 	
 	/**
-	 * @Title: disableShareConfig
+	 * @Title: enableShareConfig
 	 * <p>Description:开启某个共享时间段
 	 * /v1/shareconfig/enableshareconfig/1d93e91d-ae0b-4c5f-b0cc-0e6e711357ff
 	 * </p>
@@ -162,7 +162,7 @@ public class ShareConfigController {
             @PathVariable String UUID,
             HttpServletRequest request) {
 		OperationResult res = new OperationResult();
-		BaseUser baseUser = (BaseUser) request.getAttribute("baseUser");
+		BaseUser baseUser = (BaseUser)request.getSession().getAttribute("_USER");
 		try {
 			String userName = "";
 			if(baseUser != null) {
@@ -186,7 +186,7 @@ public class ShareConfigController {
 	
 	/**
 	 * @Title: deleteShareConfig
-	 * <p>Description:开启某个共享时间段
+	 * <p>Description:删除某个共享时间段
 	 * /v1/shareconfig/deleteshareconfig/1d93e91d-ae0b-4c5f-b0cc-0e6e711357ff
 	 * </p>
 	 * @param     参数
@@ -200,7 +200,7 @@ public class ShareConfigController {
             @PathVariable String UUID,
             HttpServletRequest request) {
 		OperationResult res = new OperationResult();
-		BaseUser baseUser = (BaseUser) request.getAttribute("baseUser");
+		BaseUser baseUser = (BaseUser)request.getSession().getAttribute("_USER");
 		try {
 			String userName = "";
 			if(baseUser != null) {
@@ -244,7 +244,7 @@ public class ShareConfigController {
 			@RequestBody ShareConfig shareConfig,
             HttpServletRequest request) {
 		OperationResult res = new OperationResult();
-		BaseUser baseUser = (BaseUser) request.getAttribute("baseUser");
+		BaseUser baseUser = (BaseUser)request.getSession().getAttribute("_USER");
 		try {
 			String userName = "";
 			if(baseUser != null) {
@@ -287,7 +287,7 @@ public class ShareConfigController {
 			@RequestBody ShareConfig shareConfig,
             HttpServletRequest request) {
 		OperationResult res = new OperationResult();
-		BaseUser baseUser = (BaseUser) request.getAttribute("baseUser");
+		BaseUser baseUser = (BaseUser)request.getSession().getAttribute("_USER");
 		try {
 			String userName = "";
 			if(baseUser != null) {

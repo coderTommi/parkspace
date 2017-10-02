@@ -10,7 +10,11 @@ public class Constants {
 		/** 手机号被占用 **/
 		TELEPHONE_IS_EXISTS(10001),
 		/** 车位编号为不能空 **/
-		SPACENO_IS_NOT_NULL(20001);
+		SPACENO_IS_NOT_NULL(20001),
+		/** 小区编号为不能空 **/
+		COMID_IS_NOT_NULL(20002),
+		/** 行政区域编号为不能空 **/
+		ZONEID_IS_NOT_NULL(20003);
 		
 		
 		/** 错误码 **/
