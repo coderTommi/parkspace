@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
 
 import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.dao.SMSCodeDao;
@@ -12,6 +13,7 @@ import com.parkspace.service.ISmsCodeService;
 import com.parkspace.util.CommonUtils;
 import com.parkspace.util.Constants;
 
+@Service("smsCodeService")
 public class SmsCodeServiceImpl implements ISmsCodeService {
 	private static Log logger = LogFactory.getLog(SmsCodeServiceImpl.class);
 	private static final int TIMEOUT = 60;
