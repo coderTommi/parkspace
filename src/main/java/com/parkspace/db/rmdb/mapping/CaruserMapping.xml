@@ -158,7 +158,7 @@
             	 and car.userId = #{userId}
         	  </if>
         	  <if test="carno != null">
-            	 and car.carno = #{carno}
+            	 and car.carno like CONCAT('%', #{carno}, '%') 
         	  </if>
         	  <if test="isauth != null">
             	 and car.isauth = #{isauth}
@@ -173,6 +173,9 @@
         	  <!-- 用户信息过滤 -->
         	  <if test="userName != null">
             	 and u.userName like CONCAT('%', #{userName}, '%') 
+        	  </if>
+        	  <if test="telePhone != null">
+            	 and u.telephone like CONCAT('%', #{telePhone}, '%') 
         	  </if>
         	  <if test="nickName != null">
             	 and u.nickName like CONCAT('%', #{nickName}, '%') 
@@ -219,6 +222,9 @@
 	        	  </if>
 	        	  <if test="zone.isenable != null">
 	            	 and z.isenable = #{zone.isenable}
+	        	  </if>
+	        	  <if test="zone.zoneid != null">
+	            	 and z.zoneid = #{zone.zoneid}
 	        	  </if>
 	        	  <!-- 行政区域多状态查询 -->
 	        	  <if test="zone.isenableQuery != null and zone.isenableQuery.length > 0 ">
@@ -259,7 +265,7 @@
             	 and car.userId = #{userId}
         	  </if>
         	  <if test="carno != null">
-            	 and car.carno = #{carno}
+            	 and car.carno = like CONCAT('%', #{carno}, '%') 
         	  </if>
         	  <if test="isauth != null">
             	 and car.isauth = #{isauth}
@@ -272,6 +278,9 @@
 				 </foreach>
         	  </if>
         	  <!-- 用户信息过滤 -->
+        	  <if test="telePhone != null">
+            	 and u.telephone like CONCAT('%', #{telePhone}, '%') 
+        	  </if>
         	  <if test="userName != null">
             	 and u.userName like CONCAT('%', #{userName}, '%') 
         	  </if>
@@ -320,6 +329,9 @@
 	        	  </if>
 	        	  <if test="zone.isenable != null">
 	            	 and z.isenable = #{zone.isenable}
+	        	  </if>
+	        	  <if test="zone.zoneid != null">
+	            	 and z.zoneid = #{zone.zoneid}
 	        	  </if>
 	        	  <!-- 行政区域多状态查询 -->
 	        	  <if test="zone.isenableQuery != null and zone.isenableQuery.length > 0 ">

@@ -3,7 +3,7 @@
 <mapper namespace="com.parkspace.db.rmdb.dao.BlackListDao">
 	<!-- 黑名单信息字段 -->
 	<sql id="BlackList_Column">
-		b.UUID,b.userId,b.isCancel,b.memo,b.createTime,b.modifyTime
+		b.UUID,b.userId,b.isCancel,b.memo,b.createTime,b.modifyTime,b.userType
 	</sql>
 	<!-- 用户基本信息字段 -->
 	<!-- 用户信息字段 -->
@@ -39,7 +39,8 @@
 				isCancel,
 				memo,
 				createTime,
-				modifyTime
+				modifyTime,
+				userType
     		) 
          values(
        			#{UUID},
@@ -47,7 +48,8 @@
        			#{isCancel},
        			#{memo},
        			#{createTime},
-       			#{modifyTime}
+       			#{modifyTime},
+       			#{userType}
          )
 	</insert>
 	
@@ -90,6 +92,9 @@
         	 <if test="isCancel != null">
             	and isCancel = #{isCancel}
         	 </if>
+        	 <if test="userType != null">
+            	and userType = #{userType}
+        	 </if>
         	 <if test="createTime != null">
             	<![CDATA[ and createTime >= #{createTime} ]]>
         	 </if>
@@ -115,6 +120,9 @@
         	  <if test="isCancel != null">
             	 and b.isCancel = #{isCancel}
         	  </if>
+        	  <if test="userType != null">
+            	and b.userType = #{userType}
+        	 </if>
         	  <if test="createTime != null">
             	 <![CDATA[ and b.createTime >= #{createTime} ]]>
         	  </if>

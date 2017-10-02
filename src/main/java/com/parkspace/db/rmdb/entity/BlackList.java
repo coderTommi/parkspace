@@ -32,9 +32,12 @@ public class BlackList implements Serializable{
 	private Date createTime;
 	//修改时间
 	private Date modifyTime;
+	//用户类型：0业主，1车主，2，物业，3其他
+	private Integer userType;
 	
 	//用户基本信息
 	private BaseUser baseUser;
+	
 	
 	//用户名称
 //	private String userName;
@@ -59,7 +62,16 @@ public class BlackList implements Serializable{
 	@Override
 	public String toString() {
 		return "BlackList [UUID=" + UUID + ", userId=" + userId + ", isCancel=" + isCancel + ", memo=" + memo
-				+ ", createTime=" + createTime + ", modifyTime=" + modifyTime + ", baseUser=" + baseUser + "]";
+				+ ", createTime=" + createTime + ", modifyTime=" + modifyTime + ", userType=" + userType + ", baseUser="
+				+ baseUser + "]";
+	}
+
+	public Integer getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Integer userType) {
+		this.userType = userType;
 	}
 
 	public String getUUID() {
