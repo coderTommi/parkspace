@@ -35,6 +35,15 @@ public interface IMoneyService {
 	 * <p>CreateDate:2017年10月2日 上午10:13:36</p>
 	 */
 	public void withdrawMondy(String userId, BigDecimal amt) throws ParkspaceServiceException, Exception;
+	/**
+	 * 交押金
+	 * @Title: payPledge
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月2日 上午10:16:39</p>
+	 */
+	public void payPledge(String userId, BigDecimal amt) throws ParkspaceServiceException, Exception;
 	
-	public void payPledge
 }
