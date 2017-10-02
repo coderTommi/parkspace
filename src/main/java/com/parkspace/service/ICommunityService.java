@@ -2,7 +2,7 @@ package com.parkspace.service;
 
 import java.util.List;
 
-import com.parkspace.common.exception.PackspaceServiceException;
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.Community;
 import com.parkspace.db.rmdb.entity.PropertyMgmtUser;
 
@@ -143,7 +143,7 @@ public interface ICommunityService {
 	 * <p>CreateDate:2017年10月1日 下午5:26:09</p>
 	 */
 	public PropertyMgmtUser getPropertyMgmtUserByComid(String comid) 
-			throws PackspaceServiceException; 
+			throws ParkspaceServiceException; 
 	
 	/**
 	 * @Title: addUserCommunity

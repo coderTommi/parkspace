@@ -9,6 +9,34 @@
 	<sql id="Baseuser_Column">
 		u.userId,u.userName,u.nickName,u.telephone,u.isAdmin,u.idtype,u.idno,u.state,u.weixinAccount,u.avator,u.memo,u.createBy,u.createTime,u.modifyBy,u.modifyTime
 	</sql>
+	<!-- 小区信息字段 -->
+	<sql id="Community_Column">
+		c.comid 		as "community.comid",
+		c.zoneid 		as "community.zoneid",
+		c.comname 		as "community.comname",
+		c.address 		as "community.address",
+		c.isenable 		as "community.isenable",
+		c.memo 			as "community.memo",
+		c.createBy 		as "community.createBy",
+		c.createTime 	as "community.createTime",
+		c.modifyBy 		as "community.modifyBy",
+		c.modifyTime 	as "community.modifyTime"
+	</sql>
+	<!-- 行政区域信息字段 -->
+	<sql id="Zone_Column">
+		z.zoneid   		as "zone.zoneid",
+		z.zonename 		as "zone.zonename",
+		z.isenable 		as "zone.isenable",
+		z.province 		as "zone.province",
+		z.city     		as "zone.city",
+		z.zone     		as "zone.zone",
+		z.memo     		as "zone.memo",
+		z.createBy 		as "zone.createBy",
+		z.createTime 	as "zone.createTime",
+		z.modifyBy 		as "zone.modifyBy",
+		z.modifyTime 	as "zone.modifyTime"
+	</sql>
+	
 	<!-- 根据用户编号和车牌号获取车主信息-->
 	<select id="getCaruser" parameterType="HashMap" resultType="Caruser">
 		select 
@@ -103,4 +131,214 @@
             	<![CDATA[ and u.createTime >= #{createTime} ]]>
         	 </if>
 	</select>
+	<!-- 根据条件查询车主信息，信息包括 -->
+	<!-- 小区信息、行政区域信息、用户基本信息等 -->
+	<select id="getCaruserAllInfoList" parameterType="Caruser" resultType="Caruser">
+		select 
+			<include refid="Caruser_Column" />
+			,
+			<include refid="Baseuser_Column" />
+			,
+			<include refid="Community_Column"/>
+			,
+			<include refid="Zone_Column"/>
+		from Caruser car,
+		     Baseuser u,
+		     UserCommunity uc,
+		     Community c,
+			 Zone z
+		where 1=1
+		      and car.userId  = u.userId
+		      and u.userId    = uc.userId
+		      and uc.comid    = c.comid
+		      and c.zoneid    = z.zoneid
+		      
+		      <!-- 车主过滤条件 -->
+			  <if test="userId != null">
+            	 and car.userId = #{userId}
+        	  </if>
+        	  <if test="carno != null">
+            	 and car.carno = #{carno}
+        	  </if>
+        	  <if test="isauth != null">
+            	 and car.isauth = #{isauth}
+        	  </if>
+        	  <!-- 车主多状态查询 -->
+        	  <if test="isauthQuery != null and isauthQuery.length > 0 ">
+        	  	 and car.isauth in
+        	  	 <foreach item="item" index="index" collection="isauthQuery" open="(" separator="," close=")">  
+ 					 #{item}  
+				 </foreach>
+        	  </if>
+        	  <!-- 用户信息过滤 -->
+        	  <if test="userName != null">
+            	 and u.userName like CONCAT('%', #{userName}, '%') 
+        	  </if>
+        	  <if test="nickName != null">
+            	 and u.nickName like CONCAT('%', #{nickName}, '%') 
+        	  </if>
+        	  <if test="state != null">
+            	 and u.state = #{state}
+        	  </if>
+        	  <if test="createTime != null">
+            	 <![CDATA[ and u.createTime >= #{createTime} ]]>
+        	  </if>
+        	  <!-- 小区过滤条件 -->
+        	  <if test="community != null">
+        	  	  <if test="community.zoneid != null">
+	            	 and c.zoneid = #{community.zoneid}
+	        	  </if>
+	        	  <!-- 小区多条件过滤 -->
+	        	  <if test="community.comidQuery != null and community.comidQuery.length > 0 ">
+	        	  	 and c.comid in
+	        	  	 	<foreach item="item" index="index" collection="community.comidQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+	        	  <if test="community.comname != null">
+	            	 and c.comname like CONCAT('%', #{community.comname}, '%')  
+	        	  </if>
+	        	  <if test="community.address != null">
+	            	 and c.address like CONCAT('%', #{community.address}, '%') 
+	        	  </if>
+	        	  <if test="community.isenable != null">
+	            	 and c.isenable = #{community.isenable}
+	        	  </if>
+	        	  <!-- 小区多状态查询 -->
+	        	  <if test="community.isenableQuery != null and community.isenableQuery.length > 0 ">
+	        	  	 and c.isenable in
+	        	  	 	<foreach item="item" index="index" collection="community.isenableQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+        	  </if>
+        	  <!-- 行政区域过滤条件 -->
+        	  <if test="zone != null">
+        	  	  <if test="zone.zonename != null">
+	            	 and z.zonename like CONCAT('%', #{zone.zonename}, '%') 
+	        	  </if>
+	        	  <if test="zone.isenable != null">
+	            	 and z.isenable = #{zone.isenable}
+	        	  </if>
+	        	  <!-- 行政区域多状态查询 -->
+	        	  <if test="zone.isenableQuery != null and zone.isenableQuery.length > 0 ">
+	        	  	 and z.isenable in
+	        	  	 	<foreach item="item" index="index" collection="zone.senableQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+	        	  <if test="zone.province != null">
+	            	 and z.province = #{zone.province}
+	        	  </if>
+	        	  <if test="zone.city != null">
+	            	 and z.city = #{zone.city}
+	        	  </if>
+	        	  <if test="zone.zone != null">
+	            	 and z.zone = #{zone.zone}
+	        	  </if>
+        	  </if>
+        order by u.createTime desc
+	</select>
+	<!-- 根据条件查询车主数量 -->
+	<select id="getCaruserAllInfoCount" parameterType="Caruser" resultType="int">
+		select 
+			count(distinct car.userId)
+		from Caruser car,
+		     Baseuser u,
+		     UserCommunity uc,
+		     Community c,
+			 Zone z
+		where 1=1
+		      and car.userId  = u.userId
+		      and u.userId    = uc.userId
+		      and uc.comid    = c.comid
+		      and c.zoneid    = z.zoneid
+		      
+		      <!-- 车主过滤条件 -->
+			  <if test="userId != null">
+            	 and car.userId = #{userId}
+        	  </if>
+        	  <if test="carno != null">
+            	 and car.carno = #{carno}
+        	  </if>
+        	  <if test="isauth != null">
+            	 and car.isauth = #{isauth}
+        	  </if>
+        	  <!-- 车主多状态查询 -->
+        	  <if test="isauthQuery != null and isauthQuery.length > 0 ">
+        	  	 and car.isauth in
+        	  	 <foreach item="item" index="index" collection="isauthQuery" open="(" separator="," close=")">  
+ 					 #{item}  
+				 </foreach>
+        	  </if>
+        	  <!-- 用户信息过滤 -->
+        	  <if test="userName != null">
+            	 and u.userName like CONCAT('%', #{userName}, '%') 
+        	  </if>
+        	  <if test="nickName != null">
+            	 and u.nickName like CONCAT('%', #{nickName}, '%') 
+        	  </if>
+        	  <if test="state != null">
+            	 and u.state = #{state}
+        	  </if>
+        	  <if test="createTime != null">
+            	 <![CDATA[ and u.createTime >= #{createTime} ]]>
+        	  </if>
+        	  <!-- 小区过滤条件 -->
+        	  <if test="community != null">
+        	  	  <if test="community.zoneid != null">
+	            	 and c.zoneid = #{community.zoneid}
+	        	  </if>
+	        	  <!-- 小区多条件过滤 -->
+	        	  <if test="community.comidQuery != null and community.comidQuery.length > 0 ">
+	        	  	 and c.comid in
+	        	  	 	<foreach item="item" index="index" collection="community.comidQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+	        	  <if test="community.comname != null">
+	            	 and c.comname like CONCAT('%', #{community.comname}, '%')  
+	        	  </if>
+	        	  <if test="community.address != null">
+	            	 and c.address like CONCAT('%', #{community.address}, '%') 
+	        	  </if>
+	        	  <if test="community.isenable != null">
+	            	 and c.isenable = #{community.isenable}
+	        	  </if>
+	        	  <!-- 小区多状态查询 -->
+	        	  <if test="community.isenableQuery != null and community.isenableQuery.length > 0 ">
+	        	  	 and c.isenable in
+	        	  	 	<foreach item="item" index="index" collection="community.isenableQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+        	  </if>
+        	  <!-- 行政区域过滤条件 -->
+        	  <if test="zone != null">
+        	  	  <if test="zone.zonename != null">
+	            	 and z.zonename like CONCAT('%', #{zone.zonename}, '%') 
+	        	  </if>
+	        	  <if test="zone.isenable != null">
+	            	 and z.isenable = #{zone.isenable}
+	        	  </if>
+	        	  <!-- 行政区域多状态查询 -->
+	        	  <if test="zone.isenableQuery != null and zone.isenableQuery.length > 0 ">
+	        	  	 and z.isenable in
+	        	  	 	<foreach item="item" index="index" collection="zone.senableQuery" open="(" separator="," close=")">  
+	 						#{item}  
+						</foreach>
+	        	  </if>
+	        	  <if test="zone.province != null">
+	            	 and z.province = #{zone.province}
+	        	  </if>
+	        	  <if test="zone.city != null">
+	            	 and z.city = #{zone.city}
+	        	  </if>
+	        	  <if test="zone.zone != null">
+	            	 and z.zone = #{zone.zone}
+	        	  </if>
+        	  </if>
+        order by u.createTime desc
+	</select>
+	
 </mapper>

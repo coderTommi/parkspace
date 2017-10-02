@@ -6,13 +6,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.parkspace.common.OperationResult;
-import com.parkspace.common.exception.PackspaceServiceException;
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.Caruser;
+import com.parkspace.db.rmdb.entity.Community;
 import com.parkspace.db.rmdb.entity.PropertyMgmtUser;
 import com.parkspace.db.rmdb.entity.SpaceOwner;
 import com.parkspace.model.AdminIndexSurvey;
@@ -81,7 +83,57 @@ public class AdminIndexController {
 			
 			res.setResData(adminIndexSurvey);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
+			LOG.error("获取首页概况信息失败" 
+					+ e.getMessageCode() + e.getMessage());
+			res.setFlag(false);
+			res.setErrCode(e.getMessageCode());
+		}
+		return res;
+	}
+	
+	/**
+	 * 
+	 * @Title: getCommunitySurvey
+	 * <p>Description:查询小区概况信息
+	 * /v1/admin/index/getcommunitysurvey/43143143
+	 * </p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/getcommunitysurvey/{comid}")
+    @ResponseBody
+	public OperationResult getCommunitySurvey(
+				@PathVariable String comid,
+				HttpServletRequest request
+			) {
+		OperationResult res = new OperationResult();
+		try {
+			AdminIndexSurvey adminIndexSurvey = new AdminIndexSurvey();
+			
+			Community community = new Community();
+			community.setComid(comid);
+			
+			//用户注册数:包括车主和业主
+			int userCout = 0;
+			SpaceOwner spaceOwner = new SpaceOwner();
+			spaceOwner.setCommunity(community);
+			//目前获取所有没排除未开启的用户
+			int spaceUser = spaceOwnerService.getSpaceOwnerCount(spaceOwner);
+			Caruser caruser = new Caruser();
+			caruser.setCommunity(community);
+			int carUser = caruserService.getCaruserAllInfoCount(caruser);
+			userCout = spaceUser + carUser;
+			adminIndexSurvey.setUserCout(userCout);
+			//管理的车位数，排除未对外开放的车位
+			int spaceCount = parkingSpaceService.getEnableParkingSpaceCountByComid(comid);
+			adminIndexSurvey.setSpaceCount(spaceCount);
+			
+			res.setResData(adminIndexSurvey);
+			res.setFlag(true);
+		}catch(ParkspaceServiceException e) {
 			LOG.error("获取首页概况信息失败" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);

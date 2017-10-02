@@ -219,6 +219,21 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	}
 	
 	/**
+	 * @Title: getEnableParkingSpaceCountByComid
+	 * <p>Description:通过小区id获取共享的车位数量包括占用和空闲</p>
+	 * @param     comid 小区id
+	 * @return int    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月27日 上午9:18:39</p>
+	 */
+	public int getEnableParkingSpaceCountByComid(String comid) {
+		ParkingSpace parkingSpace = new ParkingSpace();
+		parkingSpace.setParkStatusQuery(new String[] {"0","1"});
+		parkingSpace.setComid(comid);
+		return this.parkingSpaceDao.getParkingSpaceCount(parkingSpace);
+	}
+	
+	/**
 	 * @Title: getParkingSpaceListBySpacenoLike
 	 * <p>Description:通过车位号模糊查询车位信息</p>
 	 * @param     spaceno 车位号

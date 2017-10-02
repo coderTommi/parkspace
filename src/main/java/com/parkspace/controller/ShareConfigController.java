@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.parkspace.common.OperationResult;
-import com.parkspace.common.exception.PackspaceServiceException;
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.BaseUser;
 import com.parkspace.db.rmdb.entity.ShareConfig;
 import com.parkspace.service.IShareConfigService;
@@ -70,7 +70,7 @@ public class ShareConfigController {
 			}else {
 				res.setResData(list);
 			}
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("根据车位编号"+"{"+spaceno+"},查询车位共享信息失败" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -99,7 +99,7 @@ public class ShareConfigController {
 			ShareConfig shareConfig = this.shareConfigService.getShareConfig(UUID);
 			res.setResData(shareConfig);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("根据共享时间段UUID"+"{"+UUID+"},获取共享详细信息失败" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -137,7 +137,7 @@ public class ShareConfigController {
 			}
 			shareConfigService.disableShareConfig(UUID, userName);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("根据共享时间段UUID"+"{"+UUID+"},关闭共享信息失败" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -175,7 +175,7 @@ public class ShareConfigController {
 			}
 			shareConfigService.enableShareConfig(UUID, userName);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("根据共享时间段UUID"+"{"+UUID+"},开启共享信息失败" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -219,7 +219,7 @@ public class ShareConfigController {
 			
 			shareConfigService.deleteShareConfig(shareConfig);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("根据共享时间段UUID"+"{"+UUID+"},删除共享信息失败" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -262,7 +262,7 @@ public class ShareConfigController {
 			ShareConfig newShareConfig = shareConfigService.addShareConfig(shareConfig);
 			res.setResData(newShareConfig);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("添加共享信息失败"+"{"+shareConfig+"}" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -303,7 +303,7 @@ public class ShareConfigController {
 			
 			shareConfigService.updateShareConfig(shareConfig);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("更新共享信息失败"+"{"+shareConfig+"}" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);

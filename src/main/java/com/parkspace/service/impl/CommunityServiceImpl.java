@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import com.parkspace.common.exception.PackspaceServiceException;
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.dao.CommunityDao;
 import com.parkspace.db.rmdb.dao.PropertyMgmtUserDao;
 import com.parkspace.db.rmdb.entity.Community;
@@ -251,9 +251,9 @@ public class CommunityServiceImpl implements ICommunityService{
 	 */
 	@Override
 	public PropertyMgmtUser getPropertyMgmtUserByComid(String comid) 
-			throws PackspaceServiceException{
+			throws ParkspaceServiceException{
 		if(StringUtils.isEmpty(comid)) {
-			throw new PackspaceServiceException(Constants.ERRORCODE.COMID_IS_NOT_NULL.toString(), 
+			throw new ParkspaceServiceException(Constants.ERRORCODE.COMID_IS_NOT_NULL.toString(), 
 					"小区编号不能为空");
 		}
 		PropertyMgmtUser propertyMgmtUser = new PropertyMgmtUser();

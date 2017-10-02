@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import com.parkspace.common.exception.PackspaceServiceException;
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.dao.ShareConfigDao;
 import com.parkspace.db.rmdb.entity.ShareConfig;
 import com.parkspace.service.IShareConfigService;
@@ -202,9 +202,9 @@ public class ShareConfigServiceImpl implements IShareConfigService{
 	 * <p>CreateDate:2017年9月28日 下午6:02:54</p>
 	 */
 	public List<ShareConfig> getShareConfigListBySpaceno(String spaceno) 
-			throws PackspaceServiceException{
+			throws ParkspaceServiceException{
 		if(StringUtils.isEmpty(spaceno)) {
-			throw new PackspaceServiceException(Constants.ERRORCODE.SPACENO_IS_NOT_NULL.toString(), 
+			throw new ParkspaceServiceException(Constants.ERRORCODE.SPACENO_IS_NOT_NULL.toString(), 
 					"车位编号不能为空");
 		}
 		ShareConfig shareConfig = new ShareConfig();

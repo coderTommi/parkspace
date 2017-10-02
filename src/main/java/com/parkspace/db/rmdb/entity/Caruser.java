@@ -1,6 +1,7 @@
 package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * @Title: Caruser.java
@@ -25,6 +26,29 @@ public class Caruser extends BaseUser implements Serializable{
 	//状态查询条件
 	private Integer[] isauthQuery;
 	
+	//小区信息
+	private Community community;
+	//行政区域信息
+	private Zone zone;
+	
+	
+	@Override
+	public String toString() {
+		return "Caruser [carno=" + carno + ", isauth=" + isauth + ", isauthQuery=" + Arrays.toString(isauthQuery)
+				+ ", community=" + community + ", zone=" + zone + "]";
+	}
+	public Community getCommunity() {
+		return community;
+	}
+	public void setCommunity(Community community) {
+		this.community = community;
+	}
+	public Zone getZone() {
+		return zone;
+	}
+	public void setZone(Zone zone) {
+		this.zone = zone;
+	}
 	public Integer[] getIsauthQuery() {
 		return isauthQuery;
 	}

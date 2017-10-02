@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.parkspace.common.OperationResult;
-import com.parkspace.common.exception.PackspaceServiceException;
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.BaseUser;
 import com.parkspace.db.rmdb.entity.Zone;
 import com.parkspace.service.IZoneService;
@@ -77,7 +77,7 @@ public class ZoneController {
 			Zone newZone = zoneService.addZone(zone);
 			res.setResData(newZone);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("添加行政区域信息失败"+"{"+zone+"}" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -118,7 +118,7 @@ public class ZoneController {
 			
 			this.zoneService.updateZone(zone);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("更新行政区域信息失败"+"{"+zone+"}" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -162,7 +162,7 @@ public class ZoneController {
 			zone.setIsenable(-1);
 			this.zoneService.deleteZone(zone);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("根据行政区域主键zoneid"+"{"+zoneid+"},删除行政区域信息失败" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -205,7 +205,7 @@ public class ZoneController {
 			}else {
 				res.setResData(list);
 			}
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("查询行政区域信息失败："+"{"+zone+"}" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -234,7 +234,7 @@ public class ZoneController {
 			Zone zone = this.zoneService.getZone(zoneid);
 			res.setResData(zone);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("根据行政区域主键zoneid"+"{"+zoneid+"},获取行政区域详细信息失败" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);

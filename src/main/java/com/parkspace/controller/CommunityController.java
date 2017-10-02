@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.parkspace.common.OperationResult;
-import com.parkspace.common.exception.PackspaceServiceException;
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.BaseUser;
 import com.parkspace.db.rmdb.entity.Community;
 import com.parkspace.db.rmdb.entity.PropertyMgmtUser;
@@ -78,7 +78,7 @@ public class CommunityController {
 			Community newCommunity = this.communityService.addCommunity(community);
 			res.setResData(newCommunity);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("添加小区信息失败"+"{"+community+"}" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -119,7 +119,7 @@ public class CommunityController {
 			
 			this.communityService.updateCommunity(community);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("更新小区信息失败"+"{"+community+"}" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -163,7 +163,7 @@ public class CommunityController {
 			
 			this.communityService.deleteCommunity(community);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("根据小区主键comid"+"{"+comid+"},删除小区信息失败" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -206,7 +206,7 @@ public class CommunityController {
 			}else {
 				res.setResData(list);
 			}
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("查询小区信息失败："+"{"+community+"}" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -235,7 +235,7 @@ public class CommunityController {
 			Community community = this.communityService.getCommunity(comid);
 			res.setResData(community);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("根据小区主键comid"+"{"+comid+"},获取小区详细信息失败" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
@@ -264,7 +264,7 @@ public class CommunityController {
 			PropertyMgmtUser propertyMgmtUser = communityService.getPropertyMgmtUserByComid(comid);
 			res.setResData(propertyMgmtUser);
 			res.setFlag(true);
-		}catch(PackspaceServiceException e) {
+		}catch(ParkspaceServiceException e) {
 			LOG.error("根据小区主键comid"+"{"+comid+"},获取小区物业详细信息失败" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
