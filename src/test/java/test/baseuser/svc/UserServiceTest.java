@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.parkspace.common.exception.PackspaceServiceException;
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.controller.pojo.RegisterUserWapper;
 import com.parkspace.db.rmdb.entity.BaseUser;
 import com.parkspace.service.IUserService;
@@ -25,7 +25,7 @@ public class UserServiceTest {
 	@Resource
 	private IUserService userService;
 	@Test
-	public void testRegister() throws PackspaceServiceException, Exception {
+	public void testRegister() throws ParkspaceServiceException, Exception {
 		RegisterUserWapper user = new RegisterUserWapper();
 		user.setUserName("lidongliang");
 		user.setRealName("李栋梁");

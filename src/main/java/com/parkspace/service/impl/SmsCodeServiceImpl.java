@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.parkspace.common.exception.PackspaceServiceException;
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.dao.SMSCodeDao;
 import com.parkspace.db.rmdb.entity.SMSCode;
 import com.parkspace.service.ISmsCodeService;
@@ -19,7 +19,15 @@ public class SmsCodeServiceImpl implements ISmsCodeService {
 	@Resource
 	private SMSCodeDao sMSCodeDao;
 	@Override
-	public void sendSMSCode(String telePhone) {
+	public void sendSMSCode(String telePhone) throws ParkspaceServiceException, Exception{
+		/*
+		 * 检查是否有未过期短信，如果有,等过期再发送
+		 */
+		SMSCode oldSMSCode = sMSCodeDao.getNewestCodeByPhone(telePhone);
+		if(System.currentTimeMillis() - oldSMSCode.getCreateTime() < TIMEOUT) {
+			return;
+		}
+		
 		Integer smsCode = CommonUtils.generateSMSCode();
 		/*
 		 * 發送短信
@@ -32,13 +40,12 @@ public class SmsCodeServiceImpl implements ISmsCodeService {
 	}
 
 	@Override
-	public boolean checkSmsCode(String telePhone, String smsCode) {
+	public void checkSmsCode(String telePhone, String smsCode) throws ParkspaceServiceException, Exception {
 		SMSCode code = sMSCodeDao.getNewestCodeByPhone(telePhone);
 		if(code == null || (System.currentTimeMillis() - code.getCreateTime() > TIMEOUT)) {
 			logger.error("smscode is error");
-			return false;
+			throw new ParkspaceServiceException(Constants.ERRORCODE.SMSCODE_IS_ERROR.toString());
 		}
-		return true;
 	}
 
 }

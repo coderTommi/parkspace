@@ -9,6 +9,10 @@ import java.io.Serializable;
  */
 public class Integral implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String userId;
 	/** 积分值 **/
 	private Integer val;

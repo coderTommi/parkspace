@@ -2,7 +2,7 @@ package com.parkspace.common.exception;
 
 import java.io.Serializable;
 
-public class PackspaceServiceException extends RuntimeException implements Serializable {
+public class ParkspaceServiceException extends RuntimeException implements Serializable {
     /**
 	 * 
 	 */
@@ -23,7 +23,7 @@ public class PackspaceServiceException extends RuntimeException implements Seria
      * @param msg the msg
      * @param cause the cause
      */
-    public PackspaceServiceException(String msgCode, String msg, Throwable cause) {
+    public ParkspaceServiceException(String msgCode, String msg, Throwable cause) {
         super(msg, cause);
         this.msgCode = msgCode;
         this.msg = msg;
@@ -34,7 +34,7 @@ public class PackspaceServiceException extends RuntimeException implements Seria
      * @param msgCode the msg code
      * @param cause the cause
      */
-    public PackspaceServiceException(String msgCode, Throwable cause) {
+    public ParkspaceServiceException(String msgCode, Throwable cause) {
 
         super(cause.getMessage(), cause);
         this.msgCode = msgCode;
@@ -46,7 +46,7 @@ public class PackspaceServiceException extends RuntimeException implements Seria
      * @param msgCode the msg code
      * @param msg the msg
      */
-    public PackspaceServiceException(String msgCode, String msg) {
+    public ParkspaceServiceException(String msgCode, String msg) {
         super(msg);
         this.msgCode = msgCode;
         this.msg = msg;
@@ -56,7 +56,7 @@ public class PackspaceServiceException extends RuntimeException implements Seria
      * Instantiates a new cloud business exception.
      * @param msgCode the msg code
      */
-    public PackspaceServiceException(String msgCode) {
+    public ParkspaceServiceException(String msgCode) {
         super(msgCode);
         this.msgCode = msgCode;
     }

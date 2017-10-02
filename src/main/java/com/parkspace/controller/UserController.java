@@ -1,4 +1,4 @@
-package com.parkspace.controller.pojo;
+package com.parkspace.controller;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -9,11 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.parkspace.common.OperationResult;
-import com.parkspace.common.exception.PackspaceServiceException;
+import com.parkspace.common.exception.ParkspaceServiceException;
+import com.parkspace.controller.pojo.LoginWapper;
+import com.parkspace.controller.pojo.RegisterUserWapper;
 import com.parkspace.service.IUserService;
 import com.parkspace.util.Constants;
 
@@ -25,14 +26,26 @@ public class UserController {
 	@Resource
 	private IUserService userService;
 	
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	/**
+	 * ex: http://localhost:8080/parkspace/user/registe
+	 * {
+	 * 	"telePhone" : "13888888888",
+	 * 	"smsCode" : "123456",
+	 * 	"weixinAccount" : "21312sad",
+	 * 	"realName" : "lidongliang",
+	 * 
+	 * }
+	 * @param user
+	 * @return
+	 */
+	@RequestMapping(value = "/registe", method = RequestMethod.POST)
     @ResponseBody
 	public OperationResult registerUser(@RequestBody RegisterUserWapper user){
 		OperationResult result = new OperationResult();
 		try {
 			userService.registerUser(user);
 			result.setFlag(true);
-		}catch(PackspaceServiceException e){
+		}catch(ParkspaceServiceException e){
 			log.error("register user error", e);
 			result.setErrCode(e.getMessageCode());
 			result.setFlag(false);
@@ -43,6 +56,16 @@ public class UserController {
 		}
 		return result;
 	}
+	/**
+	 * ex: http://localhost:8080/parkspace/user/login
+	 * {
+	 * 	"telePhone" : "13888888888",
+	 * 	"smsCode" : "321123"
+	 * }
+	 * @param request
+	 * @param wapper
+	 * @return
+	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
 	public OperationResult login(HttpServletRequest request, 
@@ -52,7 +75,7 @@ public class UserController {
 			String sessionId = userService.login(request, wapper.getTelePhone(), wapper.getSmsCode());
 			result.setFlag(true);
 			result.setResData(sessionId);
-		}catch(PackspaceServiceException e){
+		}catch(ParkspaceServiceException e){
 			log.error("login user error", e);
 			result.setErrCode(e.getMessageCode());
 			result.setFlag(false);
@@ -64,22 +87,28 @@ public class UserController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/qry", method = RequestMethod.GET)
+	/**
+	 * ex: http://localhost:8080/parkspace/user/logout
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
     @ResponseBody
-	public OperationResult test01(HttpServletRequest request){
+	public OperationResult logout(HttpServletRequest request){
 		OperationResult result = new OperationResult();
 		try {
-			Object obj = request.getSession().getAttribute("_USER");
+			userService.logout(request);
 			result.setFlag(true);
-		}catch(PackspaceServiceException e){
-			log.error("login user error", e);
+		}catch(ParkspaceServiceException e){
+			log.error("logout  error", e);
 			result.setErrCode(e.getMessageCode());
 			result.setFlag(false);
 		} catch (Exception e) {
-			log.error("login user error", e);
+			log.error("logout  error", e);
 			result.setFlag(false);
 			result.setErrCode(Constants.ERRORCODE.UNKNOWERROR.toString());
 		}
 		return result;
 	}
+	
 }

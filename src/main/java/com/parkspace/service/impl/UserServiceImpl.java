@@ -13,11 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.parkspace.common.exception.PackspaceServiceException;
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.controller.pojo.RegisterUserWapper;
 import com.parkspace.db.rmdb.dao.BaseUserDao;
+import com.parkspace.db.rmdb.dao.IntegralDao;
 import com.parkspace.db.rmdb.dao.WalletDao;
 import com.parkspace.db.rmdb.entity.BaseUser;
+import com.parkspace.db.rmdb.entity.Integral;
 import com.parkspace.db.rmdb.entity.Wallet;
 import com.parkspace.service.ISmsCodeService;
 import com.parkspace.service.IUserService;
@@ -33,21 +35,22 @@ public class UserServiceImpl implements IUserService {
 	private WalletDao walletDao;
 	@Resource
 	private ISmsCodeService smsCodeService;
+	@Resource
+	private IntegralDao integralDao;
 	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
-	public void registerUser(RegisterUserWapper user) throws PackspaceServiceException, Exception {
+	public void registerUser(RegisterUserWapper user) throws ParkspaceServiceException, Exception {
 		/**
 		 * 校驗短信驗證碼
 		 * 1. 檢查手機號是否被佔用
 		 * 2. 记录baseuser表
 		 * 3. 初始化钱包表
+		 * 4. 初始化积分表
 		 */
-		if(!smsCodeService.checkSmsCode(user.getTelePhone(), user.getSmsCode())) {
-//			throw new PackspaceServiceException(Constants.ERRORCODE.SMSCODE_IS_ERROR.toString());
-		}
+		smsCodeService.checkSmsCode(user.getTelePhone(), user.getSmsCode());
 		
 		if(checkTelIsExists(user.getTelePhone())) {
-			throw new PackspaceServiceException(Constants.ERRORCODE.TELEPHONE_IS_EXISTS.toString(), 
+			throw new ParkspaceServiceException(Constants.ERRORCODE.TELEPHONE_IS_EXISTS.toString(), 
 					"telephone is exists");
 		}
 		
@@ -80,11 +83,18 @@ public class UserServiceImpl implements IUserService {
 		wallet.setUnclosedAmt(initAmt);
 		wallet.setPledge(initAmt);
 		walletDao.save(wallet);
+		/*
+		 * 初始化积分表
+		 */
+		Integral integral = new Integral();
+		integral.setUserId(userId);
+		integral.setVal(0);
+		integralDao.save(integral);
 	}
 	
 	@Override
 	public String login(HttpServletRequest req, String telePhone, String smsCode)
-			throws PackspaceServiceException, Exception {
+			throws ParkspaceServiceException, Exception {
 		/*
 		 * 手機號+密碼
 		 * 手機號+短信驗證碼登錄
@@ -92,14 +102,17 @@ public class UserServiceImpl implements IUserService {
 		 */
 		if(telePhone == null || "".equals(telePhone)) {
 			logger.error("telephone is null");
-			throw new PackspaceServiceException(Constants.ERRORCODE.PARAM_IS_NULL.toString());
+			throw new ParkspaceServiceException(Constants.ERRORCODE.PARAM_IS_NULL.toString());
 		}
-		if(!smsCodeService.checkSmsCode(telePhone, smsCode)) {
-//			throw new PackspaceServiceException(Constants.ERRORCODE.SMSCODE_IS_ERROR.toString());
-		}
+		smsCodeService.checkSmsCode(telePhone, smsCode);
 		BaseUser user = baseUserDao.getByTelphone(telePhone);
 		req.getSession().setAttribute("_USER", user);
 		return req.getSession().getId();
+	}
+	
+	@Override
+	public void logout(HttpServletRequest req) throws ParkspaceServiceException, Exception {
+		req.getSession().invalidate();
 	}
 	
 	
@@ -107,10 +120,10 @@ public class UserServiceImpl implements IUserService {
 	 * 检查手机号是否被占用
 	 * @param telePhone 手机号
 	 * @return
-	 * @throws PackspaceServiceException
+	 * @throws ParkspaceServiceException
 	 * @throws Exception
 	 */
-	private boolean checkTelIsExists(String telePhone)  throws PackspaceServiceException, Exception {
+	private boolean checkTelIsExists(String telePhone)  throws ParkspaceServiceException, Exception {
 		BaseUser user = baseUserDao.getByTelphone(telePhone);
 		if(user != null) {
 			logger.info("telephone is exists");
