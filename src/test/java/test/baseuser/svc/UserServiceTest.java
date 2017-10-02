@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.parkspace.common.exception.PackspaceServiceException;
+import com.parkspace.controller.pojo.RegisterUserWapper;
 import com.parkspace.db.rmdb.entity.BaseUser;
 import com.parkspace.service.IUserService;
 
@@ -25,12 +26,9 @@ public class UserServiceTest {
 	private IUserService userService;
 	@Test
 	public void testRegister() throws PackspaceServiceException, Exception {
-		BaseUser user = new BaseUser();
-		user.setUserId(UUID.randomUUID().toString());
+		RegisterUserWapper user = new RegisterUserWapper();
 		user.setUserName("lidongliang");
-		user.setNickName("lidongliang_nickName");
 		user.setRealName("李栋梁");
-		user.setUserPwd("123456a?");
 		user.setTelePhone("15300201276");
 		user.setWeixinAccount("123456");
 		userService.registerUser(user);

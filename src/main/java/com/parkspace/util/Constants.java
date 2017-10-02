@@ -7,8 +7,17 @@ public class Constants {
 	 *
 	 */
 	public enum ERRORCODE {
+		/** 未知异常 **/
+		UNKNOWERROR(10000),
+		/** 未登录 **/
+		URL_NEED_LOGIN(10001),
 		/** 手机号被占用 **/
-		TELEPHONE_IS_EXISTS(10001),
+		TELEPHONE_IS_EXISTS(10002), 
+		/** 手機號為空 **/
+		PARAM_IS_NULL(10003), 
+		/** 手機號或密碼錯誤 **/
+		PHONE_OR_PWD_ERROR(10004), 
+		SMSCODE_IS_ERROR(10005),
 		/** 车位编号为不能空 **/
 		SPACENO_IS_NOT_NULL(20001),
 		/** 小区编号为不能空 **/
