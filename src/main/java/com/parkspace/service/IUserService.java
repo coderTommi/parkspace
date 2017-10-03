@@ -20,8 +20,10 @@ public interface IUserService {
 	/** 用户登出 **/
 	public void logout(HttpServletRequest req)  throws ParkspaceServiceException, Exception;
 	
-	
 	/** 车主认证 **/
 	
 	/** 业主认证 **/
+	
+	/** 获取管理员userId **/
+	public String getAdminUserId() throws ParkspaceServiceException, Exception;
 }

@@ -41,10 +41,41 @@
         	 </if>
         	 <if test="unclosedAmt != null">
             	unclosedAmt = #{unclosedAmt},
-        	 </if>        	 
+        	 </if>
         	 <if test="lastTrsTime != null">
             	lastTrsTime = #{lastTrsTime}
         	 </if>        	 
+        	 where userId=#{userId} 
+	</update>
+	
+	<!-- 根据账单修改账户 -->
+	<update id="updateByBill" parameterType="WalletOperation">
+		update wallet set
+			 <if test="pledge != null">
+            	pledge = pledge + #{pledge} ,
+        	 </if>
+        	 <if test="balance != null">
+            	balance = balance + #{balance},
+        	 </if>
+        	 <if test="bonus != null">
+            	bonus = bonus + #{bonus},
+        	 </if>
+        	 <if test="unclosedAmt != null">
+            	unclosedAmt = unclosedAmt + #{unclosedAmt},
+        	 </if>        	 
+             lastTrsTime = now()
         	 where userId=#{userId}
+        	 			 <if test="pledge != null">
+			            	and pledge + #{pledge} >0 
+			        	 </if>
+			        	 <if test="balance != null">
+			            	and balance + #{balance} >0
+			        	 </if>
+			        	 <if test="bonus != null">
+			            	and bonus + #{bonus} > 0
+			        	 </if>
+			        	 <if test="unclosedAmt != null">
+			            	and unclosedAmt + #{unclosedAmt} > 0
+			        	 </if>        	 
 	</update>
 </mapper>

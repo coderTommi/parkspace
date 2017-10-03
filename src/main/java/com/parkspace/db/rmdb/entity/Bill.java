@@ -20,10 +20,12 @@ public class Bill implements Serializable {
 	private String payee;
 	private Date transDate;
 	private Timestamp transTime;
-	private int billType;
+	private Integer billType;
 	private BigDecimal amount;
-	private int state;
+	private Integer state;
 	private String orderJnlno;
+	private String remoteJnlNo;
+	private Integer payChannel;
 	public String getBillId() {
 		return billId;
 	}
@@ -42,10 +44,10 @@ public class Bill implements Serializable {
 	public void setPayee(String payee) {
 		this.payee = payee;
 	}
-	public int getBillType() {
+	public Integer getBillType() {
 		return billType;
 	}
-	public void setBillType(int billType) {
+	public void setBillType(Integer billType) {
 		this.billType = billType;
 	}
 	public BigDecimal getAmount() {
@@ -54,10 +56,10 @@ public class Bill implements Serializable {
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
-	public int getState() {
+	public Integer getState() {
 		return state;
 	}
-	public void setState(int state) {
+	public void setState(Integer state) {
 		this.state = state;
 	}
 	public String getOrderJnlno() {
@@ -77,5 +79,19 @@ public class Bill implements Serializable {
 	}
 	public void setTransTime(Timestamp transTime) {
 		this.transTime = transTime;
+	}
+	
+	public String getRemoteJnlNo() {
+		return remoteJnlNo;
+	}
+	public void setRemoteJnlNo(String remoteJnlNo) {
+		this.remoteJnlNo = remoteJnlNo;
+	}
+	
+	public Integer getPayChannel() {
+		return payChannel;
+	}
+	public void setPayChannel(Integer payChannel) {
+		this.payChannel = payChannel;
 	}
 }

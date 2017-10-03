@@ -115,6 +115,11 @@ public class UserServiceImpl implements IUserService {
 		req.getSession().invalidate();
 	}
 	
+	@Override
+	public String getAdminUserId() throws ParkspaceServiceException, Exception {
+		return null;
+	}
+	
 	
 	/**
 	 * 检查手机号是否被占用

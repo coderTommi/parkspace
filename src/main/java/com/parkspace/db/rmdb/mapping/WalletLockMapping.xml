@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.WalletLockDao">
+	<!-- 新增 -->
+	<insert id="save" parameterType="java.lang.String">
+    	insert into wallet(
+    			userId,
+    			lockTime
+    		) 
+    	 values(
+    	 		#{userId},
+    	 		now()
+    	 	)
+	</insert>
+	
+	<!-- 根据条件查询账单 -->
+	<delete id="delete" parameterType="java.lang.String">
+		delete from walletlock where userId = #{userId}
+	</delete>
+</mapper>

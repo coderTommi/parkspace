@@ -19,6 +19,17 @@ public interface BillDao {
 	 */
 	public void save(Bill bill);
 	/**
+	 * 更新
+	 * @Title: update
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 下午2:48:49</p>
+	 */
+	public void update(Bill bill);
+	
+	/**
 	 * 根据id查询
 	 * @param billId
 	 * @return
