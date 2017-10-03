@@ -470,4 +470,61 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		newParkingSpace.setParkStatus("0");//空闲
 		parkingSpaceDao.updateParkingSpace(newParkingSpace);
 	}
+	/**
+	 * @Title: confirmOrderParkingSpace
+	 * <p>Description:确认停车
+	 * 停车之前需要确认车位的合法性
+	 * 1.订单状态由预约中变成使用中：1--2，并且更新当前时间
+	 * 2.在历史表中增加一条预约订单信息
+	 * </p>
+	 * @param     orderJnlNo 订单编号
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 下午6:01:39</p>
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
+	public void confirmOrderParkingSpace(String orderJnlNo)
+			throws ParkspaceServiceException{
+		if(StringUtils.isEmpty(orderJnlNo)) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
+					"订单信息不能为空");
+		}
+		//判断订单的状态
+		ParkingSpaceBill parkingSpaceBill = parkingSpaceBillDao.getParkingSpaceBill(orderJnlNo);
+		if(parkingSpaceBill == null) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
+					"订单信息不能为空");
+		}
+		if(parkingSpaceBill.getBillStatus() != 1) {//订单状态：1、预约中，2、使用中，3.延长使用中
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_STATUS_IS_ILLLEGAL.toString(), 
+					"订单状态不合法");
+		}
+		//判断车位状态
+		String spaceno = parkingSpaceBill.getSpaceno();
+		Integer parkHours = parkingSpaceBill.getParkHours();
+		//首先判断该车位目前是否可以空闲
+		ParkingSpace parkingSpace = new ParkingSpace();
+		parkingSpace.setParkHours(parkHours);
+		parkingSpace.setParkHoursString("00:00:00");
+		parkingSpace.setSpaceno(spaceno);
+		List<ParkingSpace> list = parkingSpaceDao.getParkingSpaceEnableBillList(parkingSpace);
+		if(list == null || list.size() <= 0) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.SPACE_IS_NOT_USE.toString(), 
+					"该车位不能被使用");
+		}
+		//订单状态由预约中变成使用中：1--2，并且更新当前时间
+		ParkingSpaceBill newParkingSpaceBill = new ParkingSpaceBill();
+		newParkingSpaceBill.setOrderJnlNo(parkingSpaceBill.getOrderJnlNo());
+		newParkingSpaceBill.setBillStatus(2);
+		newParkingSpaceBill.setCreateTime(new Date());
+		
+		parkingSpaceBillDao.updateParkingSpaceBill(newParkingSpaceBill);
+		//在历史表中增加一条预约订单信息
+		parkingSpaceBillHisService.addParkingSpaceBillHis(parkingSpaceBill);
+	}
 }

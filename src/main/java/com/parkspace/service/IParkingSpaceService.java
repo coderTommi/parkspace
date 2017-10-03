@@ -208,4 +208,18 @@ public interface IParkingSpaceService {
 	 */
 	public void cancelOrderParkingSpace(String orderJnlNo)
 			throws ParkspaceServiceException;
+	/**
+	 * @Title: confirmOrderParkingSpace
+	 * <p>Description:确认停车
+	 * 停车之前需要确认车位的合法性
+	 * 1.订单状态由预约中变成使用中：1--2，并且更新当前时间
+	 * 2.在历史表中增加一条预约订单信息
+	 * </p>
+	 * @param     orderJnlNo 订单编号
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 下午6:01:39</p>
+	 */
+	public void confirmOrderParkingSpace(String orderJnlNo)
+			throws ParkspaceServiceException;
 }

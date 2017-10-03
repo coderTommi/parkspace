@@ -20,4 +20,7 @@ public class ParkingScheduler {
 	public void doSomething() { 
 		System.out.println(new Date()+"=========================");
 	}
+	
+	//监控预约的车位，超过15分钟自动取消
+	//监控使用中的车位，如果超时，需要提示信息处理
 }

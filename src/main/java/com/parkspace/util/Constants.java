@@ -65,7 +65,9 @@ public class Constants {
 		/** 该车位不能被预定 **/
 		SPACE_IS_NOT_ORDER(20006),
 		/** 订单状态不合法 **/
-		ORDER_STATUS_IS_ILLLEGAL(20007);
+		ORDER_STATUS_IS_ILLLEGAL(20007),
+		/** 该车位不能被使用 **/
+		SPACE_IS_NOT_USE(20008);
 		
 		
 		/** 错误码 **/

@@ -293,4 +293,34 @@ public class ParkingSpaceController {
 		}
 		return res;
 	}
+	
+	/**
+	 * @Title: confirmOrderParkingSpace
+	 * <p>Description:确认停车
+	 * /v1/parkingspace/confirmorderparkingspace
+	 * </p>
+	 * @param     spaceno   车位编号
+	 * @param     parkHours 停车时长
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/confirmorderparkingspace")
+    @ResponseBody
+	public OperationResult confirmOrderParkingSpace(
+            @RequestParam(value = "orderJnlNo", required = true) String orderJnlNo,
+            HttpServletRequest request) {
+		OperationResult res = new OperationResult();
+		try {
+			parkingSpaceService.confirmOrderParkingSpace(orderJnlNo);
+			res.setFlag(true);
+		}catch(ParkspaceServiceException e) {
+			LOG.error("确认停车："+"{"+orderJnlNo+"}，失败" 
+					+ e.getMessageCode() + e.getMessage());
+			res.setFlag(false);
+			res.setErrCode(e.getMessageCode());
+		}
+		return res;
+	}
+	
 }

@@ -59,7 +59,8 @@ public class ParkingSpaceBillHisServiceImpl implements IParkingSpaceBillHisServi
 			Date createTime = parkingSpaceBill.getCreateTime();
 			Date currentTime = new Date();
 			long longActualParkHours = currentTime.getTime() - createTime.getTime();
-			BigDecimal actualParkHours = new BigDecimal(longActualParkHours/1000/60/60);
+			double actualParkHoursTemp = (double)longActualParkHours/1000/60/60;
+			BigDecimal actualParkHours = new BigDecimal(actualParkHoursTemp).setScale(2, BigDecimal.ROUND_HALF_UP);
 			parkingSpaceBillHis.setActualParkHours(actualParkHours);
 			//实际价格：=单价*实际停车时长
 			BigDecimal unitPrice = parkingSpaceBill.getUnitPrice();

@@ -3,7 +3,6 @@ package com.parkspace.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -36,7 +35,7 @@ public class TestParkingSpaceController extends TestBaseController{
 	
 	public String spaceno = "1";
 	
-	public String orderJnlNo = "40bf4831-3cee-462b-855c-b222ff21fc4f";
+	public String orderJnlNo = "b760207a-d4ba-4add-a6d0-837549e43c58";
 	
 	@Test
 	public void getAllParkingSpace() {
@@ -178,10 +177,26 @@ public class TestParkingSpaceController extends TestBaseController{
 		Date createTime = simpleFormat.parse("2017-10-03 16:00:31");
 		Date currentTime = new Date();
 		long longActualParkHours = currentTime.getTime() - createTime.getTime();
-		double aa = Math.round((double)longActualParkHours/1000/60/60*100)/100;
-		BigDecimal actualParkHours = new BigDecimal(aa);
-		System.out.println(aa);
+		double actualParkHoursTemp = (double)longActualParkHours/1000/60/60;
+		BigDecimal actualParkHours = new BigDecimal(actualParkHoursTemp).setScale(2, BigDecimal.ROUND_HALF_UP);
+		System.out.println(actualParkHoursTemp);
 		System.out.println(longActualParkHours);
 		System.out.println(actualParkHours);
+	}
+	
+	
+	@Test
+	public void confirmOrderParkingSpace() {
+		try {
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/confirmorderparkingspace")
+					.param("orderJnlNo", orderJnlNo)
+					)
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
