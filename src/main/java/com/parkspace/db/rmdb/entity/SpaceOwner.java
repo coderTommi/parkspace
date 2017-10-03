@@ -77,7 +77,6 @@ public class SpaceOwner extends BaseUser implements Serializable{
 	//区
 //	private String zone;
 	
-	
 	public String getSpaceno() {
 		return spaceno;
 	}

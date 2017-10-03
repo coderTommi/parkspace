@@ -25,7 +25,8 @@
 		p.createBy 				as "parkingSpace.createBy",
 		p.createTime 			as "parkingSpace.createTime",
 		p.modifyBy 				as "parkingSpace.modifyBy",
-		p.modifyTime 			as "parkingSpace.modifyTime"
+		p.modifyTime 			as "parkingSpace.modifyTime",
+		p.useCount              as "parkingSpace.useCount"
 	</sql>
 	<!-- 小区信息字段 -->
 	<sql id="Community_Column">
@@ -159,6 +160,9 @@
 		      	<!-- and spaceno = #{spaceno} -->
 		      	 and s.spaceno like CONCAT('%', #{spaceno}, '%') 
         	  </if>
+        	  <if test="carno != null">
+		      	 and s.carno like CONCAT('%', #{carno}, '%') 
+        	  </if>
         	  <if test="userId != null">
             	 and s.userId = #{userId}
         	  </if>
@@ -178,6 +182,9 @@
         	  <!-- 用户信息过滤 -->
         	  <if test="userName != null">
             	 and u.userName like CONCAT('%', #{userName}, '%') 
+        	  </if>
+        	  <if test="telePhone != null">
+            	 and u.telePhone like CONCAT('%', #{telePhone}, '%') 
         	  </if>
         	  <if test="nickName != null">
             	 and u.nickName like CONCAT('%', #{nickName}, '%') 
@@ -251,6 +258,9 @@
         	  </if>
         	  <!-- 行政区域过滤条件 -->
         	  <if test="zone != null">
+        	   	  <if test="zone.zoneid != null">
+	            	 and z.zoneid =  #{zone.zoneid}
+	        	  </if>
         	  	  <if test="zone.zonename != null">
 	            	 and z.zonename like CONCAT('%', #{zone.zonename}, '%') 
 	        	  </if>
@@ -297,6 +307,9 @@
 		      	<!-- and spaceno = #{spaceno} -->
 		      	 and s.spaceno like CONCAT('%', #{spaceno}, '%') 
         	  </if>
+        	  <if test="carno != null">
+		      	 and s.carno like CONCAT('%', #{carno}, '%') 
+        	  </if>
         	  <if test="userId != null">
             	 and s.userId = #{userId}
         	  </if>
@@ -314,6 +327,9 @@
             	 and s.carno like CONCAT('%', #{carno}, '%') 
         	  </if>
         	  <!-- 用户信息过滤 -->
+        	  <if test="telePhone != null">
+            	 and u.telePhone like CONCAT('%', #{telePhone}, '%') 
+        	  </if>
         	  <if test="userName != null">
             	 and u.userName like CONCAT('%', #{userName}, '%') 
         	  </if>
@@ -389,6 +405,9 @@
         	  </if>
         	  <!-- 行政区域过滤条件 -->
         	  <if test="zone != null">
+        	  	  <if test="zone.zoneid != null">
+	            	 and z.zoneid =  #{zone.zoneid}
+	        	  </if>
         	  	  <if test="zone.zonename != null">
 	            	 and z.zonename like CONCAT('%', #{zone.zonename}, '%') 
 	        	  </if>

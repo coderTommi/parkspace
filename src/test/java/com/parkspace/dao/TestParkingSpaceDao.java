@@ -120,7 +120,7 @@ public class TestParkingSpaceDao {
 		ShareConfig shareConfig = new ShareConfig();
 		shareConfig.setIsOpen(1);
 		
-		parkingSpace.setShareConfig(shareConfig);
+//		parkingSpace.setShareConfig(shareConfig);
 		this.parkingSpaceDao.getParkingSpaceEnableBillList(parkingSpace);
 	}
 }

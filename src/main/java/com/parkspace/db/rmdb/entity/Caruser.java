@@ -30,12 +30,29 @@ public class Caruser extends BaseUser implements Serializable{
 	private Community community;
 	//行政区域信息
 	private Zone zone;
+	//停车次数：需要在订单成功之后+1,默认0
+	private Integer parkCount;
 	
+	public Integer getParkCount() {
+		return parkCount;
+	}
+	public void setParkCount(Integer parkCount) {
+		this.parkCount = parkCount;
+	}
+	//钱包信息
+	private Wallet wallet;
 	
+	public Wallet getWallet() {
+		return wallet;
+	}
+	public void setWallet(Wallet wallet) {
+		this.wallet = wallet;
+	}
 	@Override
 	public String toString() {
 		return "Caruser [carno=" + carno + ", isauth=" + isauth + ", isauthQuery=" + Arrays.toString(isauthQuery)
-				+ ", community=" + community + ", zone=" + zone + "]";
+				+ ", community=" + community + ", zone=" + zone + ", parkCount=" + parkCount + ", wallet=" + wallet
+				+ "]";
 	}
 	public Community getCommunity() {
 		return community;

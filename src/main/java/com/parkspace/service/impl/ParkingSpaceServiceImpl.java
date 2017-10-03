@@ -15,6 +15,7 @@ import com.parkspace.db.rmdb.entity.ParkingSpace;
 import com.parkspace.db.rmdb.entity.ShareConfig;
 import com.parkspace.db.rmdb.entity.SpaceOwner;
 import com.parkspace.service.IParkingSpaceService;
+import com.parkspace.service.IShareConfigService;
 
 /**
  * @Title: ParkingSpaceServiceImpl.java
@@ -30,9 +31,13 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	private SpaceOwnerDao spaceOwnerDao;
 	@Resource
 	private ParkingSpaceDao parkingSpaceDao;
+	@Resource
+	private IShareConfigService shareConfigService;
 	/**
 	 * @Title: getParkingSpace
-	 * <p>Description:根据车位编号查询车位信息</p>
+	 * <p>Description:根据车位编号查询车位信息
+	 * 包含共享信息
+	 * </p>
 	 * @param     spaceno 车位编号
 	 * @return ParkingSpace    返回类型
 	 * @throws
@@ -40,7 +45,13 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	 */
 	@Override
 	public ParkingSpace getParkingSpace(String spaceno) {
-		return parkingSpaceDao.getParkingSpace(spaceno);
+		ParkingSpace parkingSpace = parkingSpaceDao.getParkingSpace(spaceno);
+		//车主时间段信息
+		List<ShareConfig> shareConfigList = shareConfigService.getShareConfigListBySpaceno(spaceno);
+		if(shareConfigList != null && parkingSpace != null) {
+			parkingSpace.setShareConfigList(shareConfigList);
+		}
+		return parkingSpace;
 	}
 	/**
 	 * @Title: addParkingSpace
@@ -62,6 +73,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 			parkingSpace.setParkStatus("N");
 			//默认属于物业
 			parkingSpace.setParkType("P");
+			parkingSpace.setUseCount(0);
 			this.parkingSpaceDao.addParkingSpace(parkingSpace);
 			return parkingSpace;
 		}else{
@@ -151,7 +163,18 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		if(parkingSpace == null){
 			parkingSpace = new ParkingSpace();
 		}
-		return this.parkingSpaceDao.getParkingSpaceList(parkingSpace);
+		List<ParkingSpace> list = this.parkingSpaceDao.getParkingSpaceList(parkingSpace);
+		if(list != null && list.size() > 0) {
+			for(ParkingSpace ps : list) {
+				String spaceno = ps.getSpaceno();
+				//车主时间段信息
+				List<ShareConfig> shareConfigList = shareConfigService.getShareConfigListBySpaceno(spaceno);
+				if(shareConfigList != null && ps != null) {
+					ps.setShareConfigList(shareConfigList);
+				}
+			}
+		}
+		return list;
 	}
 	
 	/**
@@ -172,9 +195,10 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		}
 		List<ParkingSpace> list = this.parkingSpaceDao.getParkingSpaceALLInfoList(parkingSpace);
 		if(list != null && list.size() > 0) {
-			//获取用户的基本信息
 			for(ParkingSpace p : list) {
 				String spaceno = p.getSpaceno();
+				String parkStatus = p.getParkStatus(); 
+				//获取用户的基本信息
 				SpaceOwner so = spaceOwnerDao.getSpaceOwner(spaceno);
 				if(so != null) {
 //					p.setUserId(so.getUserId());
@@ -186,6 +210,18 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 //					p.setWeixinAccount(so.getWeixinAccount());
 //					p.setAvator(so.getAvator());
 					p.setSpaceOwnerUser(so);
+				}
+				//判断车位状态
+				if("0".equals(parkStatus)) {//空闲
+					ShareConfig shareConfig = new ShareConfig();
+					shareConfig.setSpaceno(spaceno);
+					shareConfig.setParkHourString("00:00:00");
+					List<ShareConfig> shareConfigList = shareConfigService.getEnableShareConfigList(shareConfig);
+					if(shareConfigList != null && shareConfigList.size() > 0) {
+						p.setParkStatus("0");//空闲
+					}else {
+						p.setParkStatus("-1");//不对外开放
+					}
 				}
 			}
 		}
@@ -212,26 +248,44 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	 * @throws
 	 * <p>CreateDate:2017年9月27日 上午9:18:39</p>
 	 */
-	public int getEnableParkingSpaceCount() {
-		ParkingSpace parkingSpace = new ParkingSpace();
+	public int getEnableParkingSpaceCount(ParkingSpace parkingSpace) {
+		if(parkingSpace == null) {
+			parkingSpace = new ParkingSpace();
+		}
 		parkingSpace.setParkStatusQuery(new String[] {"0","1"});
 		return this.parkingSpaceDao.getParkingSpaceCount(parkingSpace);
 	}
 	
 	/**
-	 * @Title: getEnableParkingSpaceCountByComid
-	 * <p>Description:通过小区id获取共享的车位数量包括占用和空闲</p>
-	 * @param     comid 小区id
+	 * @Title: getNoUseingParkingSpaceCount
+	 * <p>Description:获取共享的车位数量：空闲</p>
+	 * @param     parkingSpace 过滤条件
 	 * @return int    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年9月27日 上午9:18:39</p>
 	 */
-	public int getEnableParkingSpaceCountByComid(String comid) {
-		ParkingSpace parkingSpace = new ParkingSpace();
+	public int getNoUseingParkingSpaceCount(ParkingSpace parkingSpace) {
+		if(parkingSpace == null) {
+			parkingSpace = new ParkingSpace();
+		}
 		parkingSpace.setParkStatusQuery(new String[] {"0","1"});
-		parkingSpace.setComid(comid);
-		return this.parkingSpaceDao.getParkingSpaceCount(parkingSpace);
+		return this.parkingSpaceDao.getNoUseingParkingSpaceCount(parkingSpace);
 	}
+	
+//	/**
+//	 * @Title: getEnableParkingSpaceCountByComid
+//	 * <p>Description:通过小区id获取共享的车位数量包括占用和空闲</p>
+//	 * @param     comid 小区id
+//	 * @return int    返回类型
+//	 * @throws
+//	 * <p>CreateDate:2017年9月27日 上午9:18:39</p>
+//	 */
+//	public int getEnableParkingSpaceCountByComid(String comid) {
+//		ParkingSpace parkingSpace = new ParkingSpace();
+//		parkingSpace.setParkStatusQuery(new String[] {"0","1"});
+//		parkingSpace.setComid(comid);
+//		return this.parkingSpaceDao.getParkingSpaceCount(parkingSpace);
+//	}
 	
 	/**
 	 * @Title: getParkingSpaceListBySpacenoLike
@@ -270,13 +324,10 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	public List<ParkingSpace> getParkingSpaceListByComidAndParkHours(String comid, 
 			Integer parkHours){
 		ParkingSpace parkingSpace = new ParkingSpace();
-		ShareConfig shareConfig = new ShareConfig();
-		//获取共享的车位
-		shareConfig.setIsOpen(1);
 		
 		parkingSpace.setComid(comid);
 		parkingSpace.setParkHours(parkHours);
-		parkingSpace.setShareConfig(shareConfig);
+		parkingSpace.setParkHoursString("00:00:00");
 		//空闲的车位
 		parkingSpace.setParkStatus("0");
 		

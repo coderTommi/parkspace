@@ -129,4 +129,44 @@
         	 </if>
         	 order by createTime desc
 	</select>
+	
+	<!-- 根据条件查询车位共享信息 -->
+	<!-- 查询的信息表示从当时间预约，可预约的车位共享信息 -->
+	<select id="getEnableShareConfigList" parameterType="ShareConfig" resultType="ShareConfig">
+		select * from vEnableBillShareConfig where 1=1
+			 <if test="UUID != null">
+            	and UUID = #{UUID}
+        	 </if>
+        	 <if test="spaceno != null">
+            	and spaceno = #{spaceno}
+        	 </if>
+        	 <if test="isAllDay != null">
+            	and isAllDay = #{isAllDay}
+        	 </if>
+        	 <if test="isOpen != null">
+            	and isOpen = #{isOpen}
+        	 </if>
+        	 <!-- 多状态查询 -->
+        	 <if test="isOpenQuery != null and isOpenQuery.length > 0 ">
+        	  	 and isOpen in
+        	  	 	<foreach item="item" index="index" collection="isOpenQuery" open="(" separator="," close=")">  
+ 						#{item}  
+					</foreach>
+        	  </if>
+        	 <if test="shareType != null">
+            	and shareType = #{shareType}
+        	 </if>
+        	 <if test="queryTime != null">
+        	 	<![CDATA[ and startTime <= #{queryTime} ]]>
+        	 	<![CDATA[ and endTime >= #{queryTime} ]]>
+        	 </if>
+        	 <if test="queryDate != null">
+            	<![CDATA[ and startDate <= #{queryTime} ]]>
+        	 	<![CDATA[ and endDate >= #{queryTime} ]]>
+        	 </if>
+        	 <if test="parkHourString != null">
+            	<![CDATA[ and parkHourString >= #{parkHourString} ]]>
+        	 </if>
+        	 order by parkHourString desc
+	</select>
 </mapper>

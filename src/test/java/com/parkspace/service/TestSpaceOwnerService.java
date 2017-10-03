@@ -30,6 +30,8 @@ import com.parkspace.db.rmdb.entity.Zone;
 public class TestSpaceOwnerService {
 	@Resource
 	private ISpaceOwnerService spaceOwnerService;
+	@Resource
+	private IBlackListService blackListService;
 	@Test
 	public void getSpaceOwnerList(){
 		SpaceOwner spaceOwner = new SpaceOwner();
@@ -84,7 +86,7 @@ public class TestSpaceOwnerService {
 		BlackList addBlackList = new BlackList();
 		addBlackList.setUserId("1");
 		addBlackList.setMemo("测试加入黑名单");
-		BlackList returnBlackList = spaceOwnerService.addBlackList(addBlackList);
+		BlackList returnBlackList = blackListService.addBlackList(addBlackList);
 		System.out.println(returnBlackList);
 	}
 	
@@ -92,7 +94,7 @@ public class TestSpaceOwnerService {
 	public void getBlackListAll(){
 		BlackList queryBlackList = new BlackList();
 //		queryBlackList.setIsCancel(1);
-		List<BlackList> list = spaceOwnerService.getBlackListAllInfoList(queryBlackList);
+		List<BlackList> list = blackListService.getBlackListAllInfoList(queryBlackList);
 		for(BlackList b : list){
 			System.out.println(b);
 		}

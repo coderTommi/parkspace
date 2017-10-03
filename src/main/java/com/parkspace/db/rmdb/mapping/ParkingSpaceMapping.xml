@@ -5,7 +5,7 @@
 	<sql id="ParkingSpace_Column">
 		ps.spaceno,ps.comid,ps.parkPositionFloor,ps.parkPositionZone,ps.parkPositionX,
 		ps.parkPositionY,ps.parkStatus,ps.parkType,ps.parkPositionDes,ps.spaceOwner,
-		ps.memo,ps.createBy,ps.createTime,ps.modifyBy,ps.modifyTime
+		ps.memo,ps.createBy,ps.createTime,ps.modifyBy,ps.modifyTime,ps.useCount
 	</sql>
 	<!-- 小区信息字段 -->
 	<sql id="Community_Column">
@@ -73,7 +73,8 @@
     			createBy,
     			createTime,
     			modifyBy,
-    			modifyTime
+    			modifyTime,
+    			useCount
     		) 
     	 values(
     	 		#{spaceno},
@@ -90,7 +91,8 @@
     	 		#{createBy},
     	 		#{createTime},
     	 		#{modifyBy},
-    	 		#{modifyTime}
+    	 		#{modifyTime},
+    	 		#{useCount}
     	 	)
 	</insert>
 	
@@ -132,7 +134,10 @@
 				modifyBy                 = #{modifyBy},
 			</if>
 			<if test="modifyTime != null">
-				modifyTime               = #{modifyTime}
+				modifyTime               = #{modifyTime},
+			</if>
+			<if test="useCount != null">
+				useCount               = #{useCount}
 			</if>
 		</trim>
     	where spaceno = #{spaceno}
@@ -378,35 +383,74 @@
             	<![CDATA[ and ps.createTime >= #{createTime} ]]>
         	 </if>
 	</select>
+	<!-- 根据具体条件查询车位的数量 -->
+	<!-- 空闲 -->
+	<select id="getNoUseingParkingSpaceCount" parameterType="ParkingSpace" resultType="int">
+		select count(ps.spaceno)
+		from ParkingSpace ps
+		where 1=1
+				and exists(select * from vEnableBillShareConfig e where e.spaceno = ps.spaceno)
+		  <!-- 车位基本信息过滤条件 -->
+			 <if test="spaceno != null">
+            	and ps.spaceno = #{spaceno}
+        	 </if>
+        	 <if test="comid != null">
+            	and ps.comid = #{comid}
+        	 </if>
+        	 <if test="parkPositionFloor != null">
+            	and ps.parkPositionFloor = #{parkPositionFloor}
+        	 </if>
+        	 <if test="parkPositionZone != null">
+            	and ps.parkPositionZone = #{parkPositionZone}
+        	 </if>
+        	 <if test="parkPositionX != null">
+            	and ps.parkPositionX = #{parkPositionX}
+        	 </if>
+        	 <if test="parkPositionY != null">
+            	and ps.parkPositionY = #{parkPositionY}
+        	 </if>
+        	 <if test="parkStatus != null">
+            	and ps.parkStatus = #{parkStatus}
+        	 </if>
+        	 <if test="parkStatusQuery != null and parkStatusQuery.length > 0 ">
+        	  	and ps.parkStatus in
+        	  	 <foreach item="item" index="index" collection="parkStatusQuery" open="(" separator="," close=")">  
+ 					#{item}  
+				 </foreach>
+        	 </if>
+        	 <if test="parkType != null">
+            	and ps.parkType = #{parkType}
+        	 </if>
+        	 <if test="parkTypeQuery != null and parkTypeQuery.length > 0 ">
+        	  	and ps.parkType in
+        	  	 <foreach item="item" index="index" collection="parkTypeQuery" open="(" separator="," close=")">  
+ 					#{item}  
+				 </foreach>
+        	 </if>
+        	 
+        	 <if test="parkPositionDes != null">
+            	and ps.parkPositionDes like CONCAT('%', #{parkPositionDes}, '%') 
+        	 </if>
+        	 <if test="spaceOwner != null">
+            	and ps.spaceOwner = #{spaceOwner}
+        	 </if>
+        	 <if test="createTime != null">
+            	<![CDATA[ and ps.createTime >= #{createTime} ]]>
+        	 </if>
+	</select>
 	<!-- 查询可预订的车位信息 -->
 	<select id="getParkingSpaceEnableBillList" parameterType="ParkingSpace" resultType="ParkingSpace">
 		select 
 			<include refid="ParkingSpace_Column"/>
 		from ParkingSpace ps,
-		     (	select * 
-		        from ShareConfig s 
-		      	where 1=1
-		      	   	  <if test="shareConfig != null">
-		      	   	  	<if test="shareConfig.isOpen != null">
-            				and s.isOpen = #{shareConfig.isOpen}
-        		 		</if>
-		      	   	  </if>
-		      	   	  <!-- 根据共享类型shareType 0自定义，1周期，进行过滤数据 -->
-		      	   	  and (
-		      	   	  		(
-		      	   	  				s.shareType = 0
-		      	   	  			<![CDATA[ 
-		      	   	  				and CONCAT(s.startDate,' ',s.startTime) <= now()
-		      	   	  				and CONCAT(s.startDate,' ',s.startTime) >= now()
-		      	   	  			]]>
-		      	   	  		) 
-		      	   	  		or 
-		      	   	  		(
-		      	   	  			s.shareType = 1
-		      	   	  		)
-		      	   	  	)
+		     (SELECT
+							t.spaceno,
+							max(t.parkHourString) AS parkHourString
+				FROM     	venablebillshareconfig t
+				GROUP BY 	t.spaceno
 		      ) as sc
 		where 1=1
+			  and ps.spaceno = sc.spaceno
 			 <!-- 车位基本信息过滤条件 -->
 			 <if test="spaceno != null">
             	and ps.spaceno = #{spaceno}
@@ -458,5 +502,10 @@
         	 <if test="createTime != null">
             	<![CDATA[ and ps.createTime >= #{createTime} ]]>
         	 </if>
+        	 
+        	 <if test="parkHoursString != null">
+            	<![CDATA[ and sc.parkHourString >= ADDTIME(#{parkHoursString},concat('00:','${@com.parkspace.util.Constants@SO_RESERVE_TIME}',':00')) ]]>
+        	 </if>
+        	 order by sc.parkHourString desc, ps.useCount
 	</select>
 </mapper>

@@ -3,8 +3,14 @@ package com.parkspace.util;
 import java.math.BigDecimal;
 
 public class Constants {
-	
+	/** 押金 **/
 	public static final BigDecimal PLEDGEAMOUNT = new BigDecimal("100");
+	/** 预留时间，单位是分钟 **/
+	public static int RESERVE_TIME = 15;
+	/** 快到期时间，单位是分钟 **/
+	public static int SOON_EXPIRE_TIME = 11;
+	/** 业主预留时间,车位提前到期时间，单位是分钟 **/
+	public static int SO_RESERVE_TIME = 30;
 	
 	/**
 	 * 错误码.
@@ -51,7 +57,12 @@ public class Constants {
 		/** 小区编号为不能空 **/
 		COMID_IS_NOT_NULL(20002),
 		/** 行政区域编号为不能空 **/
-		ZONEID_IS_NOT_NULL(20003);
+		ZONEID_IS_NOT_NULL(20003),
+		/** 认证信息不能空 **/
+		APPROVE_IS_NOT_NULL(20004);
+		
+		;
+		
 		
 		
 		/** 错误码 **/

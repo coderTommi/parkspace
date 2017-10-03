@@ -1,22 +1,22 @@
 package com.parkspace.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
-import com.parkspace.db.rmdb.dao.BlackListDao;
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.dao.ParkingSpaceDao;
 import com.parkspace.db.rmdb.dao.SpaceOwnerDao;
-import com.parkspace.db.rmdb.entity.BlackList;
 import com.parkspace.db.rmdb.entity.SpaceOwner;
+import com.parkspace.service.ICommunityService;
 import com.parkspace.service.ISpaceOwnerService;
+import com.parkspace.util.Constants;
 
 /**
  * @Title: SpaceOwnerServiceImpl.java
@@ -38,8 +38,7 @@ public class SpaceOwnerServiceImpl implements ISpaceOwnerService{
 	private ParkingSpaceDao parkingSpaceDao;
 	
 	@Resource
-	private BlackListDao blackListDao;
-	
+	private ICommunityService communityService;
 	/**
 	 * @Title: getSpaceOwnerList
 	 * <p>Description:
@@ -80,54 +79,6 @@ public class SpaceOwnerServiceImpl implements ISpaceOwnerService{
 		return list;
 	}
 	/**
-	 * @Title: addBlackList
-	 * <p>Description:需要加入黑名单的用户信息</p>
-	 * @param     blackList 黑名单信息
-	 * 包括：用户编号、备注信息等
-	 * @return BlackList    返回类型，返回添加之后的信息
-	 * @throws
-	 * <p>CreateDate:2017年9月23日 下午10:04:16</p>
-	 */
-	@Transactional(propagation=Propagation.REQUIRED)
-	@Override
-	public BlackList addBlackList(BlackList blackList) {
-		//获取主键信息
-		String uuid = UUID.randomUUID().toString();
-		if(blackList != null){
-			BlackList newBlackList = new BlackList();
-			newBlackList.setCreateTime(new Date());
-			//默认否
-			newBlackList.setIsCancel(0);
-			//加入黑名单的原因
-			newBlackList.setMemo(blackList.getMemo());
-			newBlackList.setModifyTime(new Date());
-			newBlackList.setUserId(blackList.getUserId());
-			newBlackList.setUUID(uuid);
-			blackListDao.addBlackList(newBlackList);
-			return newBlackList;
-		}
-		return null;
-	}
-	/**
-	 * @Title: getBlackListAllInfoList
-	 * <p>Description:
-	 * 查看所有加入黑名单的业主
-	 * </p>
-	 * @param     blackList 过滤条件，如果为空查询所有
-	 * @return List<BlackList>    返回类型
-	 * @throws
-	 * <p>CreateDate:2017年9月23日 下午10:13:17</p>
-	 */
-	@Override
-	public List<BlackList> getBlackListAllInfoList(BlackList blackList) {
-		List<BlackList> list = new ArrayList<BlackList>();
-		if(blackList == null){
-			blackList = new BlackList();
-		}
-		list = blackListDao.getBlackListAllInfoList(blackList);
-		return list;
-	}
-	/**
 	 * @Title: getSpaceOwnerCount
 	 * <p>Description:
 	 * 根据条件查询车位业主数量
@@ -143,5 +94,33 @@ public class SpaceOwnerServiceImpl implements ISpaceOwnerService{
 			spaceOwner = new SpaceOwner();
 		}
 		return this.spaceOwnerDao.getSpaceOwnerCount(spaceOwner);
+	}
+	/**
+	 * 
+	 * @Title: addSpaceOwner
+	 * <p>Description:业主认证</p>
+	 * @param     spaceOwner 需要认证的用户信息
+	 * @param     comid 小区id
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 上午9:35:16</p>
+	 */
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void addSpaceOwner(SpaceOwner spaceOwner,String comid) 
+			throws ParkspaceServiceException{
+		if(spaceOwner == null) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.APPROVE_IS_NOT_NULL.toString(), 
+					"认证信息不能为空");
+		}
+		if(StringUtils.isEmpty(comid)) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.COMID_IS_NOT_NULL.toString(), 
+					"小区编号不能为空");
+		}
+		spaceOwnerDao.addSpaceOwner(spaceOwner);
+		//保存用户与小区的关系
+		communityService.addUserCommunity(comid, spaceOwner.getUserId());
 	}
 }

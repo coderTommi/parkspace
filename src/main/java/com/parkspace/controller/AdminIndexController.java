@@ -15,6 +15,7 @@ import com.parkspace.common.OperationResult;
 import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.Caruser;
 import com.parkspace.db.rmdb.entity.Community;
+import com.parkspace.db.rmdb.entity.ParkingSpace;
 import com.parkspace.db.rmdb.entity.PropertyMgmtUser;
 import com.parkspace.db.rmdb.entity.SpaceOwner;
 import com.parkspace.model.AdminIndexSurvey;
@@ -78,7 +79,8 @@ public class AdminIndexController {
 			userCout = spaceUser + carUser;
 			adminIndexSurvey.setUserCout(userCout);
 			//管理的车位数，排除未对外开放的车位
-			int spaceCount = parkingSpaceService.getEnableParkingSpaceCount();
+			ParkingSpace parkingSpace = new ParkingSpace();
+			int spaceCount = parkingSpaceService.getEnableParkingSpaceCount(parkingSpace);
 			adminIndexSurvey.setSpaceCount(spaceCount);
 			
 			res.setResData(adminIndexSurvey);
@@ -128,7 +130,9 @@ public class AdminIndexController {
 			userCout = spaceUser + carUser;
 			adminIndexSurvey.setUserCout(userCout);
 			//管理的车位数，排除未对外开放的车位
-			int spaceCount = parkingSpaceService.getEnableParkingSpaceCountByComid(comid);
+			ParkingSpace parkingSpace = new ParkingSpace();
+			parkingSpace.setComid(comid);
+			int spaceCount = parkingSpaceService.getEnableParkingSpaceCount(parkingSpace);
 			adminIndexSurvey.setSpaceCount(spaceCount);
 			
 			res.setResData(adminIndexSurvey);

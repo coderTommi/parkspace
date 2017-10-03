@@ -99,7 +99,7 @@ public class TestParkingSpaceService {
 	}
 	@Test
 	public void getEnableParkingSpaceCount() {
-		System.out.println(this.parkingSpaceService.getEnableParkingSpaceCount());
+		System.out.println(this.parkingSpaceService.getEnableParkingSpaceCount(null));
 	}
 	@Test
 	public void getParkingSpaceListBySpacenoLike() {

@@ -90,6 +90,17 @@ public interface ParkingSpaceDao {
 	 * <p>CreateDate:2017年9月27日 上午9:16:23</p>
 	 */
 	public int getParkingSpaceCount(ParkingSpace parkingSpace);
+	
+	/**
+	 * @Title: getNoUseingParkingSpaceCount
+	 * <p>Description:获取共享的车位数量：空闲</p>
+	 * @param     parkingSpace 过滤条件
+	 * @return int    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月27日 上午9:18:39</p>
+	 */
+	public int getNoUseingParkingSpaceCount(ParkingSpace parkingSpace);
+	
 	/**
 	 * @Title: getParkingSpaceEnableBillList
 	 * <p>Description:查询可预订的车位信息</p>

@@ -27,7 +27,7 @@ public class TestShareConfigService {
 	
 	private String spaceno = "1";
 	
-	private String userId = "1";
+	public String userId = "1";
 	
 	private String UUID = "1d93e91d-ae0b-4c5f-b0cc-0e6e711357ff";
 	
