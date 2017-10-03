@@ -61,7 +61,8 @@ public class SpaceOwnerController {
 	 * 车牌号(spaceno)、
 	 * 车位号(carno)
 	 * 
-	 * 
+	 * 如果像查询某个车主信息可以构造
+	 * userId和carno参数
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型

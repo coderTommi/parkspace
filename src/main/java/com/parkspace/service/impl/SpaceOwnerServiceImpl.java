@@ -6,11 +6,17 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.dao.ParkingSpaceDao;
 import com.parkspace.db.rmdb.dao.SpaceOwnerDao;
 import com.parkspace.db.rmdb.entity.SpaceOwner;
+import com.parkspace.service.ICommunityService;
 import com.parkspace.service.ISpaceOwnerService;
+import com.parkspace.util.Constants;
 
 /**
  * @Title: SpaceOwnerServiceImpl.java
@@ -30,6 +36,9 @@ public class SpaceOwnerServiceImpl implements ISpaceOwnerService{
 	
 	@Resource
 	private ParkingSpaceDao parkingSpaceDao;
+	
+	@Resource
+	private ICommunityService communityService;
 	/**
 	 * @Title: getSpaceOwnerList
 	 * <p>Description:
@@ -85,5 +94,33 @@ public class SpaceOwnerServiceImpl implements ISpaceOwnerService{
 			spaceOwner = new SpaceOwner();
 		}
 		return this.spaceOwnerDao.getSpaceOwnerCount(spaceOwner);
+	}
+	/**
+	 * 
+	 * @Title: addSpaceOwner
+	 * <p>Description:业主认证</p>
+	 * @param     spaceOwner 需要认证的用户信息
+	 * @param     comid 小区id
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 上午9:35:16</p>
+	 */
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void addSpaceOwner(SpaceOwner spaceOwner,String comid) 
+			throws ParkspaceServiceException{
+		if(spaceOwner == null) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.APPROVE_IS_NOT_NULL.toString(), 
+					"认证信息不能为空");
+		}
+		if(StringUtils.isEmpty(comid)) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.COMID_IS_NOT_NULL.toString(), 
+					"小区编号不能为空");
+		}
+		spaceOwnerDao.addSpaceOwner(spaceOwner);
+		//保存用户与小区的关系
+		communityService.addUserCommunity(comid, spaceOwner.getUserId());
 	}
 }

@@ -253,7 +253,8 @@ public class CommunityServiceImpl implements ICommunityService{
 	public PropertyMgmtUser getPropertyMgmtUserByComid(String comid) 
 			throws ParkspaceServiceException{
 		if(StringUtils.isEmpty(comid)) {
-			throw new ParkspaceServiceException(Constants.ERRORCODE.COMID_IS_NOT_NULL.toString(), 
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.COMID_IS_NOT_NULL.toString(), 
 					"小区编号不能为空");
 		}
 		PropertyMgmtUser propertyMgmtUser = new PropertyMgmtUser();

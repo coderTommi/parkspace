@@ -2,6 +2,7 @@ package com.parkspace.service;
 
 import java.util.List;
 
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.SpaceOwner;
 
 /**
@@ -51,4 +52,15 @@ public interface ISpaceOwnerService {
 	 * <p>CreateDate:2017年9月24日 上午1:42:12</p>
 	 */
 	public int getSpaceOwnerCount(SpaceOwner spaceOwner);
+	/**
+	 * @Title: addSpaceOwner
+	 * <p>Description:业主认证</p>
+	 * @param     spaceOwner 需要认证的用户信息
+	 * @param     comid 小区id
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 上午9:35:16</p>
+	 */
+	public void addSpaceOwner(SpaceOwner spaceOwner, String comid) 
+			throws ParkspaceServiceException;
 }

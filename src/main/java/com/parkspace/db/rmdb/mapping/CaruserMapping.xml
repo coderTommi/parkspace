@@ -3,7 +3,7 @@
 <mapper namespace="com.parkspace.db.rmdb.dao.CaruserDao">
 	<!-- 业主表字段 -->
 	<sql id="Caruser_Column">
-		car.carno,car.isauth
+		car.carno,car.isauth,car.parkCount
 	</sql>
 	<!-- 用户基本信息表字段 -->
 	<sql id="Baseuser_Column">
@@ -52,19 +52,22 @@
     	insert into Caruser(
     			userId,
     			carno,
-    			isauth
+    			isauth,
+    			parkCount
     		) 
     	 values(
     	 		#{userId},
     	 		#{carno},
-    	 		#{isauth}
+    	 		#{isauth},
+    	 		#{parkCount}
     	 	)
 	</insert>
 	
 	<!-- 更改车主信息 -->
 	<update id="updateCaruser" parameterType="Caruser">
     	update Caruser set
-    			isauth         = #{isauth}
+    			isauth         = #{isauth},
+    			parkCount      = #{parkCount}
     	where userId=#{userId} and carno=#{carno}
 	</update>
 	

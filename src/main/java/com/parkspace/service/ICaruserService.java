@@ -2,6 +2,7 @@ package com.parkspace.service;
 
 import java.util.List;
 
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.Caruser;
 
 /**
@@ -32,10 +33,12 @@ public interface ICaruserService {
 	 * </p>
 	 * @param     caruser 车位业主信息
 	 * @return List<Caruser>    返回类型
-	 * @throws
+	 * @throws Exception 
+	 * @throws ParkspaceServiceException 
 	 * <p>CreateDate:2017年9月24日 上午1:42:12</p>
 	 */
-	public List<Caruser> getCaruserAllInfoList(Caruser caruser);
+	public List<Caruser> getCaruserAllInfoList(Caruser caruser)
+			throws ParkspaceServiceException, Exception;
 	
 	/**
 	 * @Title: getSpaceOwnerCount
@@ -48,4 +51,17 @@ public interface ICaruserService {
 	 * <p>CreateDate:2017年9月24日 上午1:42:12</p>
 	 */
 	public int getCaruserAllInfoCount(Caruser caruser);
+	
+	/**
+	 * 
+	 * @Title: addCaruser
+	 * <p>Description:车主认证</p>
+	 * @param     spaceOwner 需要认证的用户信息
+	 * @param     comid 小区id
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 上午9:35:16</p>
+	 */
+	public void addCaruser(Caruser caruser, String comid) 
+			throws ParkspaceServiceException;
 }

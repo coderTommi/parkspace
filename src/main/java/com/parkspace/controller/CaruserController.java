@@ -61,7 +61,8 @@ public class CaruserController {
 	 * 手机号(telePhone)、
 	 * 车位号(carno)
 	 * 
-	 * 
+	 * 如果像查询某个车主信息可以构造
+	 * userId和carno参数
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型
@@ -91,6 +92,10 @@ public class CaruserController {
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
 			res.setErrCode(e.getMessageCode());
+		}catch(Exception e1) {
+			LOG.error("查询车主信息失败："+"{"+caruser+"}" 
+					+  e1.getMessage());
+			res.setFlag(false);
 		}
 		return res;
 	}
