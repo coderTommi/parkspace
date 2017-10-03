@@ -16,7 +16,8 @@
     			billType,
     			amount,
     			state,
-    			orderJnlno
+    			orderJnlno, 
+    			remoteJnlNo
     		) 
     	 values(
     	 		#{billId},
@@ -27,7 +28,8 @@
     	 		#{billType},
     	 		#{amount},
     	 		#{state},
-    	 		#{orderJnlno}
+    	 		#{orderJnlno}, 
+    	 		#{remoteJnlNo}
     	 	)
 	</insert>
 	
@@ -54,7 +56,21 @@
         	 </if>
         	 <if test="orderJnlno != null">
             	and orderJnlno = #{orderJnlno}
-        	 </if>        	         	 
+        	 </if>
+        	 <if test="remoteJnlNo != null">
+        	 	and remoteJnlNo = #{remoteJnlNo}
+        	 </if>
         	 order by transtime desc
 	</select>
+	
+	<update id="update"  parameterType="Bill" >
+		update bill set 
+		<if test="state != null">
+            	state=#{state} ,
+       	 </if>
+		<if test="remoteJnlNo != null">
+            	remoteJnlNo=#{remoteJnlNo}
+       	 </if>
+		where billId = #{billId}
+	</update>
 </mapper>

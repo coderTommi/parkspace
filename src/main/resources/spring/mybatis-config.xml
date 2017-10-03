@@ -22,6 +22,8 @@
 		<typeAlias alias="Wallet" type="com.parkspace.db.rmdb.entity.Wallet"/>
 		<typeAlias alias="Integral" type="com.parkspace.db.rmdb.entity.Integral"/>
 		<typeAlias alias="SMSCode" type="com.parkspace.db.rmdb.entity.SMSCode"/>
+		<typeAlias alias="WalletLock" type="com.parkspace.db.rmdb.entity.WalletLock"/>
+		<typeAlias alias="WalletOperation" type="com.parkspace.db.rmdb.entity.WalletOperation"/>
 	</typeAliases>
  	<plugins>
 	 	<plugin interceptor="com.github.pagehelper.PageInterceptor">

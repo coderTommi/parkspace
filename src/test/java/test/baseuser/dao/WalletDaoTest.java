@@ -1,9 +1,7 @@
 package test.baseuser.dao;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -16,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.parkspace.db.rmdb.dao.WalletDao;
 import com.parkspace.db.rmdb.entity.Wallet;
+import com.parkspace.db.rmdb.entity.WalletOperation;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -56,6 +55,19 @@ public class WalletDaoTest {
 		wallet.setUnclosedAmt(new BigDecimal("20.00"));
 		wallet.setLastTrsTime(new Timestamp(System.currentTimeMillis()));
 		walletDao.update(wallet);
+	}
+	
+	@Test
+	public void updateByBill() {
+		WalletOperation obj = new WalletOperation();
+		obj.setUserId("f55dc148-5abf-4af3-a0f6-535c6cdebf4d");
+		obj.setBalance(new BigDecimal("1").negate());
+		int count = walletDao.updateByBill(obj);
+		System.out.println(count);
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(new BigDecimal("10").negate());
 	}
 	
 

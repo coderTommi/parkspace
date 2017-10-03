@@ -3,6 +3,7 @@ package com.parkspace.db.rmdb.dao;
 import org.mybatis.spring.annotation.MapperScan;
 
 import com.parkspace.db.rmdb.entity.Wallet;
+import com.parkspace.db.rmdb.entity.WalletOperation;
 
 /**
  * 钱包操作表DAO
@@ -20,4 +21,6 @@ public interface WalletDao {
 	
 	/** 查询详情 **/
 	public Wallet getByUserId(String userId);
+	/** 根据账单修改账户 **/
+	public int updateByBill(WalletOperation opera) ;
 }

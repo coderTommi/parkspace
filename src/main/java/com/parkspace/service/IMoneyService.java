@@ -27,18 +27,19 @@ public interface IMoneyService {
 	 * @throws
 	 * <p>CreateDate:2017年10月2日 上午10:12:22</p>
 	 */
-	public void recharge(String userId, BigDecimal amt) throws ParkspaceServiceException, Exception;
+	public void recharge(String userId, BigDecimal amt ,
+			String remoteJnlNo, Integer payChannel) throws ParkspaceServiceException, Exception;
 	
 	/**
 	 * 提现
-	 * @Title: withdrawMondy
+	 * @Title: withdrawCash
 	 * <p>Description:</p>
 	 * @param     参数
 	 * @return void    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年10月2日 上午10:13:36</p>
 	 */
-	public void withdrawMondy(String userId, BigDecimal amt) throws ParkspaceServiceException, Exception;
+	public void withdrawCash(String userId, BigDecimal amt) throws ParkspaceServiceException, Exception;
 	/**
 	 * 查询提现明细
 	 * @Title: qryWithdrawList
@@ -59,7 +60,48 @@ public interface IMoneyService {
 	 * @throws
 	 * <p>CreateDate:2017年10月2日 上午10:16:39</p>
 	 */
-	public void payPledge(String userId, BigDecimal amt) throws ParkspaceServiceException, Exception;
+	public void pledgeIn(String userId, BigDecimal amt, String remoteJnlNo, Integer payChannel) throws ParkspaceServiceException, Exception;
+	/**
+	 * 提押金
+	 * @Title: pledgeOut
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 上午11:00:48</p>
+	 */
+	public void pledgeOut(String userId, BigDecimal amt) throws ParkspaceServiceException, Exception;
+	/**
+	 * 分配资金
+	 * @Title: payOut
+	 * <p>Description: 对账后，管理员账户将资金打入到用户账户</p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 上午11:01:43</p>
+	 */
+	public void payOut(String userId, BigDecimal amt) throws ParkspaceServiceException, Exception;
+	/**
+	 * 订单
+	 * @Title: order
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 上午11:03:45</p>
+	 */
+	public void order(String payer, String payee, BigDecimal amt,
+			String remoteJnlNo, Integer payChannel) throws ParkspaceServiceException, Exception; 
+	/**
+	 * 发放奖金
+	 * @Title: bonusOut
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 上午11:04:03</p>
+	 */
+	public void bonusOut(String userId, BigDecimal amt) throws ParkspaceServiceException, Exception;
 	/**
 	 * 查询收益明细
 	 * @Title: qryIncomeList
@@ -90,4 +132,5 @@ public interface IMoneyService {
 	 * <p>CreateDate:2017年10月2日 上午10:26:18</p>
 	 */
 	public Wallet qryWallet(String userId)   throws ParkspaceServiceException, Exception;
+	
 }
