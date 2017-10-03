@@ -327,6 +327,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		
 		parkingSpace.setComid(comid);
 		parkingSpace.setParkHours(parkHours);
+		parkingSpace.setParkHoursString("00:00:00");
 		//空闲的车位
 		parkingSpace.setParkStatus("0");
 		

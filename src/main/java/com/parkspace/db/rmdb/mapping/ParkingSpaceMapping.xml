@@ -443,30 +443,14 @@
 		select 
 			<include refid="ParkingSpace_Column"/>
 		from ParkingSpace ps,
-		     (	select * 
-		        from ShareConfig s 
-		      	where 1=1
-		      	   	  <if test="shareConfig != null">
-		      	   	  	<if test="shareConfig.isOpen != null">
-            				and s.isOpen = #{shareConfig.isOpen}
-        		 		</if>
-		      	   	  </if>
-		      	   	  <!-- 根据共享类型shareType 0自定义，1周期，进行过滤数据 -->
-		      	   	  and (
-		      	   	  		(
-		      	   	  				s.shareType = 0
-		      	   	  			<![CDATA[ 
-		      	   	  				and CONCAT(s.startDate,' ',s.startTime) <= now()
-		      	   	  				and CONCAT(s.startDate,' ',s.startTime) >= now()
-		      	   	  			]]>
-		      	   	  		) 
-		      	   	  		or 
-		      	   	  		(
-		      	   	  			s.shareType = 1
-		      	   	  		)
-		      	   	  	)
+		     (SELECT
+							t.spaceno,
+							max(t.parkHourString) AS parkHourString
+				FROM     	venablebillshareconfig t
+				GROUP BY 	t.spaceno
 		      ) as sc
 		where 1=1
+			  and ps.spaceno = sc.spaceno
 			 <!-- 车位基本信息过滤条件 -->
 			 <if test="spaceno != null">
             	and ps.spaceno = #{spaceno}
@@ -518,5 +502,10 @@
         	 <if test="createTime != null">
             	<![CDATA[ and ps.createTime >= #{createTime} ]]>
         	 </if>
+        	 
+        	 <if test="parkHoursString != null">
+            	<![CDATA[ and sc.parkHourString >= ADDTIME(#{parkHoursString},concat('00:','${@com.parkspace.util.Constants@SO_RESERVE_TIME}',':00')) ]]>
+        	 </if>
+        	 order by sc.parkHourString desc, ps.useCount
 	</select>
 </mapper>

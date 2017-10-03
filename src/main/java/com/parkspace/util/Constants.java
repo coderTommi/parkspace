@@ -1,6 +1,13 @@
 package com.parkspace.util;
 
 public class Constants {
+	/** 预留时间，单位是分钟 **/
+	public static int RESERVE_TIME = 15;
+	/** 快到期时间，单位是分钟 **/
+	public static int SOON_EXPIRE_TIME = 11;
+	/** 业主预留时间,车位提前到期时间，单位是分钟 **/
+	public static int SO_RESERVE_TIME = 30;
+	
 	/**
 	 * 错误码.
 	 * @author lidongliang

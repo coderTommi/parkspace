@@ -96,4 +96,27 @@ public class TestParkingSpaceController extends TestBaseController{
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void getEnableParkingSpace() {
+		ParkingSpace parkingSpace = new ParkingSpace();
+		parkingSpace.setParkHours(10);
+		parkingSpace.setComid(comid);
+		
+		ObjectMapper mapper = new ObjectMapper(); 
+		try {
+			String requestJson = mapper.writeValueAsString(parkingSpace); 
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/getenableparkingspace")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(requestJson)
+					.param("page", "1")
+					.param("pageSize", "10"))
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -153,4 +153,47 @@ public class ParkingSpaceController {
 		return res;
 	}
 	
+	/**
+	 * @Title: getEnableParkingSpace
+	 * <p>Description:查询可预订的车位信息
+	 * /v1/parkingspace/getenableparkingspace
+	 * 
+	 * 需要传入小区编号和停车时长,形如：
+	 * ParkingSpace parkingSpace = new ParkingSpace();
+	 * parkingSpace.setParkHours(10);
+	 * parkingSpace.setComid(comid);
+	 * </p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/getenableparkingspace")
+    @ResponseBody
+	public OperationResult getEnableParkingSpace(
+			@RequestParam(value = "page", required = true) int page,
+            @RequestParam(value = "pageSize", required = true) int pageSize,
+            @RequestBody ParkingSpace parkingSpace,
+            HttpServletRequest request) {
+		OperationResult res = new OperationResult();
+		PageHelper.startPage(page, pageSize);
+		try {
+			String comid = parkingSpace.getComid();
+			int parkHours = parkingSpace.getParkHours();
+			List<ParkingSpace> list = parkingSpaceService.getParkingSpaceListByComidAndParkHours(comid, parkHours);
+			res.setFlag(true);
+			if(list != null && list.size() > 0) {
+				PageInfo<ParkingSpace> listPage = new PageInfo<ParkingSpace>(list);
+				res.setResData(listPage);
+			}else {
+				res.setResData(list);
+			}
+		}catch(ParkspaceServiceException e) {
+			LOG.error("查询可预订车位信息失败："+"{"+parkingSpace+"}" 
+					+ e.getMessageCode() + e.getMessage());
+			res.setFlag(false);
+			res.setErrCode(e.getMessageCode());
+		}
+		return res;
+	}
 }
