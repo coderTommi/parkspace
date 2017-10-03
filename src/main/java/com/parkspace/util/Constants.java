@@ -33,10 +33,13 @@ public class Constants {
 		/** 行政区域编号为不能空 **/
 		ZONEID_IS_NOT_NULL(20003),
 		/** 认证信息不能空 **/
-		APPROVE_IS_NOT_NULL(20004);
-		
-		;
-		
+		APPROVE_IS_NOT_NULL(20004),
+		/** 订单信息不能为空 **/
+		ORDER_IS_NOT_NULL(20005),
+		/** 该车位不能被预定 **/
+		SPACE_IS_NOT_ORDER(20006),
+		/** 订单状态不合法 **/
+		ORDER_STATUS_IS_ILLLEGAL(20007);
 		
 		
 		/** 错误码 **/

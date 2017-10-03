@@ -46,6 +46,14 @@ public class ParkingSpaceBillHis implements Serializable{
 	private BigDecimal actualParkHours;
 	//预算：=单价*实际停车时长
 	private BigDecimal actualPrice;
+	//延长停车时长，默认为0
+	private Integer delayParkHours;
+	public Integer getDelayParkHours() {
+		return delayParkHours;
+	}
+	public void setDelayParkHours(Integer delayParkHours) {
+		this.delayParkHours = delayParkHours;
+	}
 	//记录时间，表示该流水记录的时间
 	private Date recodeTime = new Date();
 	public String getUUID() {
@@ -131,7 +139,7 @@ public class ParkingSpaceBillHis implements Serializable{
 		return "ParkingSpaceBillHis [UUID=" + UUID + ", orderJnlNo=" + orderJnlNo + ", userId=" + userId + ", carno="
 				+ carno + ", spaceno=" + spaceno + ", billStatus=" + billStatus + ", parkHours=" + parkHours
 				+ ", unitPrice=" + unitPrice + ", budgetPrice=" + budgetPrice + ", createTime=" + createTime
-				+ ", actualParkHours=" + actualParkHours + ", actualPrice=" + actualPrice + ", recodeTime=" + recodeTime
-				+ "]";
+				+ ", actualParkHours=" + actualParkHours + ", actualPrice=" + actualPrice + ", delayParkHours="
+				+ delayParkHours + ", recodeTime=" + recodeTime + "]";
 	}
 }

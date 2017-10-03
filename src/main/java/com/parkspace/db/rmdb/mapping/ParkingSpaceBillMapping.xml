@@ -16,7 +16,8 @@
 				parkHours,
 				unitPrice,
 				budgetPrice,
-				createTime
+				createTime,
+				delayParkHours
     		) 
          values(
        			#{orderJnlNo},
@@ -27,7 +28,8 @@
        			#{parkHours},
        			#{unitPrice},
        			#{budgetPrice},
-       			#{createTime}
+       			#{createTime},
+       			#{delayParkHours}
          )
 	</insert>
 	
@@ -49,6 +51,25 @@
         	 	</if>
         	 	<if test="createTime != null">
             		createTime   = #{createTime},
+        	 	</if>
+        	 	<if test="delayParkHours != null">
+            		delayParkHours   = #{delayParkHours},
+        	 	</if>
+        	 </trim>
+    	where orderJnlNo = #{orderJnlNo}
+	</update>
+	
+	<!-- 延长停车时长 -->
+	<update id="delayParkingSpaceBill" parameterType="ParkingSpaceBill">
+    	update ParkingSpaceBill
+    		<trim prefix="set" suffixOverrides=",">
+    			<if test="delayParkHours != null">
+            		parkHours     = parkHours + #{delayParkHours},
+            		budgetPrice   = (parkHours + #{delayParkHours})*unitPrice,
+            		delayParkHours   = #{delayParkHours},
+        	 	</if>
+        	 	<if test="billStatus != null">
+            		billStatus   = #{billStatus},
         	 	</if>
         	 </trim>
     	where orderJnlNo = #{orderJnlNo}

@@ -441,7 +441,8 @@
 	<!-- 查询可预订的车位信息 -->
 	<select id="getParkingSpaceEnableBillList" parameterType="ParkingSpace" resultType="ParkingSpace">
 		select 
-			<include refid="ParkingSpace_Column"/>
+			<include refid="ParkingSpace_Column"/>,
+			TIMEDIFF(sc.parkHourString,concat('00:','${@com.parkspace.util.Constants@SO_RESERVE_TIME}',':00')) as parkHoursString
 		from ParkingSpace ps,
 		     (SELECT
 							t.spaceno,

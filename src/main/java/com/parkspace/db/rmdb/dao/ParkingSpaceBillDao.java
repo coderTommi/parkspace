@@ -51,6 +51,17 @@ public interface ParkingSpaceBillDao {
 	 */
 	public void updateParkingSpaceBill(ParkingSpaceBill parkingSpaceBill);
 	/**
+	 * @Title: delayParkingSpaceBill
+	 * <p>Description:
+	 * 延长订单,当状态发生变换时需要把状态之前的数据保存到历史订单中
+	 * </p>
+	 * @param     parkingSpaceBill 车位订单信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:15:51</p>
+	 */
+	public void delayParkingSpaceBill(ParkingSpaceBill parkingSpaceBill);
+	/**
 	 * @Title: deleteParkingSpaceBill
 	 * <p>Description:
 	 * 删除车位订单信息，数据保存到历史订单中

@@ -34,8 +34,12 @@ public class ParkingSpaceBill implements Serializable{
 	private String spaceno;
 	//订单状态：1、预约中，2、使用中，3.延长使用中
 	private Integer billStatus;
-	//停车时长，申请停车时长，单位为小时，不能超过24小时
+	//停车时长，申请停车时长，单位为小时，不能超过24小时，包括延长停车时长
 	private Integer parkHours;
+	
+	//延长停车时长，默认为0
+	private Integer delayParkHours;
+	
 	//单价，每小时计费
 	private BigDecimal unitPrice;
 	//预算：=单价*停车时长
@@ -47,6 +51,12 @@ public class ParkingSpaceBill implements Serializable{
 	}
 	public void setOrderJnlNo(String orderJnlNo) {
 		this.orderJnlNo = orderJnlNo;
+	}
+	public Integer getDelayParkHours() {
+		return delayParkHours;
+	}
+	public void setDelayParkHours(Integer delayParkHours) {
+		this.delayParkHours = delayParkHours;
 	}
 	public String getUserId() {
 		return userId;
@@ -99,7 +109,8 @@ public class ParkingSpaceBill implements Serializable{
 	@Override
 	public String toString() {
 		return "ParkingSpaceBill [orderJnlNo=" + orderJnlNo + ", userId=" + userId + ", carno=" + carno + ", spaceno="
-				+ spaceno + ", billStatus=" + billStatus + ", parkHours=" + parkHours + ", unitPrice=" + unitPrice
-				+ ", budgetPrice=" + budgetPrice + ", createTime=" + createTime + "]";
+				+ spaceno + ", billStatus=" + billStatus + ", parkHours=" + parkHours + ", delayParkHours="
+				+ delayParkHours + ", unitPrice=" + unitPrice + ", budgetPrice=" + budgetPrice + ", createTime="
+				+ createTime + "]";
 	}
 }

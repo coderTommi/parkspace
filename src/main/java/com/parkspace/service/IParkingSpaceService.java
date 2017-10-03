@@ -2,7 +2,9 @@ package com.parkspace.service;
 
 import java.util.List;
 
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.ParkingSpace;
+import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
 
 /**
  * @Title: IParkingSpaceService.java
@@ -171,4 +173,39 @@ public interface IParkingSpaceService {
 	 */
 	public List<ParkingSpace> getParkingSpaceListByComidAndParkHours(String comid, 
 			Integer parkHours);
+	/**
+	 * @Title: orderParkingSpace
+	 * <p>Description:车位预定</p>
+	 * @param     参数
+	 * @return ParkingSpaceBill    返回类型
+	 * @throws ParkspaceServiceException
+	 * <p>CreateDate:2017年10月3日 下午2:31:54</p>
+	 */
+	public ParkingSpaceBill addOrderParkingSpace(ParkingSpaceBill parkingSpaceBill) 
+			throws ParkspaceServiceException;
+	/**
+	 * 
+	 * @Title: getParkingSpaceParkHoursBySpaceno
+	 * <p>Description:通过车位编号查询车位可共享的最长时间
+	 * </p>
+	 * @param     spaceno 车位编号
+	 * @return String    返回类型，格式100:20:10(小时：分钟：秒)
+	 * @throws ParkspaceServiceException
+	 * <p>CreateDate:2017年10月3日 下午4:05:32</p>
+	 */
+	public String getParkingSpaceParkHoursBySpaceno(String spaceno) 
+			throws ParkspaceServiceException;
+	/**
+	 * @Title: cancelOrderParkingSpace
+	 * <p>Description:取消订单，只有预约的订单才能被取消
+	 * 1.取消订单之后，订单信息写入订单历史表
+	 * 2.更新车位的状态为空闲0
+	 * </p>
+	 * @param     orderJnlNo 订单编号
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 下午4:36:47</p>
+	 */
+	public void cancelOrderParkingSpace(String orderJnlNo)
+			throws ParkspaceServiceException;
 }

@@ -80,8 +80,8 @@ public class TestShareConfigController extends TestBaseController{
 		ShareConfig shareConfig = new ShareConfig();
 		
 		shareConfig.setIsAllDay(0);
-		shareConfig.setStartTime("18:10:59");
-		shareConfig.setEndTime("13:03:59");
+		shareConfig.setStartTime("13:03:59");
+		shareConfig.setEndTime("18:10:59");
 		
 		shareConfig.setInternalDate("1,2,3,7");
 //		shareConfig.setInternalDate("1,2,3");
