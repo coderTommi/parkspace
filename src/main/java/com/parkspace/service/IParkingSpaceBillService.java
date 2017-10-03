@@ -1,24 +1,19 @@
-package com.parkspace.db.rmdb.dao;
+package com.parkspace.service;
 
 import java.util.List;
 
 import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
 
 /**
- * @Title: ParkingSpaceBillDao.java
- * @Package com.parkspace.db.rmdb.dao
- * <p>Description:
- * 车位订单，用来记录车位的订单信息
- * 预约
- * 使用中
- * 使用完成
- * </p>
+ * @Title: IParkingSpaceBillService.java
+ * @Package com.parkspace.service
+ * <p>Description:订单service接口</p>
  * @author sunld
  * @version V1.0.0 
- * <p>CreateDate:2017年9月22日 下午11:14:27</p>
+ * <p>CreateDate:2017年10月3日 下午10:11:30</p>
 */
 
-public interface ParkingSpaceBillDao {
+public interface IParkingSpaceBillService {
 	/**
 	 * @Title: getParkingSpaceBill
 	 * <p>Description:根据订单编号获取车位订单信息</p>
@@ -82,12 +77,13 @@ public interface ParkingSpaceBillDao {
 	 */
 	public List<ParkingSpaceBill> getParkingSpaceBillList(ParkingSpaceBill parkingSpaceBill);
 	/**
-	 * @Title: getMaxDelayParkHoursString
-	 * <p>Description:查询可延长停车的最长时间</p>
-	 * @param     parkingSpaceBill 车位订单信息
-	 * @return String    返回类型
+	 * @Title: getParkingSpaceBill
+	 * <p>Description:根据订单编号获取车位订单信息</p>
+	 * @param     orderJnlNo 订单编号
+	 * @param     delayParkHours 延长时间，用来判断停车的合法性
+	 * @return ParkingSpaceBill    返回类型
 	 * @throws
-	 * <p>CreateDate:2017年10月3日 下午10:53:16</p>
+	 * <p>CreateDate:2017年9月23日 下午9:16:29</p>
 	 */
-	public String getMaxDelayParkHoursString(ParkingSpaceBill parkingSpaceBill);
+	public ParkingSpaceBill getParkingSpaceBill(String orderJnlNo, int delayParkHours);
 }

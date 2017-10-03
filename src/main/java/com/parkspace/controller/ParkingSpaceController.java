@@ -23,6 +23,7 @@ import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.ParkingSpace;
 import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
 import com.parkspace.model.ParkingSpaceSurvey;
+import com.parkspace.service.IParkingSpaceBillService;
 import com.parkspace.service.IParkingSpaceService;
 
 /**
@@ -42,6 +43,8 @@ public class ParkingSpaceController {
     private static final Log LOG = LogFactory.getLog(ParkingSpaceController.class);
 	@Resource
 	private IParkingSpaceService parkingSpaceService;
+	@Resource
+	private IParkingSpaceBillService parkingSpaceBillService;
 	
 	/**
 	 * 
@@ -201,6 +204,9 @@ public class ParkingSpaceController {
 	 * </p>
 	 * @param     spaceno   车位编号
 	 * @param     parkHours 停车时长
+	 * @param     userId 用户编号
+	 * @param     carno 车牌号
+	 * @param     unitPrice 车位单价
 	 * @return OperationResult    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
@@ -238,10 +244,10 @@ public class ParkingSpaceController {
 	/**
 	 * @Title: getParkingSpaceParkHoursBySpaceno
 	 * <p>Description:获取车位的最长预定时间
+	 * 如果是A表示没有限制
 	 * /v1/parkingspace/getparkingspaceparkhoursbyspaceno
 	 * </p>
 	 * @param     spaceno   车位编号
-	 * @param     parkHours 停车时长
 	 * @return OperationResult    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
@@ -270,8 +276,7 @@ public class ParkingSpaceController {
 	 * <p>Description:取消当前订单
 	 * /v1/parkingspace/cancelorderparkingspace
 	 * </p>
-	 * @param     spaceno   车位编号
-	 * @param     parkHours 停车时长
+	 * @param     orderJnlNo   订单编号
 	 * @return OperationResult    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
@@ -299,8 +304,7 @@ public class ParkingSpaceController {
 	 * <p>Description:确认停车
 	 * /v1/parkingspace/confirmorderparkingspace
 	 * </p>
-	 * @param     spaceno   车位编号
-	 * @param     parkHours 停车时长
+	 * @param     orderJnlNo   订单编号
 	 * @return OperationResult    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
@@ -323,4 +327,65 @@ public class ParkingSpaceController {
 		return res;
 	}
 	
+	/**
+	 * @Title: delayOrderParkingSpace
+	 * <p>Description:延长停车
+	 * 注意：只有当前状态为使用中的才能执行该操作，
+	 * 并且需要判断该车位是否允许延长停车
+	 * /v1/parkingspace/delayorderparkingspace
+	 * </p>
+	 * @param     orderJnlNo     订单编号
+	 * @param     delayParkHours 延长停车时长
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/delayorderparkingspace")
+    @ResponseBody
+	public OperationResult delayOrderParkingSpace(
+            @RequestParam(value = "orderJnlNo", required = true) String orderJnlNo,
+            @RequestParam(value = "delayParkHours", required = true) int delayParkHours,
+            HttpServletRequest request) {
+		OperationResult res = new OperationResult();
+		try {
+			parkingSpaceService.delayOrderParkingSpace(orderJnlNo,delayParkHours);
+			res.setFlag(true);
+		}catch(ParkspaceServiceException e) {
+			LOG.error("延长停车："+"{"+delayParkHours+"}，小时失败" 
+					+ e.getMessageCode() + e.getMessage());
+			res.setFlag(false);
+			res.setErrCode(e.getMessageCode());
+		}
+		return res;
+	}
+	
+	/**
+	 * @Title: getParkingSpaceBill
+	 * <p>Description:查询订单信息
+	 * /v1/parkingspace/getparkingspacebill
+	 * </p>
+	 * @param     spaceno        车位编号
+	 * @param     delayParkHours 延长停车时长
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/getparkingspacebill")
+    @ResponseBody
+	public OperationResult getParkingSpaceBill(
+            @RequestParam(value = "orderJnlNo", required = true) String orderJnlNo,
+            HttpServletRequest request) {
+		OperationResult res = new OperationResult();
+		try {
+			ParkingSpaceBill parkingSpaceBill = parkingSpaceBillService.getParkingSpaceBill(orderJnlNo);
+			res.setFlag(true);
+			res.setResData(parkingSpaceBill);
+		}catch(ParkspaceServiceException e) {
+			LOG.error("根据订单编号："+"{"+orderJnlNo+"}，查询订单失败" 
+					+ e.getMessageCode() + e.getMessage());
+			res.setFlag(false);
+			res.setErrCode(e.getMessageCode());
+		}
+		return res;
+	}
 }

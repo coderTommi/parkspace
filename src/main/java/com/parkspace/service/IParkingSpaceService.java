@@ -222,4 +222,15 @@ public interface IParkingSpaceService {
 	 */
 	public void confirmOrderParkingSpace(String orderJnlNo)
 			throws ParkspaceServiceException;
+	/**
+	 * @Title: delayOrderParkingSpace
+	 * <p>Description:延长停车</p>
+	 * @param     orderJnlNo 订单号
+	 * @param     delayParkHours 延长时间
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 下午9:52:15</p>
+	 */
+	public void delayOrderParkingSpace(String orderJnlNo, int delayParkHours) 
+			throws ParkspaceServiceException;
 }

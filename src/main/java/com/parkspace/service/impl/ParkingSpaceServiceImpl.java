@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.parkspace.common.exception.ParkspaceServiceException;
-import com.parkspace.db.rmdb.dao.ParkingSpaceBillDao;
 import com.parkspace.db.rmdb.dao.ParkingSpaceDao;
 import com.parkspace.db.rmdb.dao.SpaceOwnerDao;
 import com.parkspace.db.rmdb.entity.ParkingSpace;
@@ -21,6 +20,7 @@ import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
 import com.parkspace.db.rmdb.entity.ShareConfig;
 import com.parkspace.db.rmdb.entity.SpaceOwner;
 import com.parkspace.service.IParkingSpaceBillHisService;
+import com.parkspace.service.IParkingSpaceBillService;
 import com.parkspace.service.IParkingSpaceService;
 import com.parkspace.service.IShareConfigService;
 import com.parkspace.util.Constants;
@@ -42,7 +42,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	@Resource
 	private IShareConfigService shareConfigService;
 	@Resource
-	private ParkingSpaceBillDao parkingSpaceBillDao;
+	private IParkingSpaceBillService parkingSpaceBillService;
 	@Resource
 	private IParkingSpaceBillHisService parkingSpaceBillHisService;
 	/**
@@ -389,7 +389,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		parkingSpaceBill.setBudgetPrice(budgetPrice);
 		parkingSpaceBill.setCreateTime(new Date());
 		parkingSpaceBill.setOrderJnlNo(UUID.randomUUID().toString());
-		parkingSpaceBillDao.addParkingSpaceBill(parkingSpaceBill);
+		parkingSpaceBillService.addParkingSpaceBill(parkingSpaceBill);
 		
 		//更新车位状态-占用
 		ParkingSpace newParkingSpace = new ParkingSpace();
@@ -446,7 +446,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 					"订单信息不能为空");
 		}
 		//判断订单的状态
-		ParkingSpaceBill parkingSpaceBill = parkingSpaceBillDao.getParkingSpaceBill(orderJnlNo);
+		ParkingSpaceBill parkingSpaceBill = parkingSpaceBillService.getParkingSpaceBill(orderJnlNo);
 		if(parkingSpaceBill == null) {
 			throw new ParkspaceServiceException(
 					Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
@@ -463,7 +463,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		parkingSpaceBill.setBillStatus(5);
 		parkingSpaceBillHisService.addParkingSpaceBillHis(parkingSpaceBill);
 		//删除订单信息
-		parkingSpaceBillDao.deleteParkingSpaceBill(orderJnlNo);
+		parkingSpaceBillService.deleteParkingSpaceBill(orderJnlNo);
 		//更新车位状态-空闲
 		ParkingSpace newParkingSpace = new ParkingSpace();
 		newParkingSpace.setSpaceno(spaceno);
@@ -492,7 +492,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 					"订单信息不能为空");
 		}
 		//判断订单的状态
-		ParkingSpaceBill parkingSpaceBill = parkingSpaceBillDao.getParkingSpaceBill(orderJnlNo);
+		ParkingSpaceBill parkingSpaceBill = parkingSpaceBillService.getParkingSpaceBill(orderJnlNo);
 		if(parkingSpaceBill == null) {
 			throw new ParkspaceServiceException(
 					Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
@@ -523,8 +523,65 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		newParkingSpaceBill.setBillStatus(2);
 		newParkingSpaceBill.setCreateTime(new Date());
 		
-		parkingSpaceBillDao.updateParkingSpaceBill(newParkingSpaceBill);
+		parkingSpaceBillService.updateParkingSpaceBill(newParkingSpaceBill);
 		//在历史表中增加一条预约订单信息
+		parkingSpaceBillHisService.addParkingSpaceBillHis(parkingSpaceBill);
+	}
+	/**
+	 * @Title: delayOrderParkingSpace
+	 * <p>Description:延长停车</p>
+	 * @param     orderJnlNo 订单号
+	 * @param     delayParkHours 延长时间
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 下午9:52:15</p>
+	 */
+	public void delayOrderParkingSpace(String orderJnlNo, int delayParkHours) 
+			throws ParkspaceServiceException{
+		if(StringUtils.isEmpty(orderJnlNo)) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
+					"订单信息不能为空");
+		}
+		//判断订单的状态
+		ParkingSpaceBill parkingSpaceBill = parkingSpaceBillService.getParkingSpaceBill(
+				orderJnlNo,delayParkHours);
+		if(parkingSpaceBill == null) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
+					"订单信息不能为空");
+		}
+		if(parkingSpaceBill.getBillStatus() != 2 &&
+				parkingSpaceBill.getBillStatus() != 3) {//订单状态：1、预约中，2、使用中，3.延长使用中
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_STATUS_IS_ILLLEGAL.toString(), 
+					"订单状态不合法");
+		}
+		
+		String maxDelayParkHoursString = parkingSpaceBill.getMaxDelayParkHoursString();
+		String delayParkHoursString = parkingSpaceBill.getDelayParkHoursString();
+		
+		//比对最大预留时间是否合法
+		if(StringUtils.isEmpty(maxDelayParkHoursString) ||
+				maxDelayParkHoursString.compareTo(delayParkHoursString) < 0) {//不满足要求
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.SPACENO_IS_NO_DELAY.toString(), 
+					"车位不可延期使用,请重新选择车位会减少延期时间");
+		}
+		/**
+		 * 1.更改订单信息
+		 * 1.1状态由使用中变成延长使用中
+		 * 		//订单状态：1、预约中，2、使用中，3.延长使用中
+		 * 1.2更新停车时长和延迟停车时长和对应的计算信息（预算费用）
+		 */
+		ParkingSpaceBill newParkingSpaceBill = new ParkingSpaceBill();
+		newParkingSpaceBill.setBillStatus(3);//3.延长使用中
+		newParkingSpaceBill.setOrderJnlNo(orderJnlNo);
+		newParkingSpaceBill.setDelayParkHours(delayParkHours);
+		parkingSpaceBillService.delayParkingSpaceBill(newParkingSpaceBill);
+		/**
+		 * 2.原来的使用中的订单写入历史订单中
+		 */
 		parkingSpaceBillHisService.addParkingSpaceBillHis(parkingSpaceBill);
 	}
 }

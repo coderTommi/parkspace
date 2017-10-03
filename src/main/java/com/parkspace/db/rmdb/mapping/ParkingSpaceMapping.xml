@@ -442,7 +442,14 @@
 	<select id="getParkingSpaceEnableBillList" parameterType="ParkingSpace" resultType="ParkingSpace">
 		select 
 			<include refid="ParkingSpace_Column"/>,
-			TIMEDIFF(sc.parkHourString,concat('00:','${@com.parkspace.util.Constants@SO_RESERVE_TIME}',':00')) as parkHoursString
+			(case when sc.parkHourString != 'A' then
+				replace(concat(TIMEDIFF(sc.parkHourString,
+							concat('00:','${@com.parkspace.util.Constants@SO_RESERVE_TIME}',':00')) ,''),'.000000','')
+			 else
+			 	sc.parkHourString
+			 end
+			)
+			as parkHoursString
 		from ParkingSpace ps,
 		     (SELECT
 							t.spaceno,

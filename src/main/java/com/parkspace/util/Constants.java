@@ -67,7 +67,9 @@ public class Constants {
 		/** 订单状态不合法 **/
 		ORDER_STATUS_IS_ILLLEGAL(20007),
 		/** 该车位不能被使用 **/
-		SPACE_IS_NOT_USE(20008);
+		SPACE_IS_NOT_USE(20008),
+		/** 车位不可延期使用,请重新选择车位会减少延期时间 **/
+		SPACENO_IS_NO_DELAY(20009);
 		
 		
 		/** 错误码 **/

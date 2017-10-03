@@ -105,6 +105,7 @@ public class ParkingSpace implements Serializable{
 	//停车时长
 	private Integer parkHours;
 	//转化为字符串，停车时长,格式00:00:00
+	//如果是A表示没有限制
 	private String parkHoursString;
 	//共享信息
 	private List<ShareConfig> shareConfigList;

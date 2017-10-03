@@ -199,4 +199,35 @@ public class TestParkingSpaceController extends TestBaseController{
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void getParkingSpaceBill() {
+		try {
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/getparkingspacebill")
+					.param("orderJnlNo", orderJnlNo)
+					)
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void delayOrderParkingSpace() {
+		try {
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/delayorderparkingspace")
+					.param("orderJnlNo", orderJnlNo)
+					.param("delayParkHours", "3")
+					)
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
