@@ -25,7 +25,8 @@
 		p.createBy 				as "parkingSpace.createBy",
 		p.createTime 			as "parkingSpace.createTime",
 		p.modifyBy 				as "parkingSpace.modifyBy",
-		p.modifyTime 			as "parkingSpace.modifyTime"
+		p.modifyTime 			as "parkingSpace.modifyTime",
+		p.useCount              as "parkingSpace.useCount"
 	</sql>
 	<!-- 小区信息字段 -->
 	<sql id="Community_Column">

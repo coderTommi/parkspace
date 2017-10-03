@@ -73,6 +73,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 			parkingSpace.setParkStatus("N");
 			//默认属于物业
 			parkingSpace.setParkType("P");
+			parkingSpace.setUseCount(0);
 			this.parkingSpaceDao.addParkingSpace(parkingSpace);
 			return parkingSpace;
 		}else{

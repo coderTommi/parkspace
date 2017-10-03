@@ -5,7 +5,7 @@
 	<sql id="ParkingSpace_Column">
 		ps.spaceno,ps.comid,ps.parkPositionFloor,ps.parkPositionZone,ps.parkPositionX,
 		ps.parkPositionY,ps.parkStatus,ps.parkType,ps.parkPositionDes,ps.spaceOwner,
-		ps.memo,ps.createBy,ps.createTime,ps.modifyBy,ps.modifyTime
+		ps.memo,ps.createBy,ps.createTime,ps.modifyBy,ps.modifyTime,ps.useCount
 	</sql>
 	<!-- 小区信息字段 -->
 	<sql id="Community_Column">
@@ -73,7 +73,8 @@
     			createBy,
     			createTime,
     			modifyBy,
-    			modifyTime
+    			modifyTime,
+    			useCount
     		) 
     	 values(
     	 		#{spaceno},
@@ -90,7 +91,8 @@
     	 		#{createBy},
     	 		#{createTime},
     	 		#{modifyBy},
-    	 		#{modifyTime}
+    	 		#{modifyTime},
+    	 		#{useCount}
     	 	)
 	</insert>
 	
@@ -132,7 +134,10 @@
 				modifyBy                 = #{modifyBy},
 			</if>
 			<if test="modifyTime != null">
-				modifyTime               = #{modifyTime}
+				modifyTime               = #{modifyTime},
+			</if>
+			<if test="useCount != null">
+				useCount               = #{useCount}
 			</if>
 		</trim>
     	where spaceno = #{spaceno}

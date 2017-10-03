@@ -66,8 +66,7 @@
 	<!-- 更改车主信息 -->
 	<update id="updateCaruser" parameterType="Caruser">
     	update Caruser set
-    			isauth         = #{isauth},
-    			parkCount      = #{parkCount}
+    			isauth         = #{isauth}
     	where userId=#{userId} and carno=#{carno}
 	</update>
 	

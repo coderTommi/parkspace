@@ -120,6 +120,8 @@ public class CaruserServiceImpl implements ICaruserService{
 					Constants.ERRORCODE.COMID_IS_NOT_NULL.toString(), 
 					"小区编号不能为空");
 		}
+		//默认0
+		caruser.setParkCount(0);
 		caruserDao.addCaruser(caruser);
 		//保存用户与小区的关系
 		communityService.addUserCommunity(comid, caruser.getUserId());

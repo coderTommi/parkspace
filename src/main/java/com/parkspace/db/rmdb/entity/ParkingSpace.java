@@ -109,6 +109,18 @@ public class ParkingSpace implements Serializable{
 	//共享信息
 	private List<ShareConfig> shareConfigList;
 	
+	//使用次数：默认0，每次订单成功之后+1
+	
+	private Integer useCount;
+	
+	
+	
+	public Integer getUseCount() {
+		return useCount;
+	}
+	public void setUseCount(Integer useCount) {
+		this.useCount = useCount;
+	}
 	public String getParkHoursString() {
 		return parkHoursString;
 	}
@@ -267,7 +279,8 @@ public class ParkingSpace implements Serializable{
 				+ ", spaceOwner=" + spaceOwner + ", memo=" + memo + ", createBy=" + createBy + ", createTime="
 				+ createTime + ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + ", community=" + community
 				+ ", zone=" + zone + ", spaceOwnerUser=" + spaceOwnerUser + ", parkHours=" + parkHours
-				+ ", parkHoursString=" + parkHoursString + ", shareConfigList=" + shareConfigList + "]";
+				+ ", parkHoursString=" + parkHoursString + ", shareConfigList=" + shareConfigList + ", useCount="
+				+ useCount + "]";
 	}
 	public Integer getParkHours() {
 		return parkHours;
