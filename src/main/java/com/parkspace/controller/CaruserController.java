@@ -99,7 +99,66 @@ public class CaruserController {
 		}
 		return res;
 	}
-	
+	/**
+	 * 
+	 * @Title: getNoEnoughMoneyCaruser
+	 * <p>Description:查询余额不足的所有的业主信息
+	 * /v1/caruser/getnoenoughmoneycaruser
+	 * 可以通过状态过滤信息
+	 * 状态0:未认证 1：已认证，默认1，-1表示禁用
+	 * private Integer isauth;
+	 * 多状态查询：状态查询
+	 * private Integer[]  isauthQuery;
+	 * 
+	 * 通过配置一些属性多条件查询
+	 * 按行政区划（String zone.zoneid）、
+	 * 小区【支持多选】查询业主（String[] community.comidQuery）
+	 * 可按名字(userName)、
+	 * 手机号(telePhone)、
+	 * 车位号(carno)
+	 * 
+	 * 如果像查询某个车主信息可以构造
+	 * userId和carno参数
+	 * </p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/getnoenoughmoneycaruser")
+    @ResponseBody
+	public OperationResult getNoEnoughMoneyCaruser(
+			@RequestParam(value = "page", required = true) int page,
+            @RequestParam(value = "pageSize", required = true) int pageSize,
+            @RequestBody Caruser caruser,
+            HttpServletRequest request) {
+		OperationResult res = new OperationResult();
+		PageHelper.startPage(page, pageSize);
+		try {
+			if(caruser == null) {
+				caruser = new Caruser();
+			}
+			caruser.setIsQueryNoEnoughMoney(1);
+			List<Caruser> list = caruserService.getCaruserAllInfoList(caruser);
+			res.setFlag(true);
+			if(list != null && list.size() > 0) {
+				PageInfo<Caruser> listPage = new PageInfo<Caruser>(list);
+				res.setResData(listPage);
+			}else {
+				res.setResData(list);
+			}
+		}catch(ParkspaceServiceException e) {
+			LOG.error("查询余额不足的所有的业主信息失败："+"{"+caruser+"}" 
+					+ e.getMessageCode() + e.getMessage());
+			res.setFlag(false);
+			res.setErrCode(e.getMessageCode());
+		}catch(Exception e1) {
+			LOG.error("查询余额不足的所有的业主信息失败："+"{"+caruser+"}" 
+					+  e1.getMessage());
+			res.setFlag(false);
+		}
+		return res;
+	}
 	/**
 	 * @Title: addBlackList
 	 * <p>Description:加入黑名单

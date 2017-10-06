@@ -33,6 +33,17 @@ public class Caruser extends BaseUser implements Serializable{
 	//停车次数：需要在订单成功之后+1,默认0
 	private Integer parkCount;
 	
+	//是否查询订单余额不足的车主，默认查询所有车主，0
+	private Integer isQueryNoEnoughMoney = 0;
+	
+	
+	
+	public Integer getIsQueryNoEnoughMoney() {
+		return isQueryNoEnoughMoney;
+	}
+	public void setIsQueryNoEnoughMoney(Integer isQueryNoEnoughMoney) {
+		this.isQueryNoEnoughMoney = isQueryNoEnoughMoney;
+	}
 	public Integer getParkCount() {
 		return parkCount;
 	}
@@ -51,8 +62,8 @@ public class Caruser extends BaseUser implements Serializable{
 	@Override
 	public String toString() {
 		return "Caruser [carno=" + carno + ", isauth=" + isauth + ", isauthQuery=" + Arrays.toString(isauthQuery)
-				+ ", community=" + community + ", zone=" + zone + ", parkCount=" + parkCount + ", wallet=" + wallet
-				+ "]";
+				+ ", community=" + community + ", zone=" + zone + ", parkCount=" + parkCount + ", isQueryNoEnoughMoney="
+				+ isQueryNoEnoughMoney + ", wallet=" + wallet + "]";
 	}
 	public Community getCommunity() {
 		return community;

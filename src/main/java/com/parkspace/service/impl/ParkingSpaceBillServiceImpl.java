@@ -1,5 +1,7 @@
 package com.parkspace.service.impl;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -9,11 +11,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.dao.ParkingSpaceBillDao;
 import com.parkspace.db.rmdb.dao.ParkingSpaceDao;
 import com.parkspace.db.rmdb.entity.ParkingSpace;
 import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
+import com.parkspace.service.ICaruserService;
 import com.parkspace.service.IParkingSpaceBillService;
+import com.parkspace.util.Constants;
 
 /**
  * @Title: ParkingSpaceBillServiceImpl.java
@@ -29,18 +34,39 @@ public class ParkingSpaceBillServiceImpl implements IParkingSpaceBillService{
 	private ParkingSpaceBillDao parkingSpaceBillDao;
 	@Resource
 	private ParkingSpaceDao parkingSpaceDao;
+	@Resource
+	private ICaruserService caruserService;
 	/**
 	 * @Title: getParkingSpaceBill
 	 * <p>Description:根据订单编号获取车位订单信息</p>
 	 * @param     orderJnlNo 订单编号
 	 * @return ParkingSpaceBill    返回类型
-	 * @throws
+	 * @throws ParkspaceServiceException
 	 * <p>CreateDate:2017年9月23日 下午9:16:29</p>
 	 */
 	@Override
-	public ParkingSpaceBill getParkingSpaceBill(String orderJnlNo) {
+	public ParkingSpaceBill getParkingSpaceBill(String orderJnlNo) 
+			throws  ParkspaceServiceException{
 		ParkingSpaceBill parkingSpaceBill = parkingSpaceBillDao.getParkingSpaceBill(orderJnlNo);
+		if(parkingSpaceBill == null) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
+					"订单信息不能为空");
+		}
 		if(parkingSpaceBill != null) {
+			
+			//计算小时差：实际停车时长
+			Date createTime = parkingSpaceBill.getCreateTime();
+			Date currentTime = new Date();
+			long longActualParkHours = currentTime.getTime() - createTime.getTime();
+			double actualParkHoursTemp = (double)longActualParkHours/1000/60/60;
+			BigDecimal actualParkHours = new BigDecimal(actualParkHoursTemp).setScale(2, BigDecimal.ROUND_HALF_UP);
+			parkingSpaceBill.setActualParkHours(actualParkHours);
+			//实际价格：=单价*实际停车时长
+			BigDecimal unitPrice = parkingSpaceBill.getUnitPrice();
+			parkingSpaceBill.setActualPrice(unitPrice.multiply(actualParkHours));
+			
+			
 			String spaceno = parkingSpaceBill.getSpaceno();
 			//获取最大停车时间
 			String maxParkHoursString = "";
@@ -134,7 +160,13 @@ public class ParkingSpaceBillServiceImpl implements IParkingSpaceBillService{
 		if(parkingSpaceBill == null) {
 			parkingSpaceBill = new ParkingSpaceBill();
 		}
-		return parkingSpaceBillDao.getParkingSpaceBillList(parkingSpaceBill);
+		List<ParkingSpaceBill> list = parkingSpaceBillDao.getParkingSpaceBillList(parkingSpaceBill);
+		if(list != null && list.size() > 0) {
+			for(ParkingSpaceBill psb : list) {
+				psb.setCaruser(caruserService.getCaruser(psb.getUserId(), psb.getCarno()));
+			}
+		}
+		return list;
 	}
 	/**
 	 * @Title: getParkingSpaceBill
@@ -142,12 +174,30 @@ public class ParkingSpaceBillServiceImpl implements IParkingSpaceBillService{
 	 * @param     orderJnlNo 订单编号
 	 * @param     delayParkHours 延长时间，用来判断停车的合法性
 	 * @return ParkingSpaceBill    返回类型
-	 * @throws
+	 * @throws ParkspaceServiceException
 	 * <p>CreateDate:2017年9月23日 下午9:16:29</p>
 	 */
-	public ParkingSpaceBill getParkingSpaceBill(String orderJnlNo, int delayParkHours) {
+	public ParkingSpaceBill getParkingSpaceBill(String orderJnlNo, int delayParkHours) 
+			throws ParkspaceServiceException{
 		ParkingSpaceBill parkingSpaceBill = parkingSpaceBillDao.getParkingSpaceBill(orderJnlNo);
+		if(parkingSpaceBill == null) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
+					"订单信息不能为空");
+		}
 		if(parkingSpaceBill != null) {
+			
+			//计算小时差：实际停车时长
+			Date createTime = parkingSpaceBill.getCreateTime();
+			Date currentTime = new Date();
+			long longActualParkHours = currentTime.getTime() - createTime.getTime();
+			double actualParkHoursTemp = (double)longActualParkHours/1000/60/60;
+			BigDecimal actualParkHours = new BigDecimal(actualParkHoursTemp).setScale(2, BigDecimal.ROUND_HALF_UP);
+			parkingSpaceBill.setActualParkHours(actualParkHours);
+			//实际价格：=单价*实际停车时长
+			BigDecimal unitPrice = parkingSpaceBill.getUnitPrice();
+			parkingSpaceBill.setActualPrice(unitPrice.multiply(actualParkHours));
+			
 			String spaceno = parkingSpaceBill.getSpaceno();
 			//获取最大停车时间
 			String maxParkHoursString = "";

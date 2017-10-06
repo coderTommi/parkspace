@@ -101,4 +101,25 @@ public String zoneid = "4e73503c-7052-41bc-a716-b8b2d2e32e5e";
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void getNoEnoughMoneyCaruser() {
+		Caruser caruser = new Caruser();
+		ObjectMapper mapper = new ObjectMapper(); 
+		try {
+			String requestJson = mapper.writeValueAsString(caruser); 
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/caruser/getnoenoughmoneycaruser")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(requestJson)
+					.param("page", "1")
+					.param("pageSize", "10"))
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

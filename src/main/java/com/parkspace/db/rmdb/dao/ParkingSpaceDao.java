@@ -110,4 +110,14 @@ public interface ParkingSpaceDao {
 	 * <p>CreateDate:2017年9月28日 下午6:25:46</p>
 	 */
 	public List<ParkingSpace> getParkingSpaceEnableBillList(ParkingSpace parkingSpace);
+	
+	/**
+	 * @Title: payOrderParkingSpace
+	 * <p>Description:订单完成更新使用次数和车位状态为空闲0</p>
+	 * @param     spaceno 车位编号
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:20:47</p>
+	 */
+	public void payOrderParkingSpace(String spaceno);
 }

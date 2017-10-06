@@ -78,7 +78,7 @@ public class ParkingSpaceBillHisServiceImpl implements IParkingSpaceBillHisServi
 			parkingSpaceBillHis.setUnitPrice(unitPrice);
 			parkingSpaceBillHis.setUserId(parkingSpaceBill.getUserId());
 			parkingSpaceBillHis.setUUID(UUID.randomUUID().toString());
-			
+			parkingSpaceBillHis.setSpaceOwnerUserId(parkingSpaceBill.getSpaceOwnerUserId());
 			parkingSpaceBillHisDao.addParkingSpaceBillHis(parkingSpaceBillHis);
 		}
 	}

@@ -40,7 +40,7 @@ public class SpaceOwner extends BaseUser implements Serializable{
 //	private String parkPositionX;
 	//车位纵坐标
 //	private String parkPositionY;
-	//车位状态，1占用，0空闲，-1不对外开放
+	//车位状态，1占用，0空闲，N不对外开放
 //	private String parkStatus;
 	//车位类型：P:物业、O:业主、E:其他，未知车位类型
 //	private String parkType;

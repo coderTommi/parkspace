@@ -2,6 +2,7 @@ package com.parkspace.service;
 
 import java.util.List;
 
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
 
 /**
@@ -19,10 +20,11 @@ public interface IParkingSpaceBillService {
 	 * <p>Description:根据订单编号获取车位订单信息</p>
 	 * @param     orderJnlNo 订单编号
 	 * @return ParkingSpaceBill    返回类型
-	 * @throws
+	 * @throws ParkspaceServiceException
 	 * <p>CreateDate:2017年9月23日 下午9:16:29</p>
 	 */
-	public ParkingSpaceBill getParkingSpaceBill(String orderJnlNo);
+	public ParkingSpaceBill getParkingSpaceBill(String orderJnlNo) 
+			throws ParkspaceServiceException;
 	/**
 	 * @Title: addParkingSpaceBill
 	 * <p>Description:
@@ -82,8 +84,9 @@ public interface IParkingSpaceBillService {
 	 * @param     orderJnlNo 订单编号
 	 * @param     delayParkHours 延长时间，用来判断停车的合法性
 	 * @return ParkingSpaceBill    返回类型
-	 * @throws
+	 * @throws ParkspaceServiceException
 	 * <p>CreateDate:2017年9月23日 下午9:16:29</p>
 	 */
-	public ParkingSpaceBill getParkingSpaceBill(String orderJnlNo, int delayParkHours);
+	public ParkingSpaceBill getParkingSpaceBill(String orderJnlNo, int delayParkHours) 
+			throws ParkspaceServiceException;
 }

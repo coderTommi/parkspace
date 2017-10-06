@@ -28,6 +28,8 @@ public class ParkingSpaceBillHis implements Serializable{
 	private String orderJnlNo;
 	//用户id
 	private String userId;
+	//业主用户id
+	private String spaceOwnerUserId;
 	//车牌号
 	private String carno;
 	//车位编号,形如3-101
@@ -48,6 +50,12 @@ public class ParkingSpaceBillHis implements Serializable{
 	private BigDecimal actualPrice;
 	//延长停车时长，默认为0
 	private Integer delayParkHours;
+	public String getSpaceOwnerUserId() {
+		return spaceOwnerUserId;
+	}
+	public void setSpaceOwnerUserId(String spaceOwnerUserId) {
+		this.spaceOwnerUserId = spaceOwnerUserId;
+	}
 	public Integer getDelayParkHours() {
 		return delayParkHours;
 	}
@@ -136,10 +144,11 @@ public class ParkingSpaceBillHis implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "ParkingSpaceBillHis [UUID=" + UUID + ", orderJnlNo=" + orderJnlNo + ", userId=" + userId + ", carno="
-				+ carno + ", spaceno=" + spaceno + ", billStatus=" + billStatus + ", parkHours=" + parkHours
-				+ ", unitPrice=" + unitPrice + ", budgetPrice=" + budgetPrice + ", createTime=" + createTime
-				+ ", actualParkHours=" + actualParkHours + ", actualPrice=" + actualPrice + ", delayParkHours="
-				+ delayParkHours + ", recodeTime=" + recodeTime + "]";
+		return "ParkingSpaceBillHis [UUID=" + UUID + ", orderJnlNo=" + orderJnlNo + ", userId=" + userId
+				+ ", spaceOwnerUserId=" + spaceOwnerUserId + ", carno=" + carno + ", spaceno=" + spaceno
+				+ ", billStatus=" + billStatus + ", parkHours=" + parkHours + ", unitPrice=" + unitPrice
+				+ ", budgetPrice=" + budgetPrice + ", createTime=" + createTime + ", actualParkHours=" + actualParkHours
+				+ ", actualPrice=" + actualPrice + ", delayParkHours=" + delayParkHours + ", recodeTime=" + recodeTime
+				+ "]";
 	}
 }

@@ -21,7 +21,8 @@
 				actualParkHours,
 				actualPrice,
 				recodeTime,
-				delayParkHours
+				delayParkHours,
+				spaceOwnerUserId
     		) 
          values(
          		#{UUID},
@@ -37,7 +38,8 @@
        			#{actualParkHours},
        			#{actualPrice},
        			#{recodeTime},
-       			#{delayParkHours}
+       			#{delayParkHours},
+       			#{spaceOwnerUserId}
          )
 	</insert>
 	<!-- 根据条件查询历史车位订单信息 -->

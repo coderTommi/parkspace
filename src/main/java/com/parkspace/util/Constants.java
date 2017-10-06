@@ -12,6 +12,9 @@ public class Constants {
 	/** 业主预留时间,车位提前到期时间，单位是分钟 **/
 	public static int SO_RESERVE_TIME = 30;
 	
+	/** 未来几小时计算押金+余额是否满足支付，单位是小时 **/
+	public static int FUTURE_HOURS_MONEY = 24;
+	
 	/**
 	 * 错误码.
 	 * @author lidongliang

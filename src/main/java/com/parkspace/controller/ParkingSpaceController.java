@@ -22,7 +22,9 @@ import com.parkspace.common.OperationResult;
 import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.ParkingSpace;
 import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
+import com.parkspace.db.rmdb.entity.ParkingSpaceBillHis;
 import com.parkspace.model.ParkingSpaceSurvey;
+import com.parkspace.service.IParkingSpaceBillHisService;
 import com.parkspace.service.IParkingSpaceBillService;
 import com.parkspace.service.IParkingSpaceService;
 
@@ -45,6 +47,8 @@ public class ParkingSpaceController {
 	private IParkingSpaceService parkingSpaceService;
 	@Resource
 	private IParkingSpaceBillService parkingSpaceBillService;
+	@Resource
+	private IParkingSpaceBillHisService parkingSpaceBillHisService;
 	
 	/**
 	 * 
@@ -53,7 +57,7 @@ public class ParkingSpaceController {
 	 * 对于物业段只需要赋值comid属性即可
 	 * /v1/parkingspace/getallparkingspace
 	 * 可以通过状态进行过滤：注意对于空闲的车位需要判断是否有可用共享时间段
-	 * 车位状态，1占用，0空闲，-1不对外开放
+	 * 车位状态，1占用，0空闲，N不对外开放
 	 * private String parkStatus;
 	 * 多状态查询
 	 * private String[] parkStatusQuery;
@@ -364,8 +368,7 @@ public class ParkingSpaceController {
 	 * <p>Description:查询订单信息
 	 * /v1/parkingspace/getparkingspacebill
 	 * </p>
-	 * @param     spaceno        车位编号
-	 * @param     delayParkHours 延长停车时长
+	 * @param     orderJnlNo        订单编号
 	 * @return OperationResult    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
@@ -382,6 +385,155 @@ public class ParkingSpaceController {
 			res.setResData(parkingSpaceBill);
 		}catch(ParkspaceServiceException e) {
 			LOG.error("根据订单编号："+"{"+orderJnlNo+"}，查询订单失败" 
+					+ e.getMessageCode() + e.getMessage());
+			res.setFlag(false);
+			res.setErrCode(e.getMessageCode());
+		}
+		return res;
+	}
+	
+	/**
+	 * @Title: payOrderParkingSpace
+	 * <p>Description:结算
+	 * /v1/parkingspace/payorderparkingspace
+	 * </p>
+	 * @param     orderJnlNo        订单编号
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/payorderparkingspace")
+    @ResponseBody
+	public OperationResult payOrderParkingSpace(
+            @RequestParam(value = "orderJnlNo", required = true) String orderJnlNo,
+            HttpServletRequest request) {
+		OperationResult res = new OperationResult();
+		try {
+			parkingSpaceService.payOrderParkingSpace(orderJnlNo);
+			res.setFlag(true);
+		}catch(ParkspaceServiceException e) {
+			LOG.error("结算订单："+"{"+orderJnlNo+"}，失败" 
+					+ e.getMessageCode() + e.getMessage());
+			res.setFlag(false);
+			res.setErrCode(e.getMessageCode());
+		}
+		return res;
+	}
+	
+	/**
+	 * 
+	 * @Title: getParkingSpaceUsedHistory
+	 * <p>Description:查询车位的使用记录
+	 * /v1/parkingspace/getparkingspaceusedhistory
+	 * </p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/getparkingspaceusedhistory")
+    @ResponseBody
+	public OperationResult getParkingSpaceUsedHistory(
+			@RequestParam(value = "page", required = true) int page,
+            @RequestParam(value = "pageSize", required = true) int pageSize,
+            @RequestParam(value = "spaceno", required = false) String spaceno,
+            HttpServletRequest request) {
+		OperationResult res = new OperationResult();
+		PageHelper.startPage(page, pageSize);
+		try {
+			ParkingSpaceBillHis parkingSpaceBillHis = new ParkingSpaceBillHis();
+			parkingSpaceBillHis.setSpaceno(spaceno);
+			List<ParkingSpaceBillHis> list = parkingSpaceBillHisService.getParkingSpaceBillHisList(parkingSpaceBillHis);
+			res.setFlag(true);
+			if(list != null && list.size() > 0) {
+				PageInfo<ParkingSpaceBillHis> listPage = new PageInfo<ParkingSpaceBillHis>(list);
+				res.setResData(listPage);
+			}else {
+				res.setResData(list);
+			}
+		}catch(ParkspaceServiceException e) {
+			LOG.error("查询车位使用记录失败" 
+					+ e.getMessageCode() + e.getMessage());
+			res.setFlag(false);
+			res.setErrCode(e.getMessageCode());
+		}
+		return res;
+	}
+	
+	/**
+	 * 
+	 * @Title: getParkingSpaceUsing
+	 * <p>Description:查询正在使用的车位
+	 * /v1/parkingspace/getparkingspaceusing
+	 * </p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/getparkingspaceusing")
+    @ResponseBody
+	public OperationResult getParkingSpaceUsing(
+			@RequestParam(value = "page", required = true) int page,
+            @RequestParam(value = "pageSize", required = true) int pageSize,
+            @RequestParam(value = "spaceno", required = false) String spaceno,
+            HttpServletRequest request) {
+		OperationResult res = new OperationResult();
+		PageHelper.startPage(page, pageSize);
+		try {
+			ParkingSpaceBill parkingSpaceBill = new ParkingSpaceBill();
+			parkingSpaceBill.setSpaceno(spaceno);
+			List<ParkingSpaceBill> list = parkingSpaceBillService.getParkingSpaceBillList(parkingSpaceBill);
+			res.setFlag(true);
+			if(list != null && list.size() > 0) {
+				PageInfo<ParkingSpaceBill> listPage = new PageInfo<ParkingSpaceBill>(list);
+				res.setResData(listPage);
+			}else {
+				res.setResData(list);
+			}
+		}catch(ParkspaceServiceException e) {
+			LOG.error("查询正在使用的车位失败" 
+					+ e.getMessageCode() + e.getMessage());
+			res.setFlag(false);
+			res.setErrCode(e.getMessageCode());
+		}
+		return res;
+	}
+	
+	/**
+	 * 
+	 * @Title: getParkingSpaceSoonExpire
+	 * <p>Description:查询快到期的车位
+	 * /v1/parkingspace/getparkingspacesoonexpire
+	 * </p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月1日 上午9:39:25</p>
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/getparkingspacesoonexpire")
+    @ResponseBody
+	public OperationResult getParkingSpaceSoonExpire(
+			@RequestParam(value = "page", required = true) int page,
+            @RequestParam(value = "pageSize", required = true) int pageSize,
+            @RequestParam(value = "spaceno", required = false) String spaceno,
+            HttpServletRequest request) {
+		OperationResult res = new OperationResult();
+		PageHelper.startPage(page, pageSize);
+		try {
+			ParkingSpaceBill parkingSpaceBill = new ParkingSpaceBill();
+			parkingSpaceBill.setIsQuerySoonExpire(1);
+			parkingSpaceBill.setSpaceno(spaceno);
+			List<ParkingSpaceBill> list = parkingSpaceBillService.getParkingSpaceBillList(parkingSpaceBill);
+			res.setFlag(true);
+			if(list != null && list.size() > 0) {
+				PageInfo<ParkingSpaceBill> listPage = new PageInfo<ParkingSpaceBill>(list);
+				res.setResData(listPage);
+			}else {
+				res.setResData(list);
+			}
+		}catch(ParkspaceServiceException e) {
+			LOG.error("查询快要到期的车位失败" 
 					+ e.getMessageCode() + e.getMessage());
 			res.setFlag(false);
 			res.setErrCode(e.getMessageCode());

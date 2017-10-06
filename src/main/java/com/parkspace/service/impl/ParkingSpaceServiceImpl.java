@@ -13,8 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.parkspace.common.exception.ParkspaceServiceException;
+import com.parkspace.db.rmdb.dao.CaruserDao;
 import com.parkspace.db.rmdb.dao.ParkingSpaceDao;
 import com.parkspace.db.rmdb.dao.SpaceOwnerDao;
+import com.parkspace.db.rmdb.entity.Caruser;
 import com.parkspace.db.rmdb.entity.ParkingSpace;
 import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
 import com.parkspace.db.rmdb.entity.ShareConfig;
@@ -45,6 +47,8 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	private IParkingSpaceBillService parkingSpaceBillService;
 	@Resource
 	private IParkingSpaceBillHisService parkingSpaceBillHisService;
+	@Resource
+	private CaruserDao caruserDao;
 	/**
 	 * @Title: getParkingSpace
 	 * <p>Description:根据车位编号查询车位信息
@@ -76,6 +80,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	 * @throws
 	 * <p>CreateDate:2017年9月23日 下午9:10:04</p>
 	 */
+	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
 	public ParkingSpace addParkingSpace(ParkingSpace parkingSpace){
 		if(parkingSpace != null){
@@ -378,6 +383,9 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 					Constants.ERRORCODE.SPACE_IS_NOT_ORDER.toString(), 
 					"该车位不能被预定");
 		}
+		//获取车位的业主信息--
+		SpaceOwner spaceOwner = spaceOwnerDao.getSpaceOwner(spaceno);
+		parkingSpaceBill.setSpaceOwnerUserId(spaceOwner.getUserId());
 		//预定车位
 		//订单状态：1、预约中，2、使用中，3.延长使用中
 		parkingSpaceBill.setBillStatus(1);
@@ -536,6 +544,8 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	 * @throws
 	 * <p>CreateDate:2017年10月3日 下午9:52:15</p>
 	 */
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
 	public void delayOrderParkingSpace(String orderJnlNo, int delayParkHours) 
 			throws ParkspaceServiceException{
 		if(StringUtils.isEmpty(orderJnlNo)) {
@@ -583,5 +593,58 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		 * 2.原来的使用中的订单写入历史订单中
 		 */
 		parkingSpaceBillHisService.addParkingSpaceBillHis(parkingSpaceBill);
+	}
+	
+	/**
+	 * @Title: payOrderParkingSpace
+	 * <p>Description:结算订单，完成付款，并恢复车位状态为空闲</p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月4日 上午10:35:21</p>
+	 */
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void payOrderParkingSpace(String orderJnlNo) 
+			throws ParkspaceServiceException{
+		if(StringUtils.isEmpty(orderJnlNo)) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
+					"订单信息不能为空");
+		}
+		//判断订单的状态
+		ParkingSpaceBill parkingSpaceBill = parkingSpaceBillService.getParkingSpaceBill(orderJnlNo);
+		if(parkingSpaceBill == null) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
+					"订单信息不能为空");
+		}
+		if(parkingSpaceBill.getBillStatus() != 2 &&
+				parkingSpaceBill.getBillStatus() != 3) {//订单状态：1、预约中，2、使用中，3.延长使用中
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_STATUS_IS_ILLLEGAL.toString(), 
+					"订单状态不合法");
+		}
+		String spaceno = parkingSpaceBill.getSpaceno();
+		/**
+		 * 删除订单信息
+		 */
+		parkingSpaceBillService.deleteParkingSpaceBill(orderJnlNo);
+		/**
+		 * 插入历史订单
+		 */
+		parkingSpaceBill.setBillStatus(4);//已结算
+		parkingSpaceBillHisService.addParkingSpaceBillHis(parkingSpaceBill);
+		/**
+		 * 更改车位状态为空闲0，并且记录车位使用次数和停车次数
+		 */
+		parkingSpaceDao.payOrderParkingSpace(spaceno);
+		Caruser caruser = new Caruser();
+		caruser.setUserId(parkingSpaceBill.getUserId());
+		caruser.setCarno(parkingSpaceBill.getCarno());
+		caruserDao.payOrderParkingSpace(caruser);
+		/**
+		 * 扣款，需要判断余额是否满足，余额不如需要抛出异常
+		 */
 	}
 }

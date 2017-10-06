@@ -19,7 +19,8 @@
 				unitPrice,
 				budgetPrice,
 				createTime,
-				delayParkHours
+				delayParkHours,
+				spaceOwnerUserId
     		) 
          values(
        			#{orderJnlNo},
@@ -31,7 +32,8 @@
        			#{unitPrice},
        			#{budgetPrice},
        			#{createTime},
-       			#{delayParkHours}
+       			#{delayParkHours},
+       			#{spaceOwnerUserId}
          )
 	</insert>
 	
@@ -57,6 +59,10 @@
         	 	<if test="delayParkHours != null">
             		delayParkHours   = #{delayParkHours},
         	 	</if>
+        	 	<if test="spaceOwnerUserId != null">
+            		spaceOwnerUserId   = #{spaceOwnerUserId}
+        	 	</if>
+        	 	
         	 </trim>
     	where orderJnlNo = #{orderJnlNo}
 	</update>
@@ -103,6 +109,14 @@
         	 </if>
         	 <if test="createTime != null">
             	<![CDATA[ and createTime >= #{createTime} ]]>
+        	 </if>
+        	 <if test="isQuerySoonExpire == 1">
+        	 	<![CDATA[ 
+        	 		and DATE_ADD(
+        	 			DATE_ADD(t.createTIme,INTERVAL t.parkHours HOUR),
+        	 			interval -${@com.parkspace.util.Constants@SOON_EXPIRE_TIME} MINUTE
+        	 		) < now() 
+        	 	]]>
         	 </if>
         	 order by createTime desc
 	</select>

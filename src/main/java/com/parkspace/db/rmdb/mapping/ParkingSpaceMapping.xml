@@ -149,8 +149,17 @@
     			parkStatus   = 'N',
     			modifyBy     = #{modifyBy},
     			modifyTime   = #{modifyTime}
-    	where comid = #{comid}
+    	where spaceno = #{spaceno}
 	</update>
+	
+	<!-- 订单完成 -->
+	<update id="payOrderParkingSpace" parameterType="string">
+    	update ParkingSpace set
+    			parkStatus   = '0',
+    			useCount = useCount + 1
+    	where spaceno = #{spaceno}
+	</update>
+	
 	<!-- 根据具体条件查询车位信息 -->
 	<select id="getParkingSpaceList" parameterType="ParkingSpace" resultType="ParkingSpace">
 		select 

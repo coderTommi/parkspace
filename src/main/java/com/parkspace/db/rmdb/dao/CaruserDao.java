@@ -101,4 +101,14 @@ public interface CaruserDao {
 	 */
 	public int getCaruserAllInfoCount(Caruser caruser);
 	
+	/**
+	 * @Title: payOrderParkingSpace
+	 * <p>Description:订单完成更新停车次数</p>
+	 * @param     caruser 车主信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:20:47</p>
+	 */
+	public void payOrderParkingSpace(Caruser caruser);
+	
 }

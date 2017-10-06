@@ -233,4 +233,14 @@ public interface IParkingSpaceService {
 	 */
 	public void delayOrderParkingSpace(String orderJnlNo, int delayParkHours) 
 			throws ParkspaceServiceException;
+	/**
+	 * @Title: payOrderParkingSpace
+	 * <p>Description:结算订单，完成付款，并恢复车位状态为空闲</p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月4日 上午10:35:21</p>
+	 */
+	public void payOrderParkingSpace(String orderJnlNo) 
+			throws ParkspaceServiceException;
 }

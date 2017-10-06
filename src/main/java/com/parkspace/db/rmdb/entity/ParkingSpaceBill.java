@@ -28,6 +28,8 @@ public class ParkingSpaceBill implements Serializable{
 	private String orderJnlNo;
 	//用户id
 	private String userId;
+	//业主用户id
+	private String spaceOwnerUserId;
 	//车牌号
 	private String carno;
 	//车位编号,形如3-101
@@ -55,7 +57,38 @@ public class ParkingSpaceBill implements Serializable{
 	private String maxParkHoursString;
 	//可延长最长时间:maxParkHoursString-usedParkHoursString
 	private String maxDelayParkHoursString;
-	
+	//记录实际的停车时长
+	private BigDecimal actualParkHours;
+	//预算：=单价*实际停车时长
+	private BigDecimal actualPrice;
+	//是否只查询快要到期的数据，默认否查询全部使用中的车位信息
+	private Integer isQuerySoonExpire = 0;
+	//车主信息
+	private Caruser caruser;
+	public Integer getIsQuerySoonExpire() {
+		return isQuerySoonExpire;
+	}
+	public void setIsQuerySoonExpire(Integer isQuerySoonExpire) {
+		this.isQuerySoonExpire = isQuerySoonExpire;
+	}
+	public Caruser getCaruser() {
+		return caruser;
+	}
+	public void setCaruser(Caruser caruser) {
+		this.caruser = caruser;
+	}
+	public BigDecimal getActualParkHours() {
+		return actualParkHours;
+	}
+	public void setActualParkHours(BigDecimal actualParkHours) {
+		this.actualParkHours = actualParkHours;
+	}
+	public BigDecimal getActualPrice() {
+		return actualPrice;
+	}
+	public void setActualPrice(BigDecimal actualPrice) {
+		this.actualPrice = actualPrice;
+	}
 	public String getMaxParkHoursString() {
 		return maxParkHoursString;
 	}
@@ -88,6 +121,12 @@ public class ParkingSpaceBill implements Serializable{
 	}
 	public String getUserId() {
 		return userId;
+	}
+	public String getSpaceOwnerUserId() {
+		return spaceOwnerUserId;
+	}
+	public void setSpaceOwnerUserId(String spaceOwnerUserId) {
+		this.spaceOwnerUserId = spaceOwnerUserId;
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
@@ -151,11 +190,12 @@ public class ParkingSpaceBill implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "ParkingSpaceBill [orderJnlNo=" + orderJnlNo + ", userId=" + userId + ", carno=" + carno + ", spaceno="
-				+ spaceno + ", billStatus=" + billStatus + ", parkHours=" + parkHours + ", delayParkHours="
-				+ delayParkHours + ", delayParkHoursString=" + delayParkHoursString + ", unitPrice=" + unitPrice
-				+ ", budgetPrice=" + budgetPrice + ", createTime=" + createTime + ", usedParkHoursString="
-				+ usedParkHoursString + ", maxParkHoursString=" + maxParkHoursString + ", maxDelayParkHoursString="
-				+ maxDelayParkHoursString + "]";
+		return "ParkingSpaceBill [orderJnlNo=" + orderJnlNo + ", userId=" + userId + ", spaceOwnerUserId="
+				+ spaceOwnerUserId + ", carno=" + carno + ", spaceno=" + spaceno + ", billStatus=" + billStatus
+				+ ", parkHours=" + parkHours + ", delayParkHours=" + delayParkHours + ", delayParkHoursString="
+				+ delayParkHoursString + ", unitPrice=" + unitPrice + ", budgetPrice=" + budgetPrice + ", createTime="
+				+ createTime + ", usedParkHoursString=" + usedParkHoursString + ", maxParkHoursString="
+				+ maxParkHoursString + ", maxDelayParkHoursString=" + maxDelayParkHoursString + ", actualParkHours="
+				+ actualParkHours + ", actualPrice=" + actualPrice + "]";
 	}
 }
