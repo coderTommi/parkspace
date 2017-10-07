@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.MessageDao">
+	<!-- 消息信息字段 -->
+	<sql id="Message_Column">
+		m.UUID,
+		m.context,
+		m.status,
+		m.messageObject,
+		m.comid,
+		m.enableStartTime,
+		m.enableEndTime,
+		m.memo,
+		m.createTime,
+		m.modifyTime
+	</sql>
+	<!-- 根据id查询消息信息 -->
+	<select id="getMessage" parameterType="string" resultType="Message">
+		select 
+			<include refid="Message_Column"/>
+		from Message m where UUID=#{UUID}
+	</select>
+	<!-- 新增消息信息 -->
+	<insert id="addMessage" parameterType="Message">
+    	insert into Message(
+    			UUID,
+				context,
+				status,
+				messageObject,
+				comid,
+				enableStartTime,
+				enableEndTime,
+				memo,
+				createTime,
+				modifyTime
+    		) 
+         values(
+       			#{UUID},
+       			#{context},
+       			#{status},
+       			#{messageObject},
+       			#{comid},
+       			#{enableStartTime},
+       			#{enableEndTime},
+       			#{memo},
+       			#{createTime},
+       			#{modifyTime}
+         )
+	</insert>
+	
+	<!-- 更新消息信息 -->
+	<update id="updateMessage" parameterType="Message">
+		update Message
+		<trim prefix="set" suffixOverrides=",">		
+			<if test="context != null">
+				context   = #{context},
+			</if>
+			<if test="status != null">
+				status   = #{status},
+			</if>
+			<if test="messageObject != null">
+				messageObject   = #{messageObject},
+			</if>
+			<if test="comid != null">
+				comid   = #{comid},
+			</if>
+			<if test="enableStartTime != null">
+				enableStartTime   = #{enableStartTime},
+			</if>
+			<if test="enableEndTime != null">
+				enableEndTime   = #{enableEndTime},
+			</if>
+			<if test="memo != null">
+				memo   = #{memo},
+			</if>
+			<if test="createTime != null">
+				createTime   = #{createTime},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime   = #{modifyTime}
+			</if>
+		</trim>
+    	where UUID = #{UUID}
+	</update>
+	
+	<!-- 根据id删除消息信息 -->
+	<update id="deleteMessage" parameterType="string">
+    	update Message set
+    			status   = 2,
+    			modifyTime = now()
+    	where UUID = #{UUID}
+	</update>
+	<!-- 查询所有message -->
+	<select id="getMessageAllList" parameterType="Message" resultType="Message">
+		select 
+			<include refid="Message_Column"/>
+		from Message m where 1=1
+			 <if test="UUID != null">
+            	and UUID = #{UUID}
+        	 </if>
+        	 <if test="context != null">
+            	and context like concat('%',#{context},'%')
+        	 </if>
+        	 <if test="status != null">
+            	and status = #{status}
+        	 </if>
+        	 <if test="statusQuery != null and statusQuery.length > 0 ">
+        	  	 and status in
+        	  	 	<foreach item="item" index="index" collection="statusQuery" open="(" separator="," close=")">  
+ 						#{item}  
+					</foreach>
+        	 </if>
+        	 <if test="messageObject != null">
+            	and messageObject = #{messageObject}
+        	 </if>
+        	 <if test="messageObjectQuery != null and messageObjectQuery.length > 0 ">
+        	  	 and messageObject in
+        	  	 	<foreach item="item" index="index" collection="messageObjectQuery" open="(" separator="," close=")">  
+ 						#{item}  
+					</foreach>
+        	 </if>
+        	 
+        	 
+        	 <if test="comid != null">
+            	and comid like concat('%',#{comid},'%')
+        	 </if>
+        	 <if test="enableStartTime != null">
+            	<![CDATA[ and enableStartTime >= #{enableStartTime} ]]>
+        	 </if>
+        	 <if test="enableEndTime != null">
+            	<![CDATA[ and enableEndTime <= #{enableEndTime} ]]>
+        	 </if>
+        	 
+        	 <if test="createTime != null">
+            	<![CDATA[ and createTime >= #{createTime} ]]>
+        	 </if>
+        	 order by modifyTime desc
+	</select>
+</mapper>

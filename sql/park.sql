@@ -1,8 +1,12 @@
 drop function if exists f_get_parkHoursString;
 
-drop  table  if   exists   vEnableBillShareConfig;
+drop  view  if   exists   vParkingSpaceBillAndMoney;
 
-drop  table  if   exists   vCarAndSpaceOwnerUser;
+drop  view  if   exists   vParkingSpaceBill;
+
+drop  view  if   exists   vEnableBillShareConfig;
+
+drop  view  if   exists   vCarAndSpaceOwnerUser;
 
 drop table if exists AccountCheck;
 
@@ -41,6 +45,11 @@ alter table Integral
    drop primary key;
 
 drop table if exists Integral;
+
+alter table Message
+   drop primary key;
+
+drop table if exists Message;
 
 drop index t_parking_space_ix1 on ParkingSpace;
 
@@ -104,11 +113,6 @@ alter table Zone
 
 drop table if exists Zone;
 
-alter table message
-   drop primary key;
-
-drop table if exists message;
-
 alter table walletlock
    drop primary key;
 
@@ -168,7 +172,9 @@ create table Bill
    billType             int(1) not null comment '账单类型 0：充值 1：提现  2：交押金  3：提取押金4：分配	5：入账	6：出账',
    amount               decimal(15, 2) not null comment '账单金额',
    state                int(1) not null default 0 comment '0: 正常  1：失败	2：对账异常',
-   orderJnlNo           varchar(64) comment '订单号'
+   orderJnlNo           varchar(64) comment '订单号',
+   remoteJnlNo          varchar(64) comment '远端流水号',
+   payChannel           int(1) comment '付款渠道'
 );
 
 alter table Bill comment '账单（Bill）
@@ -274,6 +280,28 @@ alter table Integral
    add primary key (userId);
 
 /*==============================================================*/
+/* Table: Message                                               */
+/*==============================================================*/
+create table Message
+(
+   UUID                 varchar(64) not null comment '主键',
+   context              text not null comment '消息内容',
+   status               int(1) comment '消息状态：0草稿，1，发布，2删除',
+   messageObject        int(1) comment '消息对象：消息面向的人群0物业，1业主，2车主,-1 所有',
+   comid                text comment '小区编号,如果不选择默认为全局，可以选择多个表示面向多个小区',
+   enableStartTime      date not null comment '有效开始时间',
+   enableEndTime        date not null comment '有效截至时间',
+   memo                 varchar(256) comment '备注',
+   createTime           datetime not null comment '创建时间',
+   modifyTime           datetime not null comment '修改时间'
+);
+
+alter table Message comment '消息（Message)';
+
+alter table Message
+   add primary key (UUID);
+
+/*==============================================================*/
 /* Table: ParkingSpace                                          */
 /*==============================================================*/
 create table ParkingSpace
@@ -315,11 +343,13 @@ create index t_parking_space_ix1 on ParkingSpace
 create table ParkingSpaceBill
 (
    orderJnlNo           varchar(64) not null comment '订单号',
+   spaceOwnerUserId     varchar(64) not null comment '业主用户id',
    userId               varchar(64) not null comment '用户id',
    carno                varchar(16) not null comment '车牌号',
    spaceno              varchar(30) not null comment '车位编号,形如3-101',
    billStatus           int(1) not null comment '订单状态：1、预约中，2、使用中，3.延长使用中',
-   parkHours            integer not null comment '停车时长，申请停车时长，单位为小时，不能超过24小时',
+   delayParkHours       integer not null default 0 comment '延长停车时长，默认为0',
+   parkHours            integer not null comment '停车时长，申请停车时长，单位为小时，不能超过24小时，包括延长停车时长',
    unitPrice            decimal(15, 2) not null comment '单价，每小时计费',
    budgetPrice          decimal(15,2) not null comment '预算：=单价*停车时长',
    createTime           datetime not null comment '创建时间'
@@ -364,6 +394,7 @@ create table ParkingSpaceBillHis
 (
    UUID                 varchar(64) not null comment '主键',
    orderJnlNo           varchar(64) not null comment '订单号',
+   spaceOwnerUserId     varchar(64) not null comment '业主用户id',
    userId               varchar(64) not null comment '用户id',
    carno                varchar(16) not null comment '车牌号',
    spaceno              varchar(30) not null comment '车位编号,形如3-101',
@@ -374,7 +405,8 @@ create table ParkingSpaceBillHis
    createTime           datetime not null comment '创建时间，表示订单当前状态的时间',
    actualParkHours      decimal(15,2) comment '记录实际的停车时长',
    actualPrice          decimal(15,2) not null comment '预算：=单价*实际停车时长',
-   recodeTime           datetime not null comment '记录时间，表示该流水记录的时间'
+   recodeTime           datetime not null comment '记录时间，表示该流水记录的时间',
+   delayParkHours       integer not null default 0 comment '延长停车时长，默认为0'
 );
 
 alter table ParkingSpaceBillHis comment '车位订单流水，记录该车为订单中的预定-使用-延长使用-结算整个流程
@@ -542,28 +574,6 @@ alter table Zone
    add primary key (zoneid);
 
 /*==============================================================*/
-/* Table: message                                               */
-/*==============================================================*/
-create table message
-(
-   UUID                 varchar(64) not null comment '主键',
-   context              text not null comment '消息内容',
-   status               int(1) comment '消息状态：0草稿，1，发布，2删除',
-   messageObject        int(1) comment '消息对象：消息面向的人群0物业，1业主，2车主,-1 所有',
-   comid                text comment '小区编号,如果不选择默认为全局，可以选择多个表示面向多个小区',
-   enableStartTime      date not null comment '有效开始时间',
-   enableEndTime        date not null comment '有效截至时间',
-   memo                 varchar(256) comment '备注',
-   createTime           datetime not null comment '创建时间',
-   modifyTime           datetime not null comment '修改时间'
-);
-
-alter table message comment '消息（message)';
-
-alter table message
-   add primary key (UUID);
-
-/*==============================================================*/
 /* Table: walletlock                                            */
 /*==============================================================*/
 create table walletlock
@@ -622,7 +632,7 @@ SELECT
 	modifyTime,
 	nowWeek,
 	nowNextWeek,
-	parkHourString
+	replace(parkHourString,'.000000','') as parkHourString
 FROM
 	(
 		SELECT
@@ -666,8 +676,9 @@ FROM
 			ShareConfig s
 		WHERE
 			s.isOpen = 1
+        and s.startTime <=concat(curtime(),'')
 		AND (
-			(s.shareType = 0)
+			(s.shareType = 0 )
 			OR (
 				s.shareType = 1
 				AND s.internalDate LIKE concat('%', dayofweek(now()), '%')
@@ -676,6 +687,83 @@ FROM
 	) ss
 WHERE
 	ss.parkHourString > '00:00:00';
+
+/*==============================================================*/
+/* View: vParkingSpaceBill                                      */
+/*==============================================================*/
+create  VIEW      vParkingSpaceBill
+  as
+SELECT
+	orderJnlNo,
+	userId,
+	carno,
+	spaceno,
+	billStatus,
+	parkHours,
+	unitPrice,
+	budgetPrice,
+	createTime,
+	delayParkHours,
+	spaceOwnerUserId,
+	usedParkHoursString as usedParkHoursString,
+	actualUsedParkHours as actualParkHours,
+	FORMAT(
+		actualUsedParkHours * unitPrice,
+		2
+	) AS actualPrice
+FROM
+	(
+		SELECT
+			orderJnlNo,
+			userId,
+			carno,
+			spaceno,
+			billStatus,
+			parkHours,
+			unitPrice,
+			budgetPrice,
+			createTime,
+			delayParkHours,
+			spaceOwnerUserId,
+			REPLACE (
+				TIMEDIFF(now(), t.createTime),
+				'.000000',
+				''
+			) AS usedParkHoursString,
+			FORMAT(
+				TIMESTAMPDIFF(SECOND, t.createTime, now()) / 60 / 60,
+				2
+			) AS actualUsedParkHours
+		FROM
+			ParkingSpaceBill t
+	) temp;
+
+/*==============================================================*/
+/* View: vParkingSpaceBillAndMoney                              */
+/*==============================================================*/
+create  VIEW      vParkingSpaceBillAndMoney
+  as
+SELECT
+	orderJnlNo,
+	p.userId,
+	carno,
+	spaceno,
+	billStatus,
+	parkHours,
+	unitPrice,
+	budgetPrice,
+	createTime,
+	delayParkHours,
+	spaceOwnerUserId,
+	usedParkHoursString,
+	actualParkHours,
+	actualPrice,
+	w.pledge,
+	w.balance,
+	(w.pledge + w.balance) AS allmoney
+FROM
+	vParkingSpaceBill p
+LEFT JOIN Wallet w ON p.userId = w.userId;
 
 alter table BlackList add constraint FK_bl_ref_user foreign key (userId)
       references Baseuser (userId) on delete restrict on update restrict;
