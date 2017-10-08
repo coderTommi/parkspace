@@ -1,6 +1,7 @@
 package com.parkspace.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -119,6 +120,7 @@ public class SpaceOwnerServiceImpl implements ISpaceOwnerService{
 					Constants.ERRORCODE.COMID_IS_NOT_NULL.toString(), 
 					"小区编号不能为空");
 		}
+		spaceOwner.setCertifiedTime(new Date());
 		spaceOwnerDao.addSpaceOwner(spaceOwner);
 		//保存用户与小区的关系
 		communityService.addUserCommunity(comid, spaceOwner.getUserId());

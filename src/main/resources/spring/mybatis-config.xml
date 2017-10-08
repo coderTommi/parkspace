@@ -25,6 +25,7 @@
 		<typeAlias alias="WalletLock" type="com.parkspace.db.rmdb.entity.WalletLock"/>
 		<typeAlias alias="WalletOperation" type="com.parkspace.db.rmdb.entity.WalletOperation"/>
 		<typeAlias alias="Message" type="com.parkspace.db.rmdb.entity.Message"/>
+		<typeAlias alias="ReportCommonModel" type="com.parkspace.model.ReportCommonModel"/>
 	</typeAliases>
  	<plugins>
 	 	<plugin interceptor="com.github.pagehelper.PageInterceptor">

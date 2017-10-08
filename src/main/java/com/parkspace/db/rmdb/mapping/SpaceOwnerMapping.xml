@@ -3,7 +3,7 @@
 <mapper namespace="com.parkspace.db.rmdb.dao.SpaceOwnerDao">
 	<!-- 物业车位信息字段-->
 	<sql id="Space_Owner_Column">
-		s.spaceno,s.isauth,s.carno
+		s.spaceno,s.isauth,s.carno,s.certifiedTime
 	</sql>
 	<!-- 用户信息字段 -->
 	<sql id="Baseuser_Column">
@@ -71,13 +71,15 @@
 				spaceno,
 				userId,
 				isauth,
-				carno
+				carno,
+				certifiedTime
     		) 
          values(
        			#{spaceno},
        			#{userId},
        			#{isauth},
-       			#{carno}
+       			#{carno},
+       			#{certifiedTime}
          )
 	</insert>
 	

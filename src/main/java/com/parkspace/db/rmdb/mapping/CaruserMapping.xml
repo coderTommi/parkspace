@@ -3,7 +3,7 @@
 <mapper namespace="com.parkspace.db.rmdb.dao.CaruserDao">
 	<!-- 业主表字段 -->
 	<sql id="Caruser_Column">
-		car.carno,car.isauth,car.parkCount
+		car.carno,car.isauth,car.parkCount,car.certifiedTime
 	</sql>
 	<!-- 用户基本信息表字段 -->
 	<sql id="Baseuser_Column">
@@ -53,13 +53,15 @@
     			userId,
     			carno,
     			isauth,
-    			parkCount
+    			parkCount,
+    			certifiedTime
     		) 
     	 values(
     	 		#{userId},
     	 		#{carno},
     	 		#{isauth},
-    	 		#{parkCount}
+    	 		#{parkCount},
+    	 		#{certifiedTime}
     	 	)
 	</insert>
 	

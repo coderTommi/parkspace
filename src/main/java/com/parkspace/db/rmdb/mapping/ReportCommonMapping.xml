@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.ReportCommonDao">
+	
+	<!-- 推广小区报表 -->
+	<select id="getCommunityReport" parameterType="ReportCommonModel" resultType="ReportCommonModel">
+		select 
+				t.createTimeYearMonth as yearMonth,
+				count(*) as count
+		from vCommunity t
+		where 1=1
+		<!-- 过滤条件 -->
+		<if test="nearCount != null">
+            <![CDATA[ 
+            	and t.createTimeYearMonth >= DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -#{nearCount}+1 month),'%Y%m')
+            ]]>
+        </if>
+        <if test="yearMonthQuery != null and yearMonthQuery.length > 0 ">
+       	  	and t.createTimeYearMonth in
+       	  	<foreach item="item" index="index" collection="yearMonthQuery" open="(" separator="," close=")">  
+					#{item}  
+			</foreach>
+       	</if>
+		group by t.createTimeYearMonth
+		order by t.createTimeYearMonth
+	</select>
+	
+	<!-- 车位订单报表 -->
+	<select id="getParkingSpaceBillHisReport" parameterType="ReportCommonModel" resultType="ReportCommonModel">
+		select 
+				t.recodeTimeYearMonth as yearMonth,
+				count(*) as count
+		from vParkingSpaceBillHis t
+		where 1=1
+		
+		<!-- 过滤条件 -->
+		<if test="nearCount != null">
+            <![CDATA[ 
+            	and t.recodeTimeYearMonth >= DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -#{nearCount}+1 month),'%Y%m')
+            ]]>
+        </if>
+        <if test="yearMonthQuery != null and yearMonthQuery.length > 0 ">
+       	  	and t.recodeTimeYearMonth in
+       	  	<foreach item="item" index="index" collection="yearMonthQuery" open="(" separator="," close=")">  
+					#{item}  
+			</foreach>
+       	</if>
+       	<if test="statusQuery != null and statusQuery.length > 0 ">
+       	  	and t.billStatus in
+       	  	<foreach item="item" index="index" collection="statusQuery" open="(" separator="," close=")">  
+					#{item}  
+			</foreach>
+       	</if>
+		group by t.recodeTimeYearMonth
+		order by t.recodeTimeYearMonth
+	</select>
+	
+	<!-- 认证车位报表 -->
+	<select id="getCertifiedParkingSpaceReport" parameterType="ReportCommonModel" resultType="ReportCommonModel">
+		select 
+				t.certifiedTimeYearMonth as yearMonth,
+				count(*) as count
+		from vSpaceOwner t
+		where 1=1
+		<!-- 过滤条件 -->
+		<if test="nearCount != null">
+            <![CDATA[ 
+            	and t.certifiedTimeYearMonth >= DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -#{nearCount}+1 month),'%Y%m')
+            ]]>
+        </if>
+        <if test="yearMonthQuery != null and yearMonthQuery.length > 0 ">
+       	  	and t.certifiedTimeYearMonth in
+       	  	<foreach item="item" index="index" collection="yearMonthQuery" open="(" separator="," close=")">  
+					#{item}  
+			</foreach>
+       	</if>
+		group by t.certifiedTimeYearMonth
+		order by t.certifiedTimeYearMonth
+	</select>
+	
+	<!-- 活跃车位报表 -->
+	<select id="getActivingParkingSpaceReport" parameterType="ReportCommonModel" resultType="ReportCommonModel">
+		select 
+				t.createTimeYearMonth as yearMonth,
+				sum(t.useCount) as count
+		from vParkingSpace t
+		where 1=1
+		<!-- 过滤条件 -->
+		<if test="nearCount != null">
+            <![CDATA[ 
+            	and t.createTimeYearMonth >= DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -#{nearCount}+1 month),'%Y%m')
+            ]]>
+        </if>
+        <if test="yearMonthQuery != null and yearMonthQuery.length > 0 ">
+       	  	and t.createTimeYearMonth in
+       	  	<foreach item="item" index="index" collection="yearMonthQuery" open="(" separator="," close=")">  
+					#{item}  
+			</foreach>
+       	</if>
+		group by t.createTimeYearMonth
+		order by t.createTimeYearMonth
+	</select>
+	
+	<!-- 认证用户报表 -->
+	<select id="getCertifiedUserReport" parameterType="ReportCommonModel" resultType="ReportCommonModel">
+		select 
+				t.certifiedTimeYearMonth as yearMonth,
+				count(*) as count
+		from vCarAndSpaceOwnerUser t
+		where 1=1
+		<!-- 过滤条件 -->
+		<if test="nearCount != null">
+            <![CDATA[ 
+            	and t.certifiedTimeYearMonth >= DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -#{nearCount}+1 month),'%Y%m')
+            ]]>
+        </if>
+        <if test="yearMonthQuery != null and yearMonthQuery.length > 0 ">
+       	  	and t.certifiedTimeYearMonth in
+       	  	<foreach item="item" index="index" collection="yearMonthQuery" open="(" separator="," close=")">  
+					#{item}  
+			</foreach>
+       	</if>
+		group by t.certifiedTimeYearMonth
+		order by t.certifiedTimeYearMonth
+	</select>
+	
+	<!-- 活跃用户报表 -->
+	<select id="getActivingUserReport" parameterType="ReportCommonModel" resultType="ReportCommonModel">
+		select 
+				t.certifiedTimeYearMonth as yearMonth,
+				sum(t.usedCount) as count
+		from vCarAndSpaceOwnerUser t
+		where 1=1
+		<!-- 过滤条件 -->
+		<if test="nearCount != null">
+            <![CDATA[ 
+            	and t.certifiedTimeYearMonth >= DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -#{nearCount}+1 month),'%Y%m')
+            ]]>
+        </if>
+        <if test="yearMonthQuery != null and yearMonthQuery.length > 0 ">
+       	  	and t.certifiedTimeYearMonth in
+       	  	<foreach item="item" index="index" collection="yearMonthQuery" open="(" separator="," close=")">  
+					#{item}  
+			</foreach>
+       	</if>
+		group by t.certifiedTimeYearMonth
+		order by t.certifiedTimeYearMonth
+	</select>
+</mapper>

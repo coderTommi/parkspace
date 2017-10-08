@@ -2,6 +2,7 @@ package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * @Title: SpaceOwner.java
@@ -30,6 +31,8 @@ public class SpaceOwner extends BaseUser implements Serializable{
 	private String carno;
 	//车位信息
 	private ParkingSpace parkingSpace;
+	//认证时间，认证之后记录的时间，不可修改
+	private Date certifiedTime;
 	//小区ID
 //	private String comid;
 	//车位楼层,用来标记车位所在的楼层比如：地面0，地下-1，地下-2等
@@ -119,10 +122,16 @@ public class SpaceOwner extends BaseUser implements Serializable{
 	public void setCommunity(Community community) {
 		this.community = community;
 	}
+	public Date getCertifiedTime() {
+		return certifiedTime;
+	}
+	public void setCertifiedTime(Date certifiedTime) {
+		this.certifiedTime = certifiedTime;
+	}
 	@Override
 	public String toString() {
 		return "SpaceOwner [spaceno=" + spaceno + ", isauth=" + isauth + ", isauthQuery=" + Arrays.toString(isauthQuery)
-				+ ", carno=" + carno + ", parkingSpace=" + parkingSpace + ", zone=" + zone + ", community=" + community
-				+ "]";
+				+ ", carno=" + carno + ", parkingSpace=" + parkingSpace + ", certifiedTime=" + certifiedTime
+				+ ", community=" + community + ", zone=" + zone + "]";
 	}
 }

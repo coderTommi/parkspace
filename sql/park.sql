@@ -1,10 +1,20 @@
 drop function if exists f_get_parkHoursString;
 
+drop  view  if   exists   vSpaceOwner;
+
+drop  view  if   exists   vParkingSpaceBillHis;
+
 drop  view  if   exists   vParkingSpaceBillAndMoney;
 
 drop  view  if   exists   vParkingSpaceBill;
 
+drop  view  if   exists   vParkingSpace;
+
 drop  view  if   exists   vEnableBillShareConfig;
+
+drop  view  if   exists   vCommunity;
+
+drop  view  if   exists   vCaruser;
 
 drop  view  if   exists   vCarAndSpaceOwnerUser;
 
@@ -218,7 +228,8 @@ create table Caruser
    userId               varchar(64) not null comment '用户id',
    carno                varchar(16) not null comment '车牌号',
    isauth               int(1) not null default 0 comment '状态0:未认证 1：已认证，默认1，-1表示禁用',
-   parkCount            int(10) not null default 0 comment '停车次数：需要在订单成功之后+1,默认0'
+   parkCount            int(10) not null default 0 comment '停车次数：需要在订单成功之后+1,默认0',
+   certifiedTime        datetime not null comment '认证时间，认证之后记录的时间，不可修改'
 );
 
 alter table Caruser comment '车主表（Caruser）';
@@ -504,7 +515,8 @@ create table SpaceOwner
    spaceno              varchar(30) not null comment '车位编号,形如3-101',
    userId               varchar(64) not null comment '用户id',
    isauth               int(1) default 0 comment '状态:0未认证，1认证，默认0，-1表示禁用不在公开车位',
-   carno                varchar(16) comment '车牌号,对于车主的车牌号只做记录，不做校验，可以不输入'
+   carno                varchar(16) comment '车牌号,对于车主的车牌号只做记录，不做校验，可以不输入',
+   certifiedTime        datetime not null comment '认证时间，认证之后记录的时间，不可修改'
 );
 
 alter table SpaceOwner comment '车位业主信息表,包含物业车位信息';
@@ -592,23 +604,65 @@ alter table walletlock
 /*==============================================================*/
 create  VIEW      vCarAndSpaceOwnerUser
   as
+select
+   c.userId,
+   c.isauth,
+   c.carno,
+   '' as spaceno,
+   'C' as userType,
+   c.certifiedTime,
+   c.parkCount as usedCount,
+   DATE_FORMAT(c.certifiedTime, '%Y%m') AS certifiedTimeYearMonth
+from
+   caruser c
+UNION
+select
+   s.userId,
+   s.isauth,
+   s.carno,
+   s.spaceno,
+   'S' as userType,
+   s.certifiedTime,
+   (select p.useCount from parkingspace p where p.spaceno = s.spaceno) as usedCount,
+   DATE_FORMAT(s.certifiedTime, '%Y%m') AS certifiedTimeYearMonth
+from
+   spaceowner s;
+
+/*==============================================================*/
+/* View: vCaruser                                               */
+/*==============================================================*/
+create  VIEW      vCaruser
+  as
 SELECT
-	c.userId,
-	c.isauth,
-	c.carno,
-	'' AS spaceno,
-	'C' AS userType
+	t.carno,
+	t.certifiedTime,
+	t.isauth,
+	t.parkCount,
+	t.userId,
+	DATE_FORMAT(t.certifiedTime, '%Y%m') AS certifiedTimeYearMonth
 FROM
-	caruser c
-UNION ALL
-	SELECT
-		s.userId,
-		s.isauth,
-		s.carno,
-		s.spaceno,
-		'S' AS userType
-	FROM
-		spaceowner s;
+	Caruser t;
+
+/*==============================================================*/
+/* View: vCommunity                                             */
+/*==============================================================*/
+create  VIEW      vCommunity
+  as
+SELECT
+	t.price,
+	t.comid,
+	t.zoneid,
+	t.comname,
+	t.address,
+	t.isenable,
+	t.memo,
+	t.createBy,
+	t.createTime,
+	t.modifyBy,
+	t.modifyTime,
+	DATE_FORMAT(t.createTime, '%Y%m') AS createTimeYearMonth
+FROM
+	community t;
 
 /*==============================================================*/
 /* View: vEnableBillShareConfig                                 */
@@ -689,6 +743,32 @@ WHERE
 	ss.parkHourString > '00:00:00';
 
 /*==============================================================*/
+/* View: vParkingSpace                                          */
+/*==============================================================*/
+create  VIEW      vParkingSpace
+  as
+SELECT
+	t.useCount,
+	t.spaceno,
+	t.comid,
+	t.parkPositionFloor,
+	t.parkPositionZone,
+	t.parkPositionX,
+	t.parkPositionY,
+	t.parkStatus,
+	t.parkType,
+	t.parkPositionDes,
+	t.spaceOwner,
+	t.memo,
+	t.createBy,
+	t.createTime,
+	t.modifyBy,
+	t.modifyTime,
+	DATE_FORMAT(t.createTime, '%Y%m') AS createTimeYearMonth
+FROM
+	parkingspace t;
+
+/*==============================================================*/
 /* View: vParkingSpaceBill                                      */
 /*==============================================================*/
 create  VIEW      vParkingSpaceBill
@@ -764,6 +844,46 @@ SELECT
 FROM
 	vParkingSpaceBill p
 LEFT JOIN Wallet w ON p.userId = w.userId;
+
+/*==============================================================*/
+/* View: vParkingSpaceBillHis                                   */
+/*==============================================================*/
+create  VIEW      vParkingSpaceBillHis
+  as
+SELECT
+	t.UUID,
+	t.orderJnlNo,
+	t.userId,
+	t.carno,
+	t.spaceno,
+	t.billStatus,
+	t.parkHours,
+	t.unitPrice,
+	t.budgetPrice,
+	t.createTime,
+	t.actualParkHours,
+	t.actualPrice,
+	t.recodeTime,
+	t.delayParkHours,
+	t.spaceOwnerUserId,
+	DATE_FORMAT(t.recodeTime, '%Y%m') AS recodeTimeYearMonth
+FROM
+	parkingspacebillhis t;
+
+/*==============================================================*/
+/* View: vSpaceOwner                                            */
+/*==============================================================*/
+create  VIEW      vSpaceOwner
+  as
+SELECT
+	t.carno,
+	t.certifiedTime,
+	t.isauth,
+	t.spaceno,
+	t.userId,
+	DATE_FORMAT(t.certifiedTime, '%Y%m') AS certifiedTimeYearMonth
+FROM
+	SpaceOwner t;
 
 alter table BlackList add constraint FK_bl_ref_user foreign key (userId)
       references Baseuser (userId) on delete restrict on update restrict;

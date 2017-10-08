@@ -1,5 +1,6 @@
 package com.parkspace.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,6 +125,7 @@ public class CaruserServiceImpl implements ICaruserService{
 		}
 		//默认0
 		caruser.setParkCount(0);
+		caruser.setCertifiedTime(new Date());
 		caruserDao.addCaruser(caruser);
 		//保存用户与小区的关系
 		communityService.addUserCommunity(comid, caruser.getUserId());

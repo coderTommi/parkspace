@@ -14,6 +14,8 @@ public class Constants {
 	
 	/** 未来几小时计算押金+余额是否满足支付，单位是小时 **/
 	public static int FUTURE_HOURS_MONEY = 24;
+	/** 报表统计月份**/
+	public static int REPORT_NEAR_COUNT = 6;
 	
 	/**
 	 * 错误码.

@@ -2,6 +2,7 @@ package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * @Title: Caruser.java
@@ -35,9 +36,16 @@ public class Caruser extends BaseUser implements Serializable{
 	
 	//是否查询订单余额不足的车主，默认查询所有车主，0
 	private Integer isQueryNoEnoughMoney = 0;
+	//认证时间，认证之后记录的时间，不可修改
+	private Date certifiedTime;
 	
 	
-	
+	public Date getCertifiedTime() {
+		return certifiedTime;
+	}
+	public void setCertifiedTime(Date certifiedTime) {
+		this.certifiedTime = certifiedTime;
+	}
 	public Integer getIsQueryNoEnoughMoney() {
 		return isQueryNoEnoughMoney;
 	}
@@ -63,7 +71,7 @@ public class Caruser extends BaseUser implements Serializable{
 	public String toString() {
 		return "Caruser [carno=" + carno + ", isauth=" + isauth + ", isauthQuery=" + Arrays.toString(isauthQuery)
 				+ ", community=" + community + ", zone=" + zone + ", parkCount=" + parkCount + ", isQueryNoEnoughMoney="
-				+ isQueryNoEnoughMoney + ", wallet=" + wallet + "]";
+				+ isQueryNoEnoughMoney + ", certifiedTime=" + certifiedTime + ", wallet=" + wallet + "]";
 	}
 	public Community getCommunity() {
 		return community;
