@@ -149,8 +149,17 @@
     			parkStatus   = 'N',
     			modifyBy     = #{modifyBy},
     			modifyTime   = #{modifyTime}
-    	where comid = #{comid}
+    	where spaceno = #{spaceno}
 	</update>
+	
+	<!-- 订单完成 -->
+	<update id="payOrderParkingSpace" parameterType="string">
+    	update ParkingSpace set
+    			parkStatus   = '0',
+    			useCount = useCount + 1
+    	where spaceno = #{spaceno}
+	</update>
+	
 	<!-- 根据具体条件查询车位信息 -->
 	<select id="getParkingSpaceList" parameterType="ParkingSpace" resultType="ParkingSpace">
 		select 
@@ -441,7 +450,15 @@
 	<!-- 查询可预订的车位信息 -->
 	<select id="getParkingSpaceEnableBillList" parameterType="ParkingSpace" resultType="ParkingSpace">
 		select 
-			<include refid="ParkingSpace_Column"/>
+			<include refid="ParkingSpace_Column"/>,
+			(case when sc.parkHourString != 'A' then
+				replace(concat(TIMEDIFF(sc.parkHourString,
+							concat('00:','${@com.parkspace.util.Constants@SO_RESERVE_TIME}',':00')) ,''),'.000000','')
+			 else
+			 	sc.parkHourString
+			 end
+			)
+			as parkHoursString
 		from ParkingSpace ps,
 		     (SELECT
 							t.spaceno,

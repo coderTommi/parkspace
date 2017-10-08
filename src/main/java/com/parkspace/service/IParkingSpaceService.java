@@ -2,7 +2,9 @@ package com.parkspace.service;
 
 import java.util.List;
 
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.ParkingSpace;
+import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
 
 /**
  * @Title: IParkingSpaceService.java
@@ -171,4 +173,74 @@ public interface IParkingSpaceService {
 	 */
 	public List<ParkingSpace> getParkingSpaceListByComidAndParkHours(String comid, 
 			Integer parkHours);
+	/**
+	 * @Title: orderParkingSpace
+	 * <p>Description:车位预定</p>
+	 * @param     参数
+	 * @return ParkingSpaceBill    返回类型
+	 * @throws ParkspaceServiceException
+	 * <p>CreateDate:2017年10月3日 下午2:31:54</p>
+	 */
+	public ParkingSpaceBill addOrderParkingSpace(ParkingSpaceBill parkingSpaceBill) 
+			throws ParkspaceServiceException;
+	/**
+	 * 
+	 * @Title: getParkingSpaceParkHoursBySpaceno
+	 * <p>Description:通过车位编号查询车位可共享的最长时间
+	 * </p>
+	 * @param     spaceno 车位编号
+	 * @return String    返回类型，格式100:20:10(小时：分钟：秒)
+	 * @throws ParkspaceServiceException
+	 * <p>CreateDate:2017年10月3日 下午4:05:32</p>
+	 */
+	public String getParkingSpaceParkHoursBySpaceno(String spaceno) 
+			throws ParkspaceServiceException;
+	/**
+	 * @Title: cancelOrderParkingSpace
+	 * <p>Description:取消订单，只有预约的订单才能被取消
+	 * 1.取消订单之后，订单信息写入订单历史表
+	 * 2.更新车位的状态为空闲0
+	 * </p>
+	 * @param     orderJnlNo 订单编号
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 下午4:36:47</p>
+	 */
+	public void cancelOrderParkingSpace(String orderJnlNo)
+			throws ParkspaceServiceException;
+	/**
+	 * @Title: confirmOrderParkingSpace
+	 * <p>Description:确认停车
+	 * 停车之前需要确认车位的合法性
+	 * 1.订单状态由预约中变成使用中：1--2，并且更新当前时间
+	 * 2.在历史表中增加一条预约订单信息
+	 * </p>
+	 * @param     orderJnlNo 订单编号
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 下午6:01:39</p>
+	 */
+	public void confirmOrderParkingSpace(String orderJnlNo)
+			throws ParkspaceServiceException;
+	/**
+	 * @Title: delayOrderParkingSpace
+	 * <p>Description:延长停车</p>
+	 * @param     orderJnlNo 订单号
+	 * @param     delayParkHours 延长时间
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月3日 下午9:52:15</p>
+	 */
+	public void delayOrderParkingSpace(String orderJnlNo, int delayParkHours) 
+			throws ParkspaceServiceException;
+	/**
+	 * @Title: payOrderParkingSpace
+	 * <p>Description:结算订单，完成付款，并恢复车位状态为空闲</p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月4日 上午10:35:21</p>
+	 */
+	public void payOrderParkingSpace(String orderJnlNo) 
+			throws ParkspaceServiceException;
 }

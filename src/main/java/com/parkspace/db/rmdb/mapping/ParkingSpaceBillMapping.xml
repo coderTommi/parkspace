@@ -3,7 +3,9 @@
 <mapper namespace="com.parkspace.db.rmdb.dao.ParkingSpaceBillDao">
 	<!-- 根据订单编号获取车位订单信息 -->
 	<select id="getParkingSpaceBill" parameterType="string" resultType="ParkingSpaceBill">
-		select * from ParkingSpaceBill where orderJnlNo=#{orderJnlNo}
+		select t.*, 
+			   replace(TIMEDIFF(now(),t.createTime),'.000000','') as usedParkHoursString
+		from ParkingSpaceBill t where orderJnlNo=#{orderJnlNo}
 	</select>
 	<!-- 保存车位订单信息，id自动生成,在service层返回主键id -->
 	<insert id="addParkingSpaceBill" parameterType="ParkingSpaceBill">
@@ -16,7 +18,9 @@
 				parkHours,
 				unitPrice,
 				budgetPrice,
-				createTime
+				createTime,
+				delayParkHours,
+				spaceOwnerUserId
     		) 
          values(
        			#{orderJnlNo},
@@ -27,7 +31,9 @@
        			#{parkHours},
        			#{unitPrice},
        			#{budgetPrice},
-       			#{createTime}
+       			#{createTime},
+       			#{delayParkHours},
+       			#{spaceOwnerUserId}
          )
 	</insert>
 	
@@ -50,6 +56,29 @@
         	 	<if test="createTime != null">
             		createTime   = #{createTime},
         	 	</if>
+        	 	<if test="delayParkHours != null">
+            		delayParkHours   = #{delayParkHours},
+        	 	</if>
+        	 	<if test="spaceOwnerUserId != null">
+            		spaceOwnerUserId   = #{spaceOwnerUserId}
+        	 	</if>
+        	 	
+        	 </trim>
+    	where orderJnlNo = #{orderJnlNo}
+	</update>
+	
+	<!-- 延长停车时长 -->
+	<update id="delayParkingSpaceBill" parameterType="ParkingSpaceBill">
+    	update ParkingSpaceBill
+    		<trim prefix="set" suffixOverrides=",">
+    			<if test="delayParkHours != null">
+            		parkHours     = parkHours + #{delayParkHours},
+            		budgetPrice   = parkHours * unitPrice,
+            		delayParkHours   = #{delayParkHours},
+        	 	</if>
+        	 	<if test="billStatus != null">
+            		billStatus   = #{billStatus},
+        	 	</if>
         	 </trim>
     	where orderJnlNo = #{orderJnlNo}
 	</update>
@@ -60,7 +89,9 @@
 	</delete>
 	<!-- 根据条件查询车位订单信息 -->
 	<select id="getParkingSpaceBillList" parameterType="ParkingSpaceBill" resultType="ParkingSpaceBill">
-		select * from ParkingSpaceBill where 1=1
+		select t.* ,
+			   replace(TIMEDIFF(now(),t.createTime),'.000000','') as usedParkHoursString
+		from ParkingSpaceBill t where 1=1
 			 <if test="orderJnlNo != null">
             	and orderJnlNo = #{orderJnlNo}
         	 </if>
@@ -79,6 +110,24 @@
         	 <if test="createTime != null">
             	<![CDATA[ and createTime >= #{createTime} ]]>
         	 </if>
+        	 <if test="isQuerySoonExpire == 1">
+        	 	<![CDATA[ 
+        	 		and DATE_ADD(
+        	 			DATE_ADD(t.createTIme,INTERVAL t.parkHours HOUR),
+        	 			interval -${@com.parkspace.util.Constants@SOON_EXPIRE_TIME} MINUTE
+        	 		) < now() 
+        	 	]]>
+        	 </if>
         	 order by createTime desc
+	</select>
+	<!-- 查询可延长停车的最长时间 -->
+	<select id="getMaxDelayParkHoursString" parameterType="ParkingSpaceBill" resultType="string">
+		select
+		<if test="delayParkHoursString != null">
+             replace(concat(TIMEDIFF(TIMEDIFF(#{maxParkHoursString},#{usedParkHoursString}),#{delayParkHoursString}),''),'.000000','') as maxDelayParkHoursString
+        </if>
+        <if test="delayParkHoursString == null">
+             replace(concat(TIMEDIFF(#{maxParkHoursString},#{usedParkHoursString}),''),'.000000','') as maxDelayParkHoursString
+        </if>
 	</select>
 </mapper>

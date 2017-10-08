@@ -28,28 +28,105 @@ public class ParkingSpaceBill implements Serializable{
 	private String orderJnlNo;
 	//用户id
 	private String userId;
+	//业主用户id
+	private String spaceOwnerUserId;
 	//车牌号
 	private String carno;
 	//车位编号,形如3-101
 	private String spaceno;
 	//订单状态：1、预约中，2、使用中，3.延长使用中
 	private Integer billStatus;
-	//停车时长，申请停车时长，单位为小时，不能超过24小时
+	//停车时长，申请停车时长，单位为小时，不能超过24小时，包括延长停车时长
 	private Integer parkHours;
+	
+	//延长停车时长，默认为0
+	private Integer delayParkHours;
+	
+	//延长停车时长，转化为字符串,格式00:00:00
+	private String delayParkHoursString;
+	
 	//单价，每小时计费
 	private BigDecimal unitPrice;
 	//预算：=单价*停车时长
 	private BigDecimal budgetPrice;
 	//创建时间
 	private Date createTime;
+	//已经停车时长,格式00:00:00，当前时间-createTime
+	private String usedParkHoursString;
+	//车位最长停留时间
+	private String maxParkHoursString;
+	//可延长最长时间:maxParkHoursString-usedParkHoursString
+	private String maxDelayParkHoursString;
+	//记录实际的停车时长
+	private BigDecimal actualParkHours;
+	//预算：=单价*实际停车时长
+	private BigDecimal actualPrice;
+	//是否只查询快要到期的数据，默认否查询全部使用中的车位信息
+	private Integer isQuerySoonExpire = 0;
+	//车主信息
+	private Caruser caruser;
+	public Integer getIsQuerySoonExpire() {
+		return isQuerySoonExpire;
+	}
+	public void setIsQuerySoonExpire(Integer isQuerySoonExpire) {
+		this.isQuerySoonExpire = isQuerySoonExpire;
+	}
+	public Caruser getCaruser() {
+		return caruser;
+	}
+	public void setCaruser(Caruser caruser) {
+		this.caruser = caruser;
+	}
+	public BigDecimal getActualParkHours() {
+		return actualParkHours;
+	}
+	public void setActualParkHours(BigDecimal actualParkHours) {
+		this.actualParkHours = actualParkHours;
+	}
+	public BigDecimal getActualPrice() {
+		return actualPrice;
+	}
+	public void setActualPrice(BigDecimal actualPrice) {
+		this.actualPrice = actualPrice;
+	}
+	public String getMaxParkHoursString() {
+		return maxParkHoursString;
+	}
+	public void setMaxParkHoursString(String maxParkHoursString) {
+		this.maxParkHoursString = maxParkHoursString;
+	}
+	public String getMaxDelayParkHoursString() {
+		return maxDelayParkHoursString;
+	}
+	public void setMaxDelayParkHoursString(String maxDelayParkHoursString) {
+		this.maxDelayParkHoursString = maxDelayParkHoursString;
+	}
+	public String getUsedParkHoursString() {
+		return usedParkHoursString;
+	}
+	public void setUsedParkHoursString(String usedParkHoursString) {
+		this.usedParkHoursString = usedParkHoursString;
+	}
 	public String getOrderJnlNo() {
 		return orderJnlNo;
 	}
 	public void setOrderJnlNo(String orderJnlNo) {
 		this.orderJnlNo = orderJnlNo;
 	}
+	public Integer getDelayParkHours() {
+		return delayParkHours;
+	}
+	public void setDelayParkHours(Integer delayParkHours) {
+		this.delayParkHours = delayParkHours;
+	}
 	public String getUserId() {
 		return userId;
+	}
+	public String getSpaceOwnerUserId() {
+		return spaceOwnerUserId;
+	}
+	public void setSpaceOwnerUserId(String spaceOwnerUserId) {
+		this.spaceOwnerUserId = spaceOwnerUserId;
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
@@ -96,10 +173,29 @@ public class ParkingSpaceBill implements Serializable{
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
+	public String getDelayParkHoursString() {
+		return delayParkHoursString;
+	}
+	public void setDelayParkHoursString(String delayParkHoursString) {
+		if(delayParkHours != null) {
+			if(delayParkHours < 10) {
+				this.delayParkHoursString = "0" + delayParkHours + ":00:00";;
+			}else {
+				this.delayParkHoursString = delayParkHours+":00:00";
+			}
+		}else {
+			this.delayParkHoursString = delayParkHoursString;
+		}
+		
+	}
 	@Override
 	public String toString() {
-		return "ParkingSpaceBill [orderJnlNo=" + orderJnlNo + ", userId=" + userId + ", carno=" + carno + ", spaceno="
-				+ spaceno + ", billStatus=" + billStatus + ", parkHours=" + parkHours + ", unitPrice=" + unitPrice
-				+ ", budgetPrice=" + budgetPrice + ", createTime=" + createTime + "]";
+		return "ParkingSpaceBill [orderJnlNo=" + orderJnlNo + ", userId=" + userId + ", spaceOwnerUserId="
+				+ spaceOwnerUserId + ", carno=" + carno + ", spaceno=" + spaceno + ", billStatus=" + billStatus
+				+ ", parkHours=" + parkHours + ", delayParkHours=" + delayParkHours + ", delayParkHoursString="
+				+ delayParkHoursString + ", unitPrice=" + unitPrice + ", budgetPrice=" + budgetPrice + ", createTime="
+				+ createTime + ", usedParkHoursString=" + usedParkHoursString + ", maxParkHoursString="
+				+ maxParkHoursString + ", maxDelayParkHoursString=" + maxDelayParkHoursString + ", actualParkHours="
+				+ actualParkHours + ", actualPrice=" + actualPrice + "]";
 	}
 }

@@ -69,6 +69,12 @@
     			isauth         = #{isauth}
     	where userId=#{userId} and carno=#{carno}
 	</update>
+	<!-- 订单完成 -->
+	<update id="payOrderParkingSpace" parameterType="Caruser">
+    	update Caruser set
+    		   parkCount = parkCount + 1
+    	where userId=#{userId} and carno=#{carno}
+	</update>
 	
 	<!-- 删除车主信息,修改isauth为-1,需要同时更新编辑人和编辑时间 -->
 	<update id="deleteCaruser" parameterType="Caruser">
@@ -106,7 +112,7 @@
         	 </if>
         order by u.createTime desc
 	</select>
-		<!-- 根据条件查询车主数量 -->
+	<!-- 根据条件查询车主数量 -->
 	<select id="getCaruserCount" parameterType="Caruser" resultType="int">
 		select count(distinct car.userId)
 		from Caruser car, Baseuser u
@@ -245,6 +251,22 @@
 	            	 and z.zone = #{zone.zone}
 	        	  </if>
         	  </if>
+        	  <!-- 余额过滤条件 -->
+        	  <if test="isQueryNoEnoughMoney == 1">
+        	  		and exists(
+        	  			select * 
+        	  			from vParkingSpaceBillAndMoney vsbm
+        	  			where vsbm.userId = car.userId
+        	  			and   vsbm.carno = car.carno
+        	  			and   
+        	  			
+        	  			<![CDATA[ 
+        	  				vsbm.allmoney < actualPrice + ${@com.parkspace.util.Constants@FUTURE_HOURS_MONEY} * unitPrice
+        	  				
+        	  			]]>
+        	  			
+        	  		)
+        	  </if>
         order by u.createTime desc
 	</select>
 	<!-- 根据条件查询车主数量 -->
@@ -351,6 +373,22 @@
 	        	  <if test="zone.zone != null">
 	            	 and z.zone = #{zone.zone}
 	        	  </if>
+        	  </if>
+        	  <!-- 余额过滤条件 -->
+        	  <if test="isQueryNoEnoughMoney == 1">
+        	  		and exists(
+        	  			select * 
+        	  			from vParkingSpaceBillAndMoney vsbm
+        	  			where vsbm.userId = car.userId
+        	  			and   vsbm.carno = car.carno
+        	  			and   
+        	  			
+        	  			<![CDATA[ 
+        	  				vsbm.allmoney < actualPrice + ${@com.parkspace.util.Constants@FUTURE_HOURS_MONEY} * unitPrice
+        	  				
+        	  			]]>
+        	  			
+        	  		)
         	  </if>
         order by u.createTime desc
 	</select>

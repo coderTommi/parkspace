@@ -2,6 +2,10 @@ package com.parkspace.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -30,6 +34,9 @@ public class TestParkingSpaceController extends TestBaseController{
 	public String userId = "1";
 	
 	public String spaceno = "1";
+	
+	public String orderJnlNo = "5aeb1df5-1284-440d-9428-9556d08e49cc";
+	
 	@Test
 	public void getAllParkingSpace() {
 		ParkingSpace parkingSpace = new ParkingSpace();
@@ -99,18 +106,188 @@ public class TestParkingSpaceController extends TestBaseController{
 	
 	@Test
 	public void getEnableParkingSpace() {
-		ParkingSpace parkingSpace = new ParkingSpace();
-		parkingSpace.setParkHours(10);
-		parkingSpace.setComid(comid);
-		
-		ObjectMapper mapper = new ObjectMapper(); 
 		try {
-			String requestJson = mapper.writeValueAsString(parkingSpace); 
 			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/getenableparkingspace")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(requestJson)
 					.param("page", "1")
-					.param("pageSize", "10"))
+					.param("pageSize", "10")
+					.param("comid", comid)
+					.param("parkHours", "10")
+					)
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void orderParkingSpace() {
+		try {
+			String json = mvc.perform(MockMvcRequestBuilders.post("/v1/parkingspace/orderparkingspace")
+					.param("spaceno", spaceno)
+					.param("parkHours", "1")
+					.param("userId", userId)
+					.param("carno", "aaa")
+					.param("unitPrice", "1.5")
+					)
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void getParkingSpaceParkHoursBySpaceno() {
+		try {
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/getparkingspaceparkhoursbyspaceno")
+					.param("spaceno", spaceno)
+					)
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void cancelOrderParkingSpace() {
+		try {
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/cancelorderparkingspace")
+					.param("orderJnlNo", orderJnlNo)
+					)
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testDate() throws Exception {
+		SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date createTime = simpleFormat.parse("2017-10-03 16:00:31");
+		Date currentTime = new Date();
+		long longActualParkHours = currentTime.getTime() - createTime.getTime();
+		double actualParkHoursTemp = (double)longActualParkHours/1000/60/60;
+		BigDecimal actualParkHours = new BigDecimal(actualParkHoursTemp).setScale(2, BigDecimal.ROUND_HALF_UP);
+		System.out.println(actualParkHoursTemp);
+		System.out.println(longActualParkHours);
+		System.out.println(actualParkHours);
+	}
+	
+	
+	@Test
+	public void confirmOrderParkingSpace() {
+		try {
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/confirmorderparkingspace")
+					.param("orderJnlNo", orderJnlNo)
+					)
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void getParkingSpaceBill() {
+		try {
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/getparkingspacebill")
+					.param("orderJnlNo", orderJnlNo)
+					)
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void delayOrderParkingSpace() {
+		try {
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/delayorderparkingspace")
+					.param("orderJnlNo", orderJnlNo)
+					.param("delayParkHours", "3")
+					)
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void payOrderParkingSpace() {
+		try {
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/payorderparkingspace")
+					.param("orderJnlNo", orderJnlNo)
+					)
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void getParkingSpaceUsedHistory() {
+		try {
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/getparkingspaceusedhistory")
+					.param("page", "1")
+					.param("pageSize", "10")
+					.param("spaceno", spaceno)
+					)
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void getParkingSpaceUsing() {
+		try {
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/getparkingspaceusing")
+					.param("page", "1")
+					.param("pageSize", "10")
+					.param("spaceno", spaceno)
+					)
+			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
+			.andDo(print())         //打印出请求和相应的内容  
+			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void getParkingSpaceSoonExpire() {
+		try {
+			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/getparkingspacesoonexpire")
+					.param("page", "1")
+					.param("pageSize", "10")
+					.param("spaceno", spaceno)
+					)
 			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
 			.andDo(print())         //打印出请求和相应的内容  
 			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  

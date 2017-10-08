@@ -64,4 +64,17 @@ public interface ICaruserService {
 	 */
 	public void addCaruser(Caruser caruser, String comid) 
 			throws ParkspaceServiceException;
+	
+	/**
+	 * @Title: getCaruser
+	 * <p>Description:
+	 * 根据用户编号和车牌号获取车主信息
+	 * </p>
+	 * @param     userId 用户编号
+	 * @param     carno 车牌号
+	 * @return Caruser    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:21:21</p>
+	 */
+	public Caruser getCaruser(String userId,String carno) ;
 }

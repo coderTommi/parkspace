@@ -12,6 +12,9 @@ public class Constants {
 	/** 业主预留时间,车位提前到期时间，单位是分钟 **/
 	public static int SO_RESERVE_TIME = 30;
 	
+	/** 未来几小时计算押金+余额是否满足支付，单位是小时 **/
+	public static int FUTURE_HOURS_MONEY = 24;
+	
 	/**
 	 * 错误码.
 	 * @author lidongliang
@@ -59,10 +62,17 @@ public class Constants {
 		/** 行政区域编号为不能空 **/
 		ZONEID_IS_NOT_NULL(20003),
 		/** 认证信息不能空 **/
-		APPROVE_IS_NOT_NULL(20004);
-		
-		;
-		
+		APPROVE_IS_NOT_NULL(20004),
+		/** 订单信息不能为空 **/
+		ORDER_IS_NOT_NULL(20005),
+		/** 该车位不能被预定 **/
+		SPACE_IS_NOT_ORDER(20006),
+		/** 订单状态不合法 **/
+		ORDER_STATUS_IS_ILLLEGAL(20007),
+		/** 该车位不能被使用 **/
+		SPACE_IS_NOT_USE(20008),
+		/** 车位不可延期使用,请重新选择车位会减少延期时间 **/
+		SPACENO_IS_NO_DELAY(20009);
 		
 		
 		/** 错误码 **/
