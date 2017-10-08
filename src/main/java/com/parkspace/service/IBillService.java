@@ -23,5 +23,7 @@ public interface IBillService {
 	public void updateWithoutTransaction(Bill bill) throws ParkspaceServiceException, Exception;
 	
 	public List<Bill> getList() throws ParkspaceServiceException, Exception;
+	
+	public List<Bill> getListByUserId(String userId)  throws ParkspaceServiceException, Exception;
 
 }

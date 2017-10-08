@@ -103,16 +103,6 @@ public interface IMoneyService {
 	 */
 	public void bonusOut(String userId, BigDecimal amt) throws ParkspaceServiceException, Exception;
 	/**
-	 * 查询收益明细
-	 * @Title: qryIncomeList
-	 * <p>Description:</p>
-	 * @param     参数
-	 * @return List<Bill>    返回类型
-	 * @throws
-	 * <p>CreateDate:2017年10月2日 上午10:21:07</p>
-	 */
-	public List<Bill> qryIncomeList(String userId,  Date beginDate, Date endDate) throws ParkspaceServiceException, Exception;
-	/**
 	 * 
 	 * @Title: qryIncomeDetailList
 	 * <p>Description:</p>

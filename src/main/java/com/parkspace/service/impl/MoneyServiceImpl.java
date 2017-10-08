@@ -287,12 +287,6 @@ public class MoneyServiceImpl implements IMoneyService {
 	}
 
 	@Override
-	public List<Bill> qryIncomeList(String userId, Date beginDate, Date endDate)
-			throws ParkspaceServiceException, Exception {
-		return null;
-	}
-
-	@Override
 	public List qryIncomeDetailList(String usrId, Date beginDate, Date endDate)
 			throws ParkspaceServiceException, Exception {
 		// TODO Auto-generated method stub

@@ -24,7 +24,8 @@ import com.parkspace.util.Constants;
  * @author lidongliang
  *
  */
-@Controller(("/bill"))
+@Controller
+@RequestMapping("/bill")
 public class BillController {
 	
 	private static Log log = LogFactory.getLog(BillController.class);
@@ -33,7 +34,7 @@ public class BillController {
 	
 	/**
 	 * 查询账户详情
-	 * ex: http://localhost:8080/parkspace/wallet/{telePhone}
+	 * ex: http://localhost:8080/parkspace/bill/{telePhone}
 	 * @param telePhone
 	 * @return
 	 */

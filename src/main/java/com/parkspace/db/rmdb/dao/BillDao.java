@@ -41,5 +41,15 @@ public interface BillDao {
 	 * @return
 	 */
 	public List<Bill> getBills(Bill bill);
+	/**
+	 * 查询用户收付款信息
+	 * @Title: getByPayeeOrPayer
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return List<Bill>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月8日 上午9:34:55</p>
+	 */
+	public List<Bill> getByPayeeOrPayer(Bill bill);
 	
 }

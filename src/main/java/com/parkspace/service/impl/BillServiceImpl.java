@@ -56,5 +56,14 @@ public class BillServiceImpl implements IBillService {
 	public List<Bill> getList() throws ParkspaceServiceException, Exception {
 		return null;
 	}
-
+	
+	@Override
+	public List<Bill> getListByUserId(String userId) throws ParkspaceServiceException, Exception {
+		Bill bill = new Bill();
+		bill.setPayee(userId);
+		bill.setPayer(userId);
+		List<Bill> list = billDao.getByPayeeOrPayer(bill);
+		return list;
+	}
+	
 }

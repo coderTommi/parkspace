@@ -73,4 +73,31 @@
        	 </if>
 		where billId = #{billId}
 	</update>
+	
+	<!-- 查询用户收付款信息账单 -->
+	<select id="getByPayeeOrPayer" parameterType="Bill" resultType="Bill">
+		select * from bill where 1=1
+			 <if test="payer != null and payee != null">
+            	and (payer = #{payer} or payee = #{payee} )
+        	 </if>
+        	 <if test="billId != null">
+            	and billId = #{billId}
+        	 </if>
+        	 <if test="billType != null">
+            	and billType = #{billType}
+        	 </if>        	 
+        	 <if test="transDate != null">
+            	and transDate = #{transDate}
+        	 </if>        	 
+        	 <if test="state != null">
+            	and state = #{state}
+        	 </if>
+        	 <if test="orderJnlno != null">
+            	and orderJnlno = #{orderJnlno}
+        	 </if>
+        	 <if test="remoteJnlNo != null">
+        	 	and remoteJnlNo = #{remoteJnlNo}
+        	 </if>
+        	 order by transtime desc
+	</select>	
 </mapper>
