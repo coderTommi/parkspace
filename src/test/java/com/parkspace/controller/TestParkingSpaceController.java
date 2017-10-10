@@ -35,7 +35,7 @@ public class TestParkingSpaceController extends TestBaseController{
 	
 	public String spaceno = "1";
 	
-	public String orderJnlNo = "5aeb1df5-1284-440d-9428-9556d08e49cc";
+	public String orderJnlNo = "ffb6a8a1-3de1-4d95-a2aa-e8b67e8ab063";
 	
 	@Test
 	public void getAllParkingSpace() {
@@ -111,7 +111,7 @@ public class TestParkingSpaceController extends TestBaseController{
 					.param("page", "1")
 					.param("pageSize", "10")
 					.param("comid", comid)
-					.param("parkHours", "10")
+					.param("parkHours", "2")
 					)
 			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
 			.andDo(print())         //打印出请求和相应的内容  
@@ -127,10 +127,10 @@ public class TestParkingSpaceController extends TestBaseController{
 		try {
 			String json = mvc.perform(MockMvcRequestBuilders.post("/v1/parkingspace/orderparkingspace")
 					.param("spaceno", spaceno)
-					.param("parkHours", "1")
+					.param("parkHours", "3")
 					.param("userId", userId)
 					.param("carno", "aaa")
-					.param("unitPrice", "1.5")
+					.param("unitPrice", "2")
 					)
 			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
 			.andDo(print())         //打印出请求和相应的内容  
@@ -220,7 +220,7 @@ public class TestParkingSpaceController extends TestBaseController{
 		try {
 			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/delayorderparkingspace")
 					.param("orderJnlNo", orderJnlNo)
-					.param("delayParkHours", "3")
+					.param("delayParkHours", "1")
 					)
 			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
 			.andDo(print())         //打印出请求和相应的内容  

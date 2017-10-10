@@ -61,6 +61,19 @@ public interface ParkingSpaceBillDao {
 	 * <p>CreateDate:2017年9月23日 下午9:15:51</p>
 	 */
 	public void delayParkingSpaceBill(ParkingSpaceBill parkingSpaceBill);
+	
+	/**
+	 * @Title: payParkingSpaceBill
+	 * <p>Description:
+	 * 24小时结算一次订单
+	 * </p>
+	 * @param     parkingSpaceBill 车位订单信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:15:51</p>
+	 */
+	public void payParkingSpaceBill(ParkingSpaceBill parkingSpaceBill);
+	
 	/**
 	 * @Title: deleteParkingSpaceBill
 	 * <p>Description:

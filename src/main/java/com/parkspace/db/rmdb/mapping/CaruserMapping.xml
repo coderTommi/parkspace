@@ -262,13 +262,13 @@
         	  			from vParkingSpaceBillAndMoney vsbm
         	  			where vsbm.userId = car.userId
         	  			and   vsbm.carno = car.carno
-        	  			and   
+        	  			<!-- <![CDATA[ 
+        	  				and vsbm.allmoney < actualPrice + ${@com.parkspace.util.Constants@FUTURE_HOURS_MONEY} * unitPrice
+        	  			]]> -->
         	  			
         	  			<![CDATA[ 
-        	  				vsbm.allmoney < actualPrice + ${@com.parkspace.util.Constants@FUTURE_HOURS_MONEY} * unitPrice
-        	  				
+        	  				and vsbm.availableMoney < maxPriceAllDay
         	  			]]>
-        	  			
         	  		)
         	  </if>
         order by u.createTime desc
@@ -385,11 +385,13 @@
         	  			from vParkingSpaceBillAndMoney vsbm
         	  			where vsbm.userId = car.userId
         	  			and   vsbm.carno = car.carno
-        	  			and   
+        	  			
+        	  			<!-- <![CDATA[ 
+        	  				and vsbm.allmoney < actualPrice + ${@com.parkspace.util.Constants@FUTURE_HOURS_MONEY} * unitPrice
+        	  			]]> -->
         	  			
         	  			<![CDATA[ 
-        	  				vsbm.allmoney < actualPrice + ${@com.parkspace.util.Constants@FUTURE_HOURS_MONEY} * unitPrice
-        	  				
+        	  				and vsbm.availableMoney < maxPriceAllDay
         	  			]]>
         	  			
         	  		)

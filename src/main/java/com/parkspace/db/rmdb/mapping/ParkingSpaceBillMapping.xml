@@ -3,9 +3,9 @@
 <mapper namespace="com.parkspace.db.rmdb.dao.ParkingSpaceBillDao">
 	<!-- 根据订单编号获取车位订单信息 -->
 	<select id="getParkingSpaceBill" parameterType="string" resultType="ParkingSpaceBill">
-		select t.*, 
-			   replace(TIMEDIFF(now(),t.createTime),'.000000','') as usedParkHoursString
-		from ParkingSpaceBill t where orderJnlNo=#{orderJnlNo}
+		select t.*
+		from vParkingSpaceBill t 
+		where orderJnlNo=#{orderJnlNo}
 	</select>
 	<!-- 保存车位订单信息，id自动生成,在service层返回主键id -->
 	<insert id="addParkingSpaceBill" parameterType="ParkingSpaceBill">
@@ -20,7 +20,9 @@
 				budgetPrice,
 				createTime,
 				delayParkHours,
-				spaceOwnerUserId
+				spaceOwnerUserId,
+				lastPayTime,
+				payedMoney
     		) 
          values(
        			#{orderJnlNo},
@@ -33,7 +35,9 @@
        			#{budgetPrice},
        			#{createTime},
        			#{delayParkHours},
-       			#{spaceOwnerUserId}
+       			#{spaceOwnerUserId},
+       			#{lastPayTime},
+       			#{payedMoney}
          )
 	</insert>
 	
@@ -63,6 +67,14 @@
             		spaceOwnerUserId   = #{spaceOwnerUserId}
         	 	</if>
         	 	
+        	 	<if test="lastPayTime != null">
+            		lastPayTime   = #{lastPayTime}
+        	 	</if>
+        	 	
+        	 	<if test="payedMoney != null">
+            		payedMoney   = #{payedMoney}
+        	 	</if>
+        	 	
         	 </trim>
     	where orderJnlNo = #{orderJnlNo}
 	</update>
@@ -83,15 +95,22 @@
     	where orderJnlNo = #{orderJnlNo}
 	</update>
 	
+	<!-- 结算 -->
+	<update id="payParkingSpaceBill" parameterType="ParkingSpaceBill">
+    	update ParkingSpaceBill
+    		set lastPayTime = now(),
+    			payedMoney = payedMoney + #{payedMoney}
+    	where orderJnlNo = #{orderJnlNo}
+	</update>
+	
 	<!-- 删除车位订单信息，数据保存到历史订单中 -->
 	<delete id="deleteParkingSpaceBill" parameterType="String">
     	delete from ParkingSpaceBill where orderJnlNo = #{orderJnlNo}
 	</delete>
 	<!-- 根据条件查询车位订单信息 -->
 	<select id="getParkingSpaceBillList" parameterType="ParkingSpaceBill" resultType="ParkingSpaceBill">
-		select t.* ,
-			   replace(TIMEDIFF(now(),t.createTime),'.000000','') as usedParkHoursString
-		from ParkingSpaceBill t where 1=1
+		select t.*
+		from vParkingSpaceBill t where 1=1
 			 <if test="orderJnlNo != null">
             	and orderJnlNo = #{orderJnlNo}
         	 </if>

@@ -50,6 +50,26 @@ public class ParkingSpaceBillHis implements Serializable{
 	private BigDecimal actualPrice;
 	//延长停车时长，默认为0
 	private Integer delayParkHours;
+	
+	//上次结算时间:24小时结算一次，并且记录该时间，同时更新结算金额
+	private Date lastPayTime;
+	//已结算金额：截至目前一共结算的金额
+	private BigDecimal payedMoney;
+	
+	
+	
+	public Date getLastPayTime() {
+		return lastPayTime;
+	}
+	public void setLastPayTime(Date lastPayTime) {
+		this.lastPayTime = lastPayTime;
+	}
+	public BigDecimal getPayedMoney() {
+		return payedMoney;
+	}
+	public void setPayedMoney(BigDecimal payedMoney) {
+		this.payedMoney = payedMoney;
+	}
 	public String getSpaceOwnerUserId() {
 		return spaceOwnerUserId;
 	}
@@ -148,7 +168,7 @@ public class ParkingSpaceBillHis implements Serializable{
 				+ ", spaceOwnerUserId=" + spaceOwnerUserId + ", carno=" + carno + ", spaceno=" + spaceno
 				+ ", billStatus=" + billStatus + ", parkHours=" + parkHours + ", unitPrice=" + unitPrice
 				+ ", budgetPrice=" + budgetPrice + ", createTime=" + createTime + ", actualParkHours=" + actualParkHours
-				+ ", actualPrice=" + actualPrice + ", delayParkHours=" + delayParkHours + ", recodeTime=" + recodeTime
-				+ "]";
+				+ ", actualPrice=" + actualPrice + ", delayParkHours=" + delayParkHours + ", lastPayTime=" + lastPayTime
+				+ ", payedMoney=" + payedMoney + ", recodeTime=" + recodeTime + "]";
 	}
 }

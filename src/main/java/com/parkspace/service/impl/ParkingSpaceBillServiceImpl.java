@@ -54,19 +54,6 @@ public class ParkingSpaceBillServiceImpl implements IParkingSpaceBillService{
 					"订单信息不能为空");
 		}
 		if(parkingSpaceBill != null) {
-			
-			//计算小时差：实际停车时长
-			Date createTime = parkingSpaceBill.getCreateTime();
-			Date currentTime = new Date();
-			long longActualParkHours = currentTime.getTime() - createTime.getTime();
-			double actualParkHoursTemp = (double)longActualParkHours/1000/60/60;
-			BigDecimal actualParkHours = new BigDecimal(actualParkHoursTemp).setScale(2, BigDecimal.ROUND_HALF_UP);
-			parkingSpaceBill.setActualParkHours(actualParkHours);
-			//实际价格：=单价*实际停车时长
-			BigDecimal unitPrice = parkingSpaceBill.getUnitPrice();
-			parkingSpaceBill.setActualPrice(unitPrice.multiply(actualParkHours));
-			
-			
 			String spaceno = parkingSpaceBill.getSpaceno();
 			//获取最大停车时间
 			String maxParkHoursString = "";

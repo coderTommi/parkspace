@@ -1,6 +1,5 @@
 package com.parkspace.service.impl;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -55,30 +54,25 @@ public class ParkingSpaceBillHisServiceImpl implements IParkingSpaceBillHisServi
 	public void addParkingSpaceBillHis(ParkingSpaceBill parkingSpaceBill) {
 		if(parkingSpaceBill != null) {
 			ParkingSpaceBillHis parkingSpaceBillHis = new ParkingSpaceBillHis();
-			//计算小时差：实际停车时长
-			Date createTime = parkingSpaceBill.getCreateTime();
-			Date currentTime = new Date();
-			long longActualParkHours = currentTime.getTime() - createTime.getTime();
-			double actualParkHoursTemp = (double)longActualParkHours/1000/60/60;
-			BigDecimal actualParkHours = new BigDecimal(actualParkHoursTemp).setScale(2, BigDecimal.ROUND_HALF_UP);
-			parkingSpaceBillHis.setActualParkHours(actualParkHours);
-			//实际价格：=单价*实际停车时长
-			BigDecimal unitPrice = parkingSpaceBill.getUnitPrice();
-			parkingSpaceBillHis.setActualPrice(unitPrice.multiply(actualParkHours));
+			
+			parkingSpaceBillHis.setActualParkHours(parkingSpaceBill.getActualParkHours());
+			parkingSpaceBillHis.setActualPrice(parkingSpaceBill.getActualPrice());
 			
 			parkingSpaceBillHis.setBillStatus(parkingSpaceBill.getBillStatus());
 			parkingSpaceBillHis.setBudgetPrice(parkingSpaceBill.getBudgetPrice());
 			parkingSpaceBillHis.setCarno(parkingSpaceBill.getCarno());
-			parkingSpaceBillHis.setCreateTime(createTime);
+			parkingSpaceBillHis.setCreateTime(parkingSpaceBill.getCreateTime());
 			parkingSpaceBillHis.setDelayParkHours(parkingSpaceBill.getDelayParkHours());
 			parkingSpaceBillHis.setOrderJnlNo(parkingSpaceBill.getOrderJnlNo());
 			parkingSpaceBillHis.setParkHours(parkingSpaceBill.getParkHours());
 			parkingSpaceBillHis.setRecodeTime(new Date());
 			parkingSpaceBillHis.setSpaceno(parkingSpaceBill.getSpaceno());
-			parkingSpaceBillHis.setUnitPrice(unitPrice);
+			parkingSpaceBillHis.setUnitPrice(parkingSpaceBill.getUnitPrice());
 			parkingSpaceBillHis.setUserId(parkingSpaceBill.getUserId());
 			parkingSpaceBillHis.setUUID(UUID.randomUUID().toString());
 			parkingSpaceBillHis.setSpaceOwnerUserId(parkingSpaceBill.getSpaceOwnerUserId());
+			parkingSpaceBillHis.setLastPayTime(parkingSpaceBill.getLastPayTime());
+			parkingSpaceBillHis.setPayedMoney(parkingSpaceBill.getPayedMoney());
 			parkingSpaceBillHisDao.addParkingSpaceBillHis(parkingSpaceBillHis);
 		}
 	}

@@ -16,6 +16,8 @@ public class Constants {
 	public static int FUTURE_HOURS_MONEY = 24;
 	/** 报表统计月份**/
 	public static int REPORT_NEAR_COUNT = 6;
+	/** 结算周期 **/
+	public static int PAY_INTERVAL_HOUR = 24;
 	
 	/**
 	 * 错误码.

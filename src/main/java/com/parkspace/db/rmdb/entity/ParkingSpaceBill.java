@@ -51,6 +51,13 @@ public class ParkingSpaceBill implements Serializable{
 	private BigDecimal budgetPrice;
 	//创建时间
 	private Date createTime;
+	//上次结算时间:24小时结算一次，并且记录该时间，同时更新结算金额
+	private Date lastPayTime;
+	//已结算金额：截至目前一共结算的金额
+	private BigDecimal payedMoney;
+	
+	
+	
 	//已经停车时长,格式00:00:00，当前时间-createTime
 	private String usedParkHoursString;
 	//车位最长停留时间
@@ -59,12 +66,54 @@ public class ParkingSpaceBill implements Serializable{
 	private String maxDelayParkHoursString;
 	//记录实际的停车时长
 	private BigDecimal actualParkHours;
-	//预算：=单价*实际停车时长
+	//实际价格：=单价*实际停车时长
 	private BigDecimal actualPrice;
 	//是否只查询快要到期的数据，默认否查询全部使用中的车位信息
 	private Integer isQuerySoonExpire = 0;
+	
+	//最大费用：一天停车最多消费多少钱，默认0
+	private BigDecimal maxPriceAllDay;
+	//免费停车时长：单位分钟,默认0
+	private Integer freeParkingMinutes;
+	//免费费用
+	private BigDecimal freePrice;
+	
 	//车主信息
 	private Caruser caruser;
+	
+	
+	
+	
+	public BigDecimal getMaxPriceAllDay() {
+		return maxPriceAllDay;
+	}
+	public void setMaxPriceAllDay(BigDecimal maxPriceAllDay) {
+		this.maxPriceAllDay = maxPriceAllDay;
+	}
+	public Integer getFreeParkingMinutes() {
+		return freeParkingMinutes;
+	}
+	public void setFreeParkingMinutes(Integer freeParkingMinutes) {
+		this.freeParkingMinutes = freeParkingMinutes;
+	}
+	public BigDecimal getFreePrice() {
+		return freePrice;
+	}
+	public void setFreePrice(BigDecimal freePrice) {
+		this.freePrice = freePrice;
+	}
+	public Date getLastPayTime() {
+		return lastPayTime;
+	}
+	public void setLastPayTime(Date lastPayTime) {
+		this.lastPayTime = lastPayTime;
+	}
+	public BigDecimal getPayedMoney() {
+		return payedMoney;
+	}
+	public void setPayedMoney(BigDecimal payedMoney) {
+		this.payedMoney = payedMoney;
+	}
 	public Integer getIsQuerySoonExpire() {
 		return isQuerySoonExpire;
 	}
@@ -194,8 +243,11 @@ public class ParkingSpaceBill implements Serializable{
 				+ spaceOwnerUserId + ", carno=" + carno + ", spaceno=" + spaceno + ", billStatus=" + billStatus
 				+ ", parkHours=" + parkHours + ", delayParkHours=" + delayParkHours + ", delayParkHoursString="
 				+ delayParkHoursString + ", unitPrice=" + unitPrice + ", budgetPrice=" + budgetPrice + ", createTime="
-				+ createTime + ", usedParkHoursString=" + usedParkHoursString + ", maxParkHoursString="
-				+ maxParkHoursString + ", maxDelayParkHoursString=" + maxDelayParkHoursString + ", actualParkHours="
-				+ actualParkHours + ", actualPrice=" + actualPrice + "]";
+				+ createTime + ", lastPayTime=" + lastPayTime + ", payedMoney=" + payedMoney + ", usedParkHoursString="
+				+ usedParkHoursString + ", maxParkHoursString=" + maxParkHoursString + ", maxDelayParkHoursString="
+				+ maxDelayParkHoursString + ", actualParkHours=" + actualParkHours + ", actualPrice=" + actualPrice
+				+ ", isQuerySoonExpire=" + isQuerySoonExpire + ", maxPriceAllDay=" + maxPriceAllDay
+				+ ", freeParkingMinutes=" + freeParkingMinutes + ", freePrice=" + freePrice + ", caruser=" + caruser
+				+ "]";
 	}
 }
