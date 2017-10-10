@@ -58,50 +58,10 @@ public class ParkingSpace implements Serializable{
 	private Date modifyTime;
 	//小区基本信息
 	private Community community;
-	//区域ID
-//	private String zoneid;
-	//小区名称
-//	private String comname;
-	//小区地址
-//	private String address;
-	//状态  0：未开放  1：封闭式小区，2：开放式小区,默认0，如果是-1表示禁用
-//	private Integer isenable;
-	//状态查询条件
-//	private Integer[] isenableQuery;
-	
 	//行政区域基本信息
 	private Zone zone;
-	//区域名称
-//	private String zonename;
-	//状态  0：未开放  1：已开放，-1,表示删除，默认0
-//	private Integer zoneisenable;
-	//行政区域状态查询
-//	private Integer[] zoneIsenableQuery;
-	//省编码
-//	private String province;
-	//市
-//	private String city;
-	//区
-//	private String zone;
-	
 	//用户的基本信息
 	private SpaceOwner spaceOwnerUser;
-	//用户ID
-//	private String userId;
-	//用户名称
-//	private String userName;
-	//真实姓名
-//	private String realName;
-	//昵称
-//	private String nickName;
-	//电话
-//	private String telePhone;
-	//证件类型
-//	private String idNo;
-	//微信
-//	private String weixinAccount;
-	//头像
-//	private String avator;
 	//停车时长
 	private Integer parkHours;
 	//转化为字符串，停车时长,格式00:00:00

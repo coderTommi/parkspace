@@ -44,6 +44,11 @@ alter table Caruser
 
 drop table if exists Caruser;
 
+alter table ChargeStrategy
+   drop primary key;
+
+drop table if exists ChargeStrategy;
+
 drop index Community_ix1 on Community;
 
 alter table Community
@@ -91,6 +96,11 @@ alter table ParkingSpaceBillHis
    drop primary key;
 
 drop table if exists ParkingSpaceBillHis;
+
+alter table PrivilegeTicket
+   drop primary key;
+
+drop table if exists PrivilegeTicket;
 
 alter table PropertyMgmtUser
    drop primary key;
@@ -246,12 +256,27 @@ create index caruser_ix1 on Caruser
 );
 
 /*==============================================================*/
+/* Table: ChargeStrategy                                        */
+/*==============================================================*/
+create table ChargeStrategy
+(
+   strategyType         int(2) not null comment '策略类型，定义为主键，1：扣费策略，2：资金分配策略',
+   strategyComment      varchar(100) not null comment '策略内容'
+);
+
+alter table ChargeStrategy comment '收费策略(ChargeStrategy)：用来记录扣款策略和资金分配策略';
+
+alter table ChargeStrategy
+   add primary key (strategyType);
+
+/*==============================================================*/
 /* Table: Community                                             */
 /*==============================================================*/
 create table Community
 (
    comid                varchar(64) not null comment '小区ID',
    price                decimal(15, 2) not null default 0 comment '单价，车位单价按小时计算',
+   maxPriceAllDay       decimal(15, 2) not null default 0 comment '最大费用：一天停车最多消费多少钱，默认0',
    zoneid               varchar(64) comment '区域ID',
    comname              varchar(128) not null comment '小区名称',
    address              varchar(256) comment '小区地址',
@@ -260,7 +285,8 @@ create table Community
    createBy             varchar(30) not null comment '创建人',
    createTime           datetime not null comment '创建时间',
    modifyBy             varchar(30) not null comment '修改人',
-   modifyTime           datetime not null comment '修改时间'
+   modifyTime           datetime not null comment '修改时间',
+   freeParkingMinutes   int(10) not null default 0 comment '免费停车时长：单位分钟,默认0'
 );
 
 alter table Community comment '小区表:记录小区的基本信息';
@@ -459,6 +485,24 @@ create index t_parking_space_bill_his_ix4 on ParkingSpaceBillHis
 );
 
 /*==============================================================*/
+/* Table: PrivilegeTicket                                       */
+/*==============================================================*/
+create table PrivilegeTicket
+(
+   id                   varchar(64) not null comment 'id',
+   userId               varchar(64) comment '用户id',
+   amt                  decimal(15,2) comment '金额',
+   createDate           date comment '生成时间',
+   endDate              date comment '截止日期',
+   used                 int(1) comment '是否使用'
+);
+
+alter table PrivilegeTicket comment '优惠券(PrivilegeTicket)';
+
+alter table PrivilegeTicket
+   add primary key (id);
+
+/*==============================================================*/
 /* Table: PropertyMgmtUser                                      */
 /*==============================================================*/
 create table PropertyMgmtUser
@@ -649,18 +693,20 @@ FROM
 create  VIEW      vCommunity
   as
 SELECT
-	t.price,
 	t.comid,
 	t.zoneid,
 	t.comname,
 	t.address,
 	t.isenable,
+	t.price,
+	t.maxPriceAllDay,
+	t.freeParkingMinutes,
+	DATE_FORMAT(t.createTime, '%Y%m') AS createTimeYearMonth,
 	t.memo,
 	t.createBy,
 	t.createTime,
 	t.modifyBy,
-	t.modifyTime,
-	DATE_FORMAT(t.createTime, '%Y%m') AS createTimeYearMonth
+	t.modifyTime
 FROM
 	community t;
 
@@ -905,6 +951,9 @@ alter table ParkingSpaceBill add constraint FK_sb_ref_cu foreign key (userId, ca
 
 alter table ParkingSpaceBill add constraint FK_sb_ref_so foreign key (spaceno)
       references SpaceOwner (spaceno) on delete restrict on update restrict;
+
+alter table PrivilegeTicket add constraint FK_pt_ref_user foreign key (userId)
+      references Baseuser (userId) on delete restrict on update restrict;
 
 alter table PropertyMgmtUser add constraint FK_pu_Ref_baseuser foreign key (userId)
       references Baseuser (userId) on delete restrict on update restrict;

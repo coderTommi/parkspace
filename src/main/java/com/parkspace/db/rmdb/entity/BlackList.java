@@ -38,27 +38,6 @@ public class BlackList implements Serializable{
 	//用户基本信息
 	private BaseUser baseUser;
 	
-	
-	//用户名称
-//	private String userName;
-	//昵称
-//	private String nickName;
-	//'手机号码
-//	private String telephone;
-	//是否是管理员 0:否  1：是
-//	private Integer isAdmin;
-	//证件类型 0: 身份证
-//	private Integer idtype;
-	//证件号码
-//	private String idno;
-	//用户状态 0：正常	1：异常锁定,2：未交押金,3；已交押金
-//	private String state;
-	//微信账号,用来汇款的账号
-//	private String weixinAccount;
-	//头像
-//	private String avator;
-	
-	
 	@Override
 	public String toString() {
 		return "BlackList [UUID=" + UUID + ", userId=" + userId + ", isCancel=" + isCancel + ", memo=" + memo

@@ -38,7 +38,8 @@ public class Caruser extends BaseUser implements Serializable{
 	private Integer isQueryNoEnoughMoney = 0;
 	//认证时间，认证之后记录的时间，不可修改
 	private Date certifiedTime;
-	
+	//钱包信息
+	private Wallet wallet;
 	
 	public Date getCertifiedTime() {
 		return certifiedTime;
@@ -58,8 +59,7 @@ public class Caruser extends BaseUser implements Serializable{
 	public void setParkCount(Integer parkCount) {
 		this.parkCount = parkCount;
 	}
-	//钱包信息
-	private Wallet wallet;
+	
 	
 	public Wallet getWallet() {
 		return wallet;

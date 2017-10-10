@@ -3,7 +3,19 @@
 <mapper namespace="com.parkspace.db.rmdb.dao.CommunityDao">
 	<!-- 小区信息字段 -->
 	<sql id="Community_Column">
-		c.comid,c.zoneid,c.comname,c.address,c.isenable,c.memo,c.createBy,c.createTime,c.modifyBy,c.modifyTime,c.price
+		c.comid,
+		c.zoneid,
+		c.comname,
+		c.address,
+		c.isenable,
+		c.memo,
+		c.createBy,
+		c.createTime,
+		c.modifyBy,
+		c.modifyTime,
+		c.price,
+		c.maxPriceAllDay,
+		c.freeParkingMinutes
 	</sql>
 	<!-- 行政区域信息字段 -->
 	<sql id="Zone_Column">
@@ -22,7 +34,10 @@
 	
 	<!-- 根据id查询小区信息 -->
 	<select id="getCommunity" parameterType="string" resultType="Community">
-		select * from community where comid=#{comid}
+		select 
+			<include refid="Community_Column"/>
+		from community c
+		where comid = #{comid}
 	</select>
 	<!-- 新增小区信息 -->
 	<insert id="addCommunity" parameterType="Community">
@@ -37,7 +52,9 @@
     			createTime,
     			modifyBy,
     			modifyTime,
-    			price
+    			price,
+    			maxPriceAllDay,
+    			freeParkingMinutes
     		) 
     	 values(
     	 		#{comid},
@@ -50,7 +67,9 @@
     	 		#{createTime},
     	 		#{modifyBy},
     	 		#{modifyTime},
-    	 		#{price}
+    	 		#{price},
+    	 		#{maxPriceAllDay},
+    	 		#{freeParkingMinutes}
     	 	)
 	</insert>
 	
@@ -80,7 +99,13 @@
 				modifyTime     = #{modifyTime},
 			</if>
 			<if test="price != null">
-				price     = #{price}
+				price     = #{price},
+			</if>
+			<if test="maxPriceAllDay != null">
+				maxPriceAllDay     = #{maxPriceAllDay},
+			</if>
+			<if test="freeParkingMinutes != null">
+				freeParkingMinutes     = #{freeParkingMinutes}
 			</if>
 		</trim>
     	where comid = #{comid}
@@ -114,6 +139,12 @@
         	 </if>
         	 <if test="price != null">
             	and price = #{price}
+        	 </if>
+        	 <if test="maxPriceAllDay != null">
+            	and maxPriceAllDay = #{maxPriceAllDay}
+        	 </if>
+        	 <if test="freeParkingMinutes != null">
+            	and freeParkingMinutes = #{freeParkingMinutes}
         	 </if>
         	 <if test="createTime != null">
             	<![CDATA[ and createTime >= #{createTime} ]]>
@@ -155,6 +186,12 @@
         	  	 	<foreach item="item" index="index" collection="isenableQuery" open="(" separator="," close=")">  
  						#{item}  
 					</foreach>
+        	  </if>
+        	  <if test="maxPriceAllDay != null">
+            	 and maxPriceAllDay = #{maxPriceAllDay}
+        	  </if>
+        	  <if test="freeParkingMinutes != null">
+            	 and freeParkingMinutes = #{freeParkingMinutes}
         	  </if>
         	  <if test="createTime != null">
             	 <![CDATA[ and c.createTime >= #{createTime} ]]>

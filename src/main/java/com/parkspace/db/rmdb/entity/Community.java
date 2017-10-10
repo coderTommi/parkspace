@@ -47,7 +47,24 @@ public class Community implements Serializable{
 	private Date modifyTime;
 	//单价
 	private BigDecimal price;
+	//最大费用：一天停车最多消费多少钱，默认0
+	private BigDecimal maxPriceAllDay;
+	//免费停车时长：单位分钟,默认0
+	private Integer freeParkingMinutes;
 	
+	
+	public BigDecimal getMaxPriceAllDay() {
+		return maxPriceAllDay;
+	}
+	public void setMaxPriceAllDay(BigDecimal maxPriceAllDay) {
+		this.maxPriceAllDay = maxPriceAllDay;
+	}
+	public Integer getFreeParkingMinutes() {
+		return freeParkingMinutes;
+	}
+	public void setFreeParkingMinutes(Integer freeParkingMinutes) {
+		this.freeParkingMinutes = freeParkingMinutes;
+	}
 	public BigDecimal getPrice() {
 		return price;
 	}
@@ -56,18 +73,6 @@ public class Community implements Serializable{
 	}
 	//行政区域基本信息
 	private Zone zone;
-	//区域名称
-//	private String zonename;
-	//状态  0：未开放  1：已开放，-1,表示删除，默认0
-//	private Integer zoneisenable;
-	//行政区域状态查询
-//	private Integer[] zoneIsenableQuery;
-	//省编码
-//	private String province;
-	//市
-//	private String city;
-	//区
-//	private String zone;
 	
 	public String getComid() {
 		return comid;

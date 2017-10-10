@@ -29,7 +29,7 @@ public class TestCommunityController extends TestBaseController{
 	@Resource
 	private ICommunityService communityService;
 	public String zoneid = "4e73503c-7052-41bc-a716-b8b2d2e32e5e";
-	public String comid = "b6a0a6e7-f522-4c4f-9dc8-33897f8a6da4";
+	public String comid = "16bafa86-7ff2-478a-8e67-c0fb04a11312";
 	@Test
 	public void getAllCommunity() {
 		Community community = new Community();
@@ -74,14 +74,17 @@ public class TestCommunityController extends TestBaseController{
 	public void addCommunity() {
 		
 		Community community = new Community();
-		community.setAddress("济洛路王府庄园1");
-		community.setComname("王府庄园1");
+		community.setAddress("师范路金牛小区");
+		community.setComname("金牛小区");
 		community.setCreateBy("孙辽东创建1");
 		//默认开通
 		community.setMemo("测试添加小区1");
 		community.setModifyBy("孙辽东编辑1");
 		community.setPrice(new BigDecimal(10));
 		community.setZoneid(zoneid);
+		community.setPrice(new BigDecimal(2));//单价
+		community.setFreeParkingMinutes(60);//免费一小时
+		community.setMaxPriceAllDay(new BigDecimal(16));//一条最多16元
 		
 		ObjectMapper mapper = new ObjectMapper(); 
 		
@@ -104,6 +107,8 @@ public class TestCommunityController extends TestBaseController{
 	public void updateCommunity() {
 		
 		Community community = this.communityService.getCommunity(comid);
+		community.setFreeParkingMinutes(30);
+		community.setMaxPriceAllDay(new BigDecimal(18));
 		
 		ObjectMapper mapper = new ObjectMapper(); 
 		
