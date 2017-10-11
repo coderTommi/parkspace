@@ -2,6 +2,7 @@ package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -36,6 +37,8 @@ public class ParkingSpaceBillHis implements Serializable{
 	private String spaceno;
 	//订单状态：1、预约中，2、使用中，3.延长使用中，4，已结算、5取消订单
 	private Integer billStatus;
+	//订单状态多条件查询
+	private Integer[] billStatusQuery;
 	//停车时长，申请停车时长，单位为小时，不能超过24小时
 	private Integer parkHours;
 	//单价，每小时计费
@@ -162,13 +165,20 @@ public class ParkingSpaceBillHis implements Serializable{
 	public void setRecodeTime(Date recodeTime) {
 		this.recodeTime = recodeTime;
 	}
+	public Integer[] getBillStatusQuery() {
+		return billStatusQuery;
+	}
+	public void setBillStatusQuery(Integer[] billStatusQuery) {
+		this.billStatusQuery = billStatusQuery;
+	}
 	@Override
 	public String toString() {
 		return "ParkingSpaceBillHis [UUID=" + UUID + ", orderJnlNo=" + orderJnlNo + ", userId=" + userId
 				+ ", spaceOwnerUserId=" + spaceOwnerUserId + ", carno=" + carno + ", spaceno=" + spaceno
-				+ ", billStatus=" + billStatus + ", parkHours=" + parkHours + ", unitPrice=" + unitPrice
-				+ ", budgetPrice=" + budgetPrice + ", createTime=" + createTime + ", actualParkHours=" + actualParkHours
-				+ ", actualPrice=" + actualPrice + ", delayParkHours=" + delayParkHours + ", lastPayTime=" + lastPayTime
-				+ ", payedMoney=" + payedMoney + ", recodeTime=" + recodeTime + "]";
+				+ ", billStatus=" + billStatus + ", billStatusQuery=" + Arrays.toString(billStatusQuery)
+				+ ", parkHours=" + parkHours + ", unitPrice=" + unitPrice + ", budgetPrice=" + budgetPrice
+				+ ", createTime=" + createTime + ", actualParkHours=" + actualParkHours + ", actualPrice=" + actualPrice
+				+ ", delayParkHours=" + delayParkHours + ", lastPayTime=" + lastPayTime + ", payedMoney=" + payedMoney
+				+ ", recodeTime=" + recodeTime + "]";
 	}
 }

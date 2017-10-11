@@ -267,7 +267,7 @@
         	  			]]> -->
         	  			
         	  			<![CDATA[ 
-        	  				and vsbm.availableMoney < maxPriceAllDay
+        	  				and vsbm.availableMoney < 0
         	  			]]>
         	  		)
         	  </if>
@@ -391,7 +391,7 @@
         	  			]]> -->
         	  			
         	  			<![CDATA[ 
-        	  				and vsbm.availableMoney < maxPriceAllDay
+        	  				and vsbm.availableMoney < 0
         	  			]]>
         	  			
         	  		)

@@ -67,6 +67,13 @@
         	 <if test="billStatus != null">
             	and billStatus = #{billStatus}
         	 </if>
+        	 <!-- 多状态查询 -->
+        	 <if test="billStatusQuery != null and billStatusQuery.length > 0 ">
+        	  	 and billStatus in
+        	  	 	<foreach item="item" index="index" collection="billStatusQuery" open="(" separator="," close=")">  
+ 						#{item}  
+					</foreach>
+        	 </if>
         	 <if test="createTime != null">
             	<![CDATA[ and createTime >= #{createTime} ]]>
         	 </if>

@@ -211,4 +211,44 @@ public class ParkingSpaceBillServiceImpl implements IParkingSpaceBillService{
 		}
 		return parkingSpaceBill;
 	}
+	
+	/**
+	 * @Title: getOverdueOrderParkingSpaceBillList
+	 * <p>Description:查询超过预留时间的预约订单</p>
+	 * @param     参数
+	 * @return List<ParkingSpaceBill>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月11日 上午8:47:49</p>
+	 */
+	@Override
+	public List<ParkingSpaceBill> getOverdueOrderParkingSpaceBillList(){
+		return parkingSpaceBillDao.getOverdueOrderParkingSpaceBillList();
+	}
+	/**
+	 * @Title: getNoPayedParkingSpaceBillListInPayInterval
+	 * <p>Description:查询结算周期内未付款的订单</p>
+	 * @param     参数
+	 * @return List<ParkingSpaceBill>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月11日 下午2:11:15</p>
+	 */
+	@Override
+	public List<ParkingSpaceBill> getNoPayedParkingSpaceBillListInPayInterval(){
+		return parkingSpaceBillDao.getNoPayedParkingSpaceBillListInPayInterval();
+	}
+	/**
+	 * @Title: payParkingSpaceBill
+	 * <p>Description:
+	 * 24小时结算一次订单
+	 * </p>
+	 * @param     parkingSpaceBill 车位订单信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:15:51</p>
+	 */
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void payParkingSpaceBill(ParkingSpaceBill parkingSpaceBill) {
+		parkingSpaceBillDao.payParkingSpaceBill(parkingSpaceBill);
+	}
 }

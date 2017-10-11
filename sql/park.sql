@@ -133,6 +133,11 @@ alter table Zone
 
 drop table if exists Zone;
 
+alter table chargerule
+   drop primary key;
+
+drop table if exists chargerule;
+
 alter table walletlock
    drop primary key;
 
@@ -389,7 +394,9 @@ create table ParkingSpaceBill
    parkHours            integer not null comment '停车时长，申请停车时长，单位为小时，不能超过24小时，包括延长停车时长',
    unitPrice            decimal(15, 2) not null comment '单价，每小时计费',
    budgetPrice          decimal(15,2) not null comment '预算：=单价*停车时长',
-   createTime           datetime not null comment '创建时间'
+   createTime           datetime not null comment '创建时间',
+   lastPayTime          datetime comment '上次结算时间:24小时结算一次，并且记录该时间，同时更新结算金额',
+   payedMoney           decimal(15,2) not null default 0 comment '已结算金额：截至目前一共结算的金额'
 );
 
 alter table ParkingSpaceBill comment '车位订单，用来记录车位的订单信息
@@ -443,7 +450,9 @@ create table ParkingSpaceBillHis
    actualParkHours      decimal(15,2) comment '记录实际的停车时长',
    actualPrice          decimal(15,2) not null comment '预算：=单价*实际停车时长',
    recodeTime           datetime not null comment '记录时间，表示该流水记录的时间',
-   delayParkHours       integer not null default 0 comment '延长停车时长，默认为0'
+   delayParkHours       integer not null default 0 comment '延长停车时长，默认为0',
+   lastPayTime          datetime comment '上次结算时间:24小时结算一次，并且记录该时间，同时更新结算金额',
+   payedMoney           decimal(15,2) not null default 0 comment '已结算金额：截至目前一共结算的金额'
 );
 
 alter table ParkingSpaceBillHis comment '车位订单流水，记录该车为订单中的预定-使用-延长使用-结算整个流程
@@ -628,6 +637,22 @@ alter table Zone comment '行政区域（Zone），记录区域的基本信息';
 
 alter table Zone
    add primary key (zoneid);
+
+/*==============================================================*/
+/* Table: chargerule                                            */
+/*==============================================================*/
+create table chargerule
+(
+   id                   varchar(64) not null comment 'id',
+   ruleType              integer(1) comment '规则类型',
+   comid                varchar(64) comment '小区id',
+   ruledef              varchar(64) comment '规则内容'
+);
+
+alter table chargerule comment '计费规则表(chargerule)';
+
+alter table chargerule
+   add primary key (id);
 
 /*==============================================================*/
 /* Table: walletlock                                            */
@@ -831,12 +856,27 @@ SELECT
 	createTime,
 	delayParkHours,
 	spaceOwnerUserId,
-	usedParkHoursString as usedParkHoursString,
-	actualUsedParkHours as actualParkHours,
-	FORMAT(
-		actualUsedParkHours * unitPrice,
-		2
-	) AS actualPrice
+	lastPayTime,
+	payedMoney,
+	usedParkHoursString,
+	actualParkHours,
+	actualPayParkTotalHours,
+	actualPayParkDay,
+	actualPayParkHours,
+	actualPrice,
+	(
+		actualPayParkDay * maxPriceAllDay + (
+			CASE
+			WHEN CEILING(actualPayParkHours) * unitPrice > maxPriceAllDay THEN
+				maxPriceAllDay
+			ELSE
+				CEILING(actualPayParkHours) * unitPrice
+			END
+		)
+	) AS actualPayPrice,
+	maxPriceAllDay,
+	freeParkingMinutes,
+	freePrice
 FROM
 	(
 		SELECT
@@ -851,18 +891,98 @@ FROM
 			createTime,
 			delayParkHours,
 			spaceOwnerUserId,
-			REPLACE (
-				TIMEDIFF(now(), t.createTime),
-				'.000000',
-				''
-			) AS usedParkHoursString,
+			lastPayTime,
+			payedMoney,
+			usedParkHoursString AS usedParkHoursString,
+			actualUsedParkHours AS actualParkHours,
+			actualPayParkTotalHours,
+			(
+				CASE
+				WHEN actualPayParkTotalHours < 0 THEN
+					0
+				ELSE
+					FLOOR(actualPayParkTotalHours / 24)
+				END
+			) AS actualPayParkDay,
+			(
+				CASE
+				WHEN actualPayParkTotalHours < 0 THEN
+					0
+				ELSE
+					FORMAT(
+						(
+							actualPayParkTotalHours - FLOOR(actualPayParkTotalHours / 24) * 24
+						),
+						2
+					)
+				END
+			) AS actualPayParkHours,
 			FORMAT(
-				TIMESTAMPDIFF(SECOND, t.createTime, now()) / 60 / 60,
+				CEILING(actualUsedParkHours) * unitPrice,
 				2
-			) AS actualUsedParkHours
+			) AS actualPrice,
+			maxPriceAllDay,
+			freeParkingMinutes,
+			(
+				round(
+					freeParkingMinutes / 60 * unitPrice,
+					2
+				)
+			) AS freePrice
 		FROM
-			ParkingSpaceBill t
-	) temp;
+			(
+				SELECT
+					orderJnlNo,
+					userId,
+					carno,
+					t.spaceno,
+					billStatus,
+					parkHours,
+					unitPrice,
+					budgetPrice,
+					t.createTime,
+					delayParkHours,
+					spaceOwnerUserId,
+					lastPayTime,
+					payedMoney,
+					REPLACE (
+						TIMEDIFF(now(), t.createTime),
+						'.000000',
+						''
+					) AS usedParkHoursString,
+					FORMAT(
+						TIMESTAMPDIFF(SECOND, t.createTime, now()) / 60 / 60,
+						2
+					) AS actualUsedParkHours,
+					FORMAT(
+						TIMESTAMPDIFF(
+							SECOND,
+							DATE_ADD(
+								ifnull(t.lastPayTime, t.createTime),
+								INTERVAL (
+									CASE
+									WHEN isnull(t.lastPayTime) THEN
+										c.freeParkingMinutes
+									ELSE
+										0
+									END
+								) MINUTE
+							),
+							now()
+						) / 60 / 60,
+						2
+					) AS actualPayParkTotalHours,
+					c.maxPriceAllDay,
+					c.freeParkingMinutes
+				FROM
+					ParkingSpaceBill t,
+					parkingspace p,
+					community c
+				WHERE
+					t.spaceno = p.spaceno
+				AND c.comid = p.comid
+			) temp
+	) a;
 
 /*==============================================================*/
 /* View: vParkingSpaceBillAndMoney                              */
@@ -884,9 +1004,18 @@ SELECT
 	usedParkHoursString,
 	actualParkHours,
 	actualPrice,
+	actualPayPrice,
+	lastPayTime,
+	payedMoney,
+	p.freeParkingMinutes,
+	p.freePrice,
+	p.maxPriceAllDay,
 	w.pledge,
 	w.balance,
-	(w.pledge + w.balance) AS allmoney
+	(w.pledge + w.balance) AS allmoney,
+	(
+		w.pledge + w.balance - actualPayPrice
+	) AS availableMoney
 FROM
 	vParkingSpaceBill p
 LEFT JOIN Wallet w ON p.userId = w.userId;
@@ -912,6 +1041,8 @@ SELECT
 	t.recodeTime,
 	t.delayParkHours,
 	t.spaceOwnerUserId,
+	t.payedMoney,
+	t.lastPayTime,
 	DATE_FORMAT(t.recodeTime, '%Y%m') AS recodeTimeYearMonth
 FROM
 	parkingspacebillhis t;

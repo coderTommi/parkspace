@@ -663,4 +663,45 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		System.out.println("=======应付金额===="+surplusMoney);
 		
 	}
+	/**
+	 * @Title: regularDeductionsForParkingSpaceBill
+	 * <p>Description:定期扣款</p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月11日 下午2:25:32</p>
+	 */
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void regularDeductionsForParkingSpaceBill(ParkingSpaceBill parkingSpaceBill)
+			throws ParkspaceServiceException{
+		if(parkingSpaceBill == null) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
+					"订单信息不能为空");
+		}
+		if(parkingSpaceBill.getBillStatus() != 2 &&
+				parkingSpaceBill.getBillStatus() != 3) {//订单状态：1、预约中，2、使用中，3.延长使用中
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_STATUS_IS_ILLLEGAL.toString(), 
+					"订单状态不合法");
+		}
+		/**
+		 * 扣款
+		 */
+		BigDecimal payedMoney = parkingSpaceBill.getActualPayPrice();
+		ParkingSpaceBill newParkingSpaceBill = new ParkingSpaceBill();
+		newParkingSpaceBill.setOrderJnlNo(parkingSpaceBill.getOrderJnlNo());
+		newParkingSpaceBill.setPayedMoney(payedMoney);
+		parkingSpaceBillService.payParkingSpaceBill(newParkingSpaceBill);
+		/**
+		 * 扣款，需要判断余额是否满足，余额不如需要抛出异常
+		 */
+		
+		System.out.println("=======应付金额===="+payedMoney);
+		
+		throw new ParkspaceServiceException(
+				Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
+				"订单信息不能为空");
+	}
 }

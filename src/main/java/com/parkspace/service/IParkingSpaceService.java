@@ -243,4 +243,14 @@ public interface IParkingSpaceService {
 	 */
 	public void payOrderParkingSpace(String orderJnlNo) 
 			throws ParkspaceServiceException;
+	/**
+	 * @Title: regularDeductionsForParkingSpaceBill
+	 * <p>Description:定期扣款</p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月11日 下午2:25:32</p>
+	 */
+	public void regularDeductionsForParkingSpaceBill(ParkingSpaceBill parkingSpaceBill)
+			throws ParkspaceServiceException;
 }

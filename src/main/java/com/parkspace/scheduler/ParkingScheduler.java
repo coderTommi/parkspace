@@ -1,9 +1,17 @@
 package com.parkspace.scheduler;
 
-import java.util.Date;
+import java.util.List;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
+import com.parkspace.service.IParkingSpaceBillService;
+import com.parkspace.service.IParkingSpaceService;
 
 /**
  * @Title: ParkingScheduler.java
@@ -15,12 +23,67 @@ import org.springframework.stereotype.Service;
 */
 @Service("parkingScheduler")
 public class ParkingScheduler {
+	/**
+     * 获取日志接口.
+     */
+    private static final Log LOG = LogFactory.getLog(ParkingScheduler.class);
+    
+	@Resource
+	private IParkingSpaceBillService parkingSpaceBillService;
+	@Resource
+	private IParkingSpaceService parkingSpaceService;
 	
+	/**
+	 * @Title: cancelOrderParkingSpace
+	 * <p>Description:监控预约的车位，超过15分钟自动取消
+	 * 当一次方法执行完毕之后，延迟多少毫秒再执行该方法
+	 * </p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月11日 上午8:57:07</p>
+	 */
 	@Scheduled(fixedDelay = 1000)
-	public void doSomething() { 
-		System.out.println(new Date()+"=========================");
+	public void cancelOrderParkingSpace() {
+		//查询预约超过15分钟的订单
+		List<ParkingSpaceBill> list = parkingSpaceBillService.getOverdueOrderParkingSpaceBillList();
+		if(list != null && list.size() > 0) {
+			for(ParkingSpaceBill parkingSpaceBill : list) {
+				String orderJnlNo = parkingSpaceBill.getOrderJnlNo();
+				try {
+					parkingSpaceService.cancelOrderParkingSpace(orderJnlNo);
+				}catch(Exception e) {
+					LOG.error("自动取消订单失败，订单编号：【"+orderJnlNo+"】失败描述"+e.getMessage());
+				}
+			}
+		}
 	}
-	
-	//监控预约的车位，超过15分钟自动取消
 	//监控使用中的车位，如果超时，需要提示信息处理
+	/**
+	 * @Title: regularDeductionsForParkingSpaceBill
+	 * <p>Description:24小时扣款一次
+	 * 针对未完成的订单（订单状态是使用中和延期使用中的订单）
+	 * 24小时扣款一次，并且记录扣款时间
+	 * </p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月11日 下午2:01:59</p>
+	 */
+	@Scheduled(fixedDelay = 1000)
+	public void regularDeductionsForParkingSpaceBill() {
+		//24小时内未付款的订单
+		List<ParkingSpaceBill> list = parkingSpaceBillService.getNoPayedParkingSpaceBillListInPayInterval();
+		if(list != null && list.size() > 0) {
+			for(ParkingSpaceBill parkingSpaceBill : list) {
+				String orderJnlNo = parkingSpaceBill.getOrderJnlNo();
+				try {
+					//调用扣款操作
+					parkingSpaceService.regularDeductionsForParkingSpaceBill(parkingSpaceBill);
+				}catch(Exception e) {
+					LOG.error("自动扣款失败，订单编号：【"+orderJnlNo+"】失败描述"+e.getMessage());
+				}
+			}
+		}
+	}
 }
