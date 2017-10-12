@@ -353,7 +353,9 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	
 	/**
 	 * @Title: orderParkingSpace
-	 * <p>Description:车位预定</p>
+	 * <p>Description:车位预定
+	 * 需要增加把数据录入道闸系统，开通临时权限
+	 * </p>
 	 * @param     参数
 	 * @return ParkingSpaceBill    返回类型
 	 * @throws ParkspaceServiceException
@@ -392,11 +394,12 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		//默认设置为0
 		parkingSpaceBill.setDelayParkHours(0);
 		BigDecimal unitPrice = parkingSpaceBill.getUnitPrice();
-		//预算：=单价*停车时长
+		//预算：=单价*停车时长（没有减去免费时间）
 		BigDecimal budgetPrice = unitPrice.multiply(new BigDecimal(parkHours));
 		parkingSpaceBill.setBudgetPrice(budgetPrice);
 		parkingSpaceBill.setCreateTime(new Date());
 		parkingSpaceBill.setOrderJnlNo(UUID.randomUUID().toString());
+		parkingSpaceBill.setPayedMoney(new BigDecimal(0));
 		parkingSpaceBillService.addParkingSpaceBill(parkingSpaceBill);
 		
 		//更新车位状态-占用
@@ -404,6 +407,8 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		newParkingSpace.setSpaceno(spaceno);
 		newParkingSpace.setParkStatus("1");//占用
 		parkingSpaceDao.updateParkingSpace(newParkingSpace);
+		//调用道闸系统写入数据
+		
 		return parkingSpaceBill;
 	}
 	/**
@@ -477,6 +482,8 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		newParkingSpace.setSpaceno(spaceno);
 		newParkingSpace.setParkStatus("0");//空闲
 		parkingSpaceDao.updateParkingSpace(newParkingSpace);
+		
+		//删除在道闸系统中的临时权限
 	}
 	/**
 	 * @Title: confirmOrderParkingSpace
@@ -646,5 +653,55 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		/**
 		 * 扣款，需要判断余额是否满足，余额不如需要抛出异常
 		 */
+		
+		//应付金额=实际费用-免费-已付
+		BigDecimal actualPrice = parkingSpaceBill.getActualPrice();
+		BigDecimal freePrice = parkingSpaceBill.getFreePrice();
+		BigDecimal payedMoney = parkingSpaceBill.getPayedMoney();
+		BigDecimal surplusMoney = actualPrice.subtract(freePrice).subtract(payedMoney);
+		
+		System.out.println("=======应付金额===="+surplusMoney);
+		
+	}
+	/**
+	 * @Title: regularDeductionsForParkingSpaceBill
+	 * <p>Description:定期扣款</p>
+	 * @param     参数
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月11日 下午2:25:32</p>
+	 */
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void regularDeductionsForParkingSpaceBill(ParkingSpaceBill parkingSpaceBill)
+			throws ParkspaceServiceException{
+		if(parkingSpaceBill == null) {
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
+					"订单信息不能为空");
+		}
+		if(parkingSpaceBill.getBillStatus() != 2 &&
+				parkingSpaceBill.getBillStatus() != 3) {//订单状态：1、预约中，2、使用中，3.延长使用中
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_STATUS_IS_ILLLEGAL.toString(), 
+					"订单状态不合法");
+		}
+		/**
+		 * 扣款
+		 */
+		BigDecimal payedMoney = parkingSpaceBill.getActualPayPrice();
+		ParkingSpaceBill newParkingSpaceBill = new ParkingSpaceBill();
+		newParkingSpaceBill.setOrderJnlNo(parkingSpaceBill.getOrderJnlNo());
+		newParkingSpaceBill.setPayedMoney(payedMoney);
+		parkingSpaceBillService.payParkingSpaceBill(newParkingSpaceBill);
+		/**
+		 * 扣款，需要判断余额是否满足，余额不如需要抛出异常
+		 */
+		
+		System.out.println("=======应付金额===="+payedMoney);
+		
+		throw new ParkspaceServiceException(
+				Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
+				"订单信息不能为空");
 	}
 }

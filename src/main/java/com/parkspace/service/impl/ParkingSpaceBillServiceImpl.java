@@ -54,19 +54,6 @@ public class ParkingSpaceBillServiceImpl implements IParkingSpaceBillService{
 					"订单信息不能为空");
 		}
 		if(parkingSpaceBill != null) {
-			
-			//计算小时差：实际停车时长
-			Date createTime = parkingSpaceBill.getCreateTime();
-			Date currentTime = new Date();
-			long longActualParkHours = currentTime.getTime() - createTime.getTime();
-			double actualParkHoursTemp = (double)longActualParkHours/1000/60/60;
-			BigDecimal actualParkHours = new BigDecimal(actualParkHoursTemp).setScale(2, BigDecimal.ROUND_HALF_UP);
-			parkingSpaceBill.setActualParkHours(actualParkHours);
-			//实际价格：=单价*实际停车时长
-			BigDecimal unitPrice = parkingSpaceBill.getUnitPrice();
-			parkingSpaceBill.setActualPrice(unitPrice.multiply(actualParkHours));
-			
-			
 			String spaceno = parkingSpaceBill.getSpaceno();
 			//获取最大停车时间
 			String maxParkHoursString = "";
@@ -223,5 +210,45 @@ public class ParkingSpaceBillServiceImpl implements IParkingSpaceBillService{
 			}
 		}
 		return parkingSpaceBill;
+	}
+	
+	/**
+	 * @Title: getOverdueOrderParkingSpaceBillList
+	 * <p>Description:查询超过预留时间的预约订单</p>
+	 * @param     参数
+	 * @return List<ParkingSpaceBill>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月11日 上午8:47:49</p>
+	 */
+	@Override
+	public List<ParkingSpaceBill> getOverdueOrderParkingSpaceBillList(){
+		return parkingSpaceBillDao.getOverdueOrderParkingSpaceBillList();
+	}
+	/**
+	 * @Title: getNoPayedParkingSpaceBillListInPayInterval
+	 * <p>Description:查询结算周期内未付款的订单</p>
+	 * @param     参数
+	 * @return List<ParkingSpaceBill>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月11日 下午2:11:15</p>
+	 */
+	@Override
+	public List<ParkingSpaceBill> getNoPayedParkingSpaceBillListInPayInterval(){
+		return parkingSpaceBillDao.getNoPayedParkingSpaceBillListInPayInterval();
+	}
+	/**
+	 * @Title: payParkingSpaceBill
+	 * <p>Description:
+	 * 24小时结算一次订单
+	 * </p>
+	 * @param     parkingSpaceBill 车位订单信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:15:51</p>
+	 */
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void payParkingSpaceBill(ParkingSpaceBill parkingSpaceBill) {
+		parkingSpaceBillDao.payParkingSpaceBill(parkingSpaceBill);
 	}
 }

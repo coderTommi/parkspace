@@ -2,6 +2,7 @@ package com.parkspace.db.rmdb.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -36,6 +37,8 @@ public class ParkingSpaceBill implements Serializable{
 	private String spaceno;
 	//订单状态：1、预约中，2、使用中，3.延长使用中
 	private Integer billStatus;
+	//订单状态多条件查询
+	private Integer[] billStatusQuery;
 	//停车时长，申请停车时长，单位为小时，不能超过24小时，包括延长停车时长
 	private Integer parkHours;
 	
@@ -51,6 +54,13 @@ public class ParkingSpaceBill implements Serializable{
 	private BigDecimal budgetPrice;
 	//创建时间
 	private Date createTime;
+	//上次结算时间:24小时结算一次，并且记录该时间，同时更新结算金额
+	private Date lastPayTime;
+	//已结算金额：截至目前一共结算的金额
+	private BigDecimal payedMoney;
+	
+	
+	
 	//已经停车时长,格式00:00:00，当前时间-createTime
 	private String usedParkHoursString;
 	//车位最长停留时间
@@ -59,12 +69,67 @@ public class ParkingSpaceBill implements Serializable{
 	private String maxDelayParkHoursString;
 	//记录实际的停车时长
 	private BigDecimal actualParkHours;
-	//预算：=单价*实际停车时长
+	//实际价格：=单价*实际停车时长
 	private BigDecimal actualPrice;
 	//是否只查询快要到期的数据，默认否查询全部使用中的车位信息
 	private Integer isQuerySoonExpire = 0;
+	
+	//最大费用：一天停车最多消费多少钱，默认0
+	private BigDecimal maxPriceAllDay;
+	//免费停车时长：单位分钟,默认0
+	private Integer freeParkingMinutes;
+	//免费费用
+	private BigDecimal freePrice;
+	
+	//实际应该付费
+	private BigDecimal actualPayPrice;
+	
 	//车主信息
 	private Caruser caruser;
+	
+	
+	public BigDecimal getActualPayPrice() {
+		return actualPayPrice;
+	}
+	public void setActualPayPrice(BigDecimal actualPayPrice) {
+		this.actualPayPrice = actualPayPrice;
+	}
+	public Integer[] getBillStatusQuery() {
+		return billStatusQuery;
+	}
+	public void setBillStatusQuery(Integer[] billStatusQuery) {
+		this.billStatusQuery = billStatusQuery;
+	}
+	public BigDecimal getMaxPriceAllDay() {
+		return maxPriceAllDay;
+	}
+	public void setMaxPriceAllDay(BigDecimal maxPriceAllDay) {
+		this.maxPriceAllDay = maxPriceAllDay;
+	}
+	public Integer getFreeParkingMinutes() {
+		return freeParkingMinutes;
+	}
+	public void setFreeParkingMinutes(Integer freeParkingMinutes) {
+		this.freeParkingMinutes = freeParkingMinutes;
+	}
+	public BigDecimal getFreePrice() {
+		return freePrice;
+	}
+	public void setFreePrice(BigDecimal freePrice) {
+		this.freePrice = freePrice;
+	}
+	public Date getLastPayTime() {
+		return lastPayTime;
+	}
+	public void setLastPayTime(Date lastPayTime) {
+		this.lastPayTime = lastPayTime;
+	}
+	public BigDecimal getPayedMoney() {
+		return payedMoney;
+	}
+	public void setPayedMoney(BigDecimal payedMoney) {
+		this.payedMoney = payedMoney;
+	}
 	public Integer getIsQuerySoonExpire() {
 		return isQuerySoonExpire;
 	}
@@ -192,10 +257,14 @@ public class ParkingSpaceBill implements Serializable{
 	public String toString() {
 		return "ParkingSpaceBill [orderJnlNo=" + orderJnlNo + ", userId=" + userId + ", spaceOwnerUserId="
 				+ spaceOwnerUserId + ", carno=" + carno + ", spaceno=" + spaceno + ", billStatus=" + billStatus
-				+ ", parkHours=" + parkHours + ", delayParkHours=" + delayParkHours + ", delayParkHoursString="
-				+ delayParkHoursString + ", unitPrice=" + unitPrice + ", budgetPrice=" + budgetPrice + ", createTime="
-				+ createTime + ", usedParkHoursString=" + usedParkHoursString + ", maxParkHoursString="
-				+ maxParkHoursString + ", maxDelayParkHoursString=" + maxDelayParkHoursString + ", actualParkHours="
-				+ actualParkHours + ", actualPrice=" + actualPrice + "]";
+				+ ", billStatusQuery=" + Arrays.toString(billStatusQuery) + ", parkHours=" + parkHours
+				+ ", delayParkHours=" + delayParkHours + ", delayParkHoursString=" + delayParkHoursString
+				+ ", unitPrice=" + unitPrice + ", budgetPrice=" + budgetPrice + ", createTime=" + createTime
+				+ ", lastPayTime=" + lastPayTime + ", payedMoney=" + payedMoney + ", usedParkHoursString="
+				+ usedParkHoursString + ", maxParkHoursString=" + maxParkHoursString + ", maxDelayParkHoursString="
+				+ maxDelayParkHoursString + ", actualParkHours=" + actualParkHours + ", actualPrice=" + actualPrice
+				+ ", isQuerySoonExpire=" + isQuerySoonExpire + ", maxPriceAllDay=" + maxPriceAllDay
+				+ ", freeParkingMinutes=" + freeParkingMinutes + ", freePrice=" + freePrice + ", actualPayPrice="
+				+ actualPayPrice + ", caruser=" + caruser + "]";
 	}
 }

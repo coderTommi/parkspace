@@ -11,16 +11,18 @@
 	</sql>
 	<!-- 小区信息字段 -->
 	<sql id="Community_Column">
-		c.comid 		as "community.comid",
-		c.zoneid 		as "community.zoneid",
-		c.comname 		as "community.comname",
-		c.address 		as "community.address",
-		c.isenable 		as "community.isenable",
-		c.memo 			as "community.memo",
-		c.createBy 		as "community.createBy",
-		c.createTime 	as "community.createTime",
-		c.modifyBy 		as "community.modifyBy",
-		c.modifyTime 	as "community.modifyTime"
+		c.comid 				as "community.comid",
+		c.zoneid 				as "community.zoneid",
+		c.comname 				as "community.comname",
+		c.address 				as "community.address",
+		c.isenable 				as "community.isenable",
+		c.memo 					as "community.memo",
+		c.createBy 				as "community.createBy",
+		c.createTime 			as "community.createTime",
+		c.modifyBy 				as "community.modifyBy",
+		c.modifyTime 			as "community.modifyTime",
+		c.maxPriceAllDay  		as "community.maxPriceAllDay",
+		c.freeParkingMinutes 	as "community.freeParkingMinutes"
 	</sql>
 	<!-- 行政区域信息字段 -->
 	<sql id="Zone_Column">
@@ -260,13 +262,13 @@
         	  			from vParkingSpaceBillAndMoney vsbm
         	  			where vsbm.userId = car.userId
         	  			and   vsbm.carno = car.carno
-        	  			and   
+        	  			<!-- <![CDATA[ 
+        	  				and vsbm.allmoney < actualPrice + ${@com.parkspace.util.Constants@FUTURE_HOURS_MONEY} * unitPrice
+        	  			]]> -->
         	  			
         	  			<![CDATA[ 
-        	  				vsbm.allmoney < actualPrice + ${@com.parkspace.util.Constants@FUTURE_HOURS_MONEY} * unitPrice
-        	  				
+        	  				and vsbm.availableMoney < 0
         	  			]]>
-        	  			
         	  		)
         	  </if>
         order by u.createTime desc
@@ -383,11 +385,13 @@
         	  			from vParkingSpaceBillAndMoney vsbm
         	  			where vsbm.userId = car.userId
         	  			and   vsbm.carno = car.carno
-        	  			and   
+        	  			
+        	  			<!-- <![CDATA[ 
+        	  				and vsbm.allmoney < actualPrice + ${@com.parkspace.util.Constants@FUTURE_HOURS_MONEY} * unitPrice
+        	  			]]> -->
         	  			
         	  			<![CDATA[ 
-        	  				vsbm.allmoney < actualPrice + ${@com.parkspace.util.Constants@FUTURE_HOURS_MONEY} * unitPrice
-        	  				
+        	  				and vsbm.availableMoney < 0
         	  			]]>
         	  			
         	  		)

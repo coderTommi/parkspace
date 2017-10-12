@@ -115,12 +115,19 @@ public class CommunityServiceImpl implements ICommunityService{
 			newCommunity.setCreateBy(community.getCreateBy());
 			newCommunity.setCreateTime(new Date());
 			//默认开通
-			newCommunity.setIsenable(1);
+			if(community.getIsenable() == null) {
+				newCommunity.setIsenable(1);//默认：封闭式小区
+			}else {
+				newCommunity.setIsenable(community.getIsenable());
+			}
+			
 			newCommunity.setMemo(community.getMemo());
 			newCommunity.setModifyBy(community.getModifyBy());
 			newCommunity.setModifyTime(new Date());
 			newCommunity.setZoneid(community.getZoneid());
 			newCommunity.setPrice(community.getPrice());
+			newCommunity.setMaxPriceAllDay(community.getMaxPriceAllDay());
+			newCommunity.setFreeParkingMinutes(community.getFreeParkingMinutes());
 			
 			this.communityDao.addCommunity(newCommunity);
 			return newCommunity;

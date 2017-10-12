@@ -61,6 +61,19 @@ public interface ParkingSpaceBillDao {
 	 * <p>CreateDate:2017年9月23日 下午9:15:51</p>
 	 */
 	public void delayParkingSpaceBill(ParkingSpaceBill parkingSpaceBill);
+	
+	/**
+	 * @Title: payParkingSpaceBill
+	 * <p>Description:
+	 * 24小时结算一次订单
+	 * </p>
+	 * @param     parkingSpaceBill 车位订单信息
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年9月23日 下午9:15:51</p>
+	 */
+	public void payParkingSpaceBill(ParkingSpaceBill parkingSpaceBill);
+	
 	/**
 	 * @Title: deleteParkingSpaceBill
 	 * <p>Description:
@@ -90,4 +103,23 @@ public interface ParkingSpaceBillDao {
 	 * <p>CreateDate:2017年10月3日 下午10:53:16</p>
 	 */
 	public String getMaxDelayParkHoursString(ParkingSpaceBill parkingSpaceBill);
+	
+	/**
+	 * @Title: getOverdueOrderParkingSpaceBillList
+	 * <p>Description:查询超过预留时间的预约订单</p>
+	 * @param     参数
+	 * @return List<ParkingSpaceBill>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月11日 上午8:47:49</p>
+	 */
+	public List<ParkingSpaceBill> getOverdueOrderParkingSpaceBillList();
+	/**
+	 * @Title: getNoPayedParkingSpaceBillListInPayInterval
+	 * <p>Description:查询结算周期内未付款的订单</p>
+	 * @param     参数
+	 * @return List<ParkingSpaceBill>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月11日 下午2:11:15</p>
+	 */
+	public List<ParkingSpaceBill> getNoPayedParkingSpaceBillListInPayInterval();
 }
