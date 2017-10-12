@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,11 +23,14 @@ import com.parkspace.db.rmdb.entity.ParkingSpace;
 import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
 import com.parkspace.db.rmdb.entity.ShareConfig;
 import com.parkspace.db.rmdb.entity.SpaceOwner;
+import com.parkspace.model.SocketDataModel;
 import com.parkspace.service.IParkingSpaceBillHisService;
 import com.parkspace.service.IParkingSpaceBillService;
 import com.parkspace.service.IParkingSpaceService;
 import com.parkspace.service.IShareConfigService;
+import com.parkspace.socket.SocketServerService;
 import com.parkspace.util.Constants;
+import com.parkspace.util.JsonUtils;
 
 /**
  * @Title: ParkingSpaceServiceImpl.java
@@ -37,6 +42,10 @@ import com.parkspace.util.Constants;
 */
 @Service("parkingSpaceService")
 public class ParkingSpaceServiceImpl implements IParkingSpaceService{
+	/**
+     * 获取日志接口.
+     */
+    private static final Log LOG = LogFactory.getLog(ParkingSpaceServiceImpl.class);
 	@Resource
 	private SpaceOwnerDao spaceOwnerDao;
 	@Resource
@@ -49,6 +58,8 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	private IParkingSpaceBillHisService parkingSpaceBillHisService;
 	@Resource
 	private CaruserDao caruserDao;
+	@Resource
+	private SocketServerService socketServerService;
 	/**
 	 * @Title: getParkingSpace
 	 * <p>Description:根据车位编号查询车位信息
@@ -408,6 +419,12 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		newParkingSpace.setParkStatus("1");//占用
 		parkingSpaceDao.updateParkingSpace(newParkingSpace);
 		//调用道闸系统写入数据
+		SocketDataModel socketDataModel = new SocketDataModel();
+		socketDataModel.setCarno(parkingSpaceBill.getCarno());
+		socketDataModel.setSpaceno(spaceno);
+		socketDataModel.setUserId(parkingSpaceBill.getUserId());
+		String message = JsonUtils.object2String(socketDataModel);
+		socketServerService.sendMessageToAllClient("addOrderParkingSpace", message);
 		
 		return parkingSpaceBill;
 	}
@@ -484,6 +501,12 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		parkingSpaceDao.updateParkingSpace(newParkingSpace);
 		
 		//删除在道闸系统中的临时权限
+		SocketDataModel socketDataModel = new SocketDataModel();
+		socketDataModel.setCarno(parkingSpaceBill.getCarno());
+		socketDataModel.setSpaceno(spaceno);
+		socketDataModel.setUserId(parkingSpaceBill.getUserId());
+		String message = JsonUtils.object2String(socketDataModel);
+		socketServerService.sendMessageToAllClient("cancelOrderParkingSpace", message);
 	}
 	/**
 	 * @Title: confirmOrderParkingSpace
@@ -660,7 +683,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		BigDecimal payedMoney = parkingSpaceBill.getPayedMoney();
 		BigDecimal surplusMoney = actualPrice.subtract(freePrice).subtract(payedMoney);
 		
-		System.out.println("=======应付金额===="+surplusMoney);
+		LOG.info("=======应付金额===="+surplusMoney);
 		
 	}
 	/**
@@ -697,11 +720,6 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		/**
 		 * 扣款，需要判断余额是否满足，余额不如需要抛出异常
 		 */
-		
-		System.out.println("=======应付金额===="+payedMoney);
-		
-		throw new ParkspaceServiceException(
-				Constants.ERRORCODE.ORDER_IS_NOT_NULL.toString(), 
-				"订单信息不能为空");
+		LOG.info("=======应付金额===="+payedMoney);
 	}
 }

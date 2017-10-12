@@ -125,6 +125,7 @@ public class TestParkingSpaceController extends TestBaseController{
 	@Test
 	public void orderParkingSpace() {
 		try {
+			Thread.sleep(15000);
 			String json = mvc.perform(MockMvcRequestBuilders.post("/v1/parkingspace/orderparkingspace")
 					.param("spaceno", spaceno)
 					.param("parkHours", "3")
