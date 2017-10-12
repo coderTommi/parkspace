@@ -9,39 +9,85 @@
 	<insert id="save" parameterType="Bill">
     	insert into bill(
     			billId,
-    			payer,
-    			payee,
+    			userId,
+    			oppUserId,
     			transDate,
     			transTime,
     			billType,
     			amount,
     			state,
     			orderJnlno, 
-    			remoteJnlNo
+    			remoteJnlNo,
+    			ticketAmt
     		) 
     	 values(
     	 		#{billId},
-    	 		#{payer},
-    	 		#{payee},
+    	 		#{userId},
+    	 		#{oppUserId},
     	 		#{transDate},
     	 		#{transTime},
     	 		#{billType},
     	 		#{amount},
     	 		#{state},
     	 		#{orderJnlno}, 
-    	 		#{remoteJnlNo}
+    	 		#{remoteJnlNo},
+    	 		#{ticketAmt}
     	 	)
 	</insert>
 	
 	<!-- 根据条件查询账单 -->
 	<select id="getBills" parameterType="Bill" resultType="Bill">
 		select * from bill where 1=1
-			 <if test="payer != null">
-            	and payer = #{payer}
+			 <if test="userId != null">
+            	and userId = #{userId}
         	 </if>
-        	 <if test="payee != null">
-            	and payee = #{payee}
+        	 <if test="oppUserId != null">
+            	and oppUserId = #{oppUserId}
         	 </if>
+        	 <if test="billId != null">
+            	and billId = #{billId}
+        	 </if>
+        	 <if test="billType != null">
+            	and billType = #{billType}
+        	 </if>        	 
+        	 <if test="transDate != null">
+            	and transDate = #{transDate}
+        	 </if>        	 
+        	 <if test="state != null">
+            	and state = #{state}
+        	 </if>
+        	 <if test="orderJnlno != null">
+            	and orderJnlno = #{orderJnlno}
+        	 </if>
+        	 <if test="remoteJnlNo != null">
+        	 	and remoteJnlNo = #{remoteJnlNo}
+        	 </if>
+        	 <if test="ticketAmt != null">
+        	 	and ticketAmt = #{ticketAmt}
+        	 </if>        	 
+        	 order by transtime desc
+	</select>
+	
+	<update id="update"  parameterType="Bill" >
+		update bill set 
+		<if test="state != null">
+            	state=#{state} 
+       	 </if>
+		<if test="remoteJnlNo != null">
+            	,remoteJnlNo=#{remoteJnlNo}
+       	 </if>
+		 where billId = #{billId}
+	</update>
+	
+	<!-- 查询用户收付款信息账单 -->
+	<select id="getByUserId" parameterType="Bill" resultType="Bill">
+		select * from bill where 1=1
+			 <if test="userId != null">
+            	and userId = #{userId}
+        	 </if>
+			 <if test="oppUserId != null">
+            	and oppUserId = #{oppUserId}
+        	 </if>        	 
         	 <if test="billId != null">
             	and billId = #{billId}
         	 </if>
@@ -61,43 +107,39 @@
         	 	and remoteJnlNo = #{remoteJnlNo}
         	 </if>
         	 order by transtime desc
+	</select>	
+	
+	<!-- 查询收入明细 -->
+	<select id="getIncomeList" parameterType="java.util.HashMap" resultType="Bill">
+		select * from bill where billType in ( 6, 8) 
+			 <if test="userId != null">
+            	and userId = #{userId}
+        	 </if>
+        	 <if test="beginDate != null">
+            	and transDate &gt;= #{transDate}
+        	 </if>
+        	 <if test="endDate != null">
+            	and transDate &lt; #{transDate}
+        	 </if>  
+        	 and state=0 order by transtime desc
 	</select>
 	
-	<update id="update"  parameterType="Bill" >
-		update bill set 
-		<if test="state != null">
-            	state=#{state} ,
-       	 </if>
-		<if test="remoteJnlNo != null">
-            	remoteJnlNo=#{remoteJnlNo}
-       	 </if>
-		where billId = #{billId}
-	</update>
-	
-	<!-- 查询用户收付款信息账单 -->
-	<select id="getByPayeeOrPayer" parameterType="Bill" resultType="Bill">
-		select * from bill where 1=1
-			 <if test="payer != null and payee != null">
-            	and (payer = #{payer} or payee = #{payee} )
+		<!-- 查询体现明细 -->
+	<select id="getByBillType" parameterType="java.util.HashMap" resultType="Bill">
+		select * from bill where 1=1 
+			 <if test="userId != null">
+            	and userId = #{userId}
         	 </if>
-        	 <if test="billId != null">
-            	and billId = #{billId}
-        	 </if>
-        	 <if test="billType != null">
+			 <if test="billType != null">
             	and billType = #{billType}
         	 </if>        	 
-        	 <if test="transDate != null">
-            	and transDate = #{transDate}
-        	 </if>        	 
-        	 <if test="state != null">
-            	and state = #{state}
+        	 <if test="beginDate != null">
+            	and transDate &gt;= #{transDate}
         	 </if>
-        	 <if test="orderJnlno != null">
-            	and orderJnlno = #{orderJnlno}
-        	 </if>
-        	 <if test="remoteJnlNo != null">
-        	 	and remoteJnlNo = #{remoteJnlNo}
-        	 </if>
+        	 <if test="endDate != null">
+            	and transDate &lt; #{transDate}
+        	 </if>  
+            	and state=0
         	 order by transtime desc
 	</select>	
 </mapper>

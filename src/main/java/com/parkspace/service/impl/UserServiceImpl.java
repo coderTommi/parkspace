@@ -1,7 +1,9 @@
 package com.parkspace.service.impl;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -17,13 +19,18 @@ import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.controller.pojo.RegisterUserWapper;
 import com.parkspace.db.rmdb.dao.BaseUserDao;
 import com.parkspace.db.rmdb.dao.IntegralDao;
+import com.parkspace.db.rmdb.dao.PropertyMgmtUserDao;
+import com.parkspace.db.rmdb.dao.SpaceApplyDao;
+import com.parkspace.db.rmdb.dao.SpaceOwnerDao;
 import com.parkspace.db.rmdb.dao.WalletDao;
 import com.parkspace.db.rmdb.entity.BaseUser;
 import com.parkspace.db.rmdb.entity.Integral;
+import com.parkspace.db.rmdb.entity.PropertyMgmtUser;
+import com.parkspace.db.rmdb.entity.SpaceApply;
+import com.parkspace.db.rmdb.entity.SpaceOwner;
 import com.parkspace.db.rmdb.entity.Wallet;
 import com.parkspace.service.ISmsCodeService;
 import com.parkspace.service.IUserService;
-import com.parkspace.util.CommonUtils;
 import com.parkspace.util.Constants;
 
 @Service("userService")
@@ -37,6 +44,12 @@ public class UserServiceImpl implements IUserService {
 	private ISmsCodeService smsCodeService;
 	@Resource
 	private IntegralDao integralDao;
+	@Resource
+	private SpaceApplyDao spaceApplyDao;
+	@Resource
+	private SpaceOwnerDao spaceOwnerDao;
+	@Resource
+	private PropertyMgmtUserDao propertyMgmtUserDao;
 	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
 	public void registerUser(RegisterUserWapper user) throws ParkspaceServiceException, Exception {
@@ -117,7 +130,8 @@ public class UserServiceImpl implements IUserService {
 	
 	@Override
 	public String getAdminUserId() throws ParkspaceServiceException, Exception {
-		return null;
+		BaseUser adminUser = baseUserDao.getById("1");
+		return adminUser.getUserId();
 	}
 	
 	
@@ -135,6 +149,51 @@ public class UserServiceImpl implements IUserService {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public List<SpaceApply> getSpaceApplys(String userId, Integer state) throws ParkspaceServiceException, Exception {
+		SpaceApply apply = new SpaceApply();
+		PropertyMgmtUser user = propertyMgmtUserDao.getPropertyMgmtUser(userId);
+		if(user != null)
+			apply.setComId(user.getComid());
+		apply.setState(state);
+		return spaceApplyDao.qryList(apply);
+	}
+	
+	@Override
+	public void parkspaceApply(SpaceApply apply)
+			throws ParkspaceServiceException, Exception {
+		apply.setApplyTime(new Timestamp(System.currentTimeMillis()));
+		spaceApplyDao.save(apply);
+	}
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
+	public void parkspaceAuth(String applyId, String memo, Integer state)
+			throws ParkspaceServiceException, Exception {
+		/** 更新车位授权表、记录spaceowner表 **/
+		
+		SpaceApply apply = new SpaceApply();
+		apply.setId(applyId);
+		apply.setMemo(memo);
+		apply.setState(state);
+		spaceApplyDao.update(apply);
+		
+		SpaceApply apply2 = spaceApplyDao.getById(applyId);
+		
+		SpaceOwner spaceOwner = new SpaceOwner();
+		spaceOwner.setSpaceno(apply2.getSpaceId());
+		spaceOwner.setUserId(apply2.getUserId());
+		spaceOwner.setIsauth(1);
+		spaceOwner.setCertifiedTime(new Date(System.currentTimeMillis()));
+		spaceOwnerDao.addSpaceOwner(spaceOwner);
+		
+		BaseUser user = baseUserDao.getById(apply2.getUserId());
+		user.setIdNo(apply2.getIdNo());
+		user.setIdType(apply2.getIdType());
+		user.setRealName(apply2.getRealName());
+		baseUserDao.update(user);
 	}
 
 }

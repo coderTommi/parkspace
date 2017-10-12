@@ -65,7 +65,16 @@ public class WalletController {
 		}
 		return result;
 	}
-	
+	/**
+	 * 查询用户账单
+	 * http://localhost:8080/parkspace/qryList?page=1&pageSize=10
+	 * @Title: getUserBillList
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月9日 上午8:54:35</p>
+	 */
 	@RequestMapping(value = "/qryList", method = RequestMethod.GET)
     @ResponseBody
 	public OperationResult getUserBillList(HttpServletRequest req,

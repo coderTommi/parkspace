@@ -1,5 +1,7 @@
 package com.parkspace.service;
 
+import java.math.BigDecimal;
+
 import com.parkspace.common.exception.ParkspaceServiceException;
 
 /**
@@ -24,7 +26,7 @@ public interface IRemoteTrsService {
 	 * @throws
 	 * <p>CreateDate:2017年10月3日 下午3:01:31</p>
 	 */
-	public boolean checkRemoteTrsRes(String remoteJnlNo, Integer payChannel);
+	public boolean checkRemoteTrsRes(String remoteJnlNo, Integer payChannel, BigDecimal amt);
 	/**
 	 * 遠程轉賬
 	 * @Title: remoteTrans
@@ -34,6 +36,6 @@ public interface IRemoteTrsService {
 	 * @throws
 	 * <p>CreateDate:2017年10月3日 下午3:02:37</p>
 	 */
-	public String remoteTrans(String payee, Integer payChannel);
+	public String remoteTrans(String payee, Integer payChannel, BigDecimal amt);
 	
 }

@@ -31,8 +31,7 @@ public class BillDaoTest {
 	public void testsave(){
 		Bill bill = new Bill();
 		bill.setBillId(UUID.randomUUID().toString());
-		bill.setPayee("123");
-		bill.setPayer("234");
+		bill.setUserId("123");
 		bill.setBillType(0);
 		bill.setAmount(new BigDecimal("22.30"));
 		bill.setState(0);
@@ -41,16 +40,24 @@ public class BillDaoTest {
 		billDao.save(bill);
 	}
 	
+	@Test
+	public void testUpdate() {
+		Bill bill = new Bill();
+		bill.setBillId("4a6da79f-165b-4280-b4f5-e553f173d8dd");
+		bill.setState(0);
+		billDao.update(bill);
+	}
+	
 	
 	@Test
 	public void getById(){
-		Bill bill = billDao.getById("93a9d493-0e30-48fa-9797-62acdb2fc59a"); 
-		System.out.println(bill.getPayee());
+		Bill bill = billDao.getById("2cae6166-77bf-4339-8930-44a08622de25"); 
+		System.out.println(bill.getUserId());
 	}
 	@Test
 	public void getBills(){
 		Bill bill = new Bill();
-		bill.setPayee("123");
+		bill.setUserId("123");
 				
 		List<Bill> bills = billDao.getBills(bill);
 		for(Bill b : bills)

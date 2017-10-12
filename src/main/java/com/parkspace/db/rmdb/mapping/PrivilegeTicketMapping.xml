@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.PrivilegeTicketDao">
+	<!-- 保存优惠券信息 -->
+	<insert id="save" parameterType="PrivilegeTicket">
+    	insert into privilegeticket(
+    			id,
+    			userId,
+    			amt,
+    			createDate,
+    			endDate,
+    			used
+    		) 
+    	 values(
+    	 		#{id},
+    	 		#{userId},
+    	 		#{amt},
+    	 		#{createDate},
+    	 		#{endDate},
+    	 		#{used}
+    	 	)
+	</insert>
+	
+	<!-- 根据条件查询优惠券 -->
+	<select id="getByUserId_amt" parameterType="PrivilegeTicket" resultType="PrivilegeTicket">
+		select * from privilegeticket where 1=1
+			 <if test="userId != null">
+            	and userId = #{userId}
+        	 </if>
+        	 <if test="used != null">
+            	and used = #{used}
+        	 </if>
+        	 <if test="endDate != null">
+            	and endDate &gt;= #{endDate}
+        	 </if>
+        	 order by amt desc
+	</select>
+	
+	<!-- 根据条件查询优惠券 -->
+	<select id="getByUserId_time" parameterType="PrivilegeTicket" resultType="PrivilegeTicket">
+		select * from privilegeticket where 1=1
+			 <if test="userId != null">
+            	and userId = #{userId}
+        	 </if>
+        	 <if test="used != null">
+            	and used = #{used}
+        	 </if>
+        	 <if test="endDate != null">
+            	and endDate &gt;= #{endDate}
+        	 </if>
+        	 order by createDate desc
+	</select>	
+	
+	<update id="update"  parameterType="PrivilegeTicket" >
+		update privilegeticket set 
+		<if test="used != null">
+            	used=#{used}
+       	 </if>
+		where id = #{id}
+	</update>
+	
+</mapper>
