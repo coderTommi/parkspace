@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parkspace.db.rmdb.dao.ChargeRuleDao">
+
+	<!-- 保存 -->
+	<insert id="save" parameterType="ChargeRule">
+    	insert into chargerule(
+    			id,
+    			ruleType,
+    			comId,
+    			ruleDef
+    		) 
+    	 values(
+    	 		#{id},
+    	 		#{ruleType},
+    	 		#{comId},
+    	 		#{ruleDef}
+    	 	)
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="ChargeRule">
+		delete	from chargerule where 1= 1
+			<if test="id != null">
+            	and id = #{id} 
+        	</if>
+			<if test="comId != null">
+            	and comId = #{comId} 
+        	</if>
+			<if test="ruleType != null">
+            	and ruleType = #{ruleType} 
+        	</if>        	
+	</delete>
+	<!-- 根据条件查询车主信息 -->
+	<select id="qry" parameterType="ChargeRule" resultType="ChargeRule">
+		select * from chargerule where 1=1
+			<if test="id != null">
+	            	and id = #{id} 
+	       	</if>
+			<if test="comId != null">
+            	and comId = #{comId} 
+        	</if>
+			<if test="ruleType != null">
+            	and ruleType = #{ruleType} 
+        	</if> 
+	</select>
+	
+	<!-- 保存Or更新 -->
+	<insert id="saveOrUpdate" parameterType="ChargeRule">
+		<selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+	    	select id from chargerule where ruleType=#{ruleType} and comId = #{comId}
+	  	</selectKey>
+	  	<if test="id != null">
+		    update chargerule 
+		    set ruleDef = #{ruleDef}
+		    where ruleType=#{ruleType} and comId = #{comId}
+	  	</if>
+		<if test="id == null">
+	    	insert into chargerule(
+	    			id,
+	    			ruleType,
+	    			comId,
+	    			ruleDef
+	    		) 
+	    	 values(
+	    	 		#{id},
+	    	 		#{ruleType},
+	    	 		#{comId},
+	    	 		#{ruleDef}
+	    	 	)
+	  	</if>
+
+	</insert>	
+</mapper>

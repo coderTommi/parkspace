@@ -1,6 +1,7 @@
 package com.parkspace.db.rmdb.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.annotation.MapperScan;
 
@@ -50,6 +51,18 @@ public interface BillDao {
 	 * @throws
 	 * <p>CreateDate:2017年10月8日 上午9:34:55</p>
 	 */
-	public List<Bill> getByPayeeOrPayer(Bill bill);
+	public List<Bill> getByUserId(Bill bill);
+	
+	public List<Bill> getIncomeList(Map qryMap);
+	/**
+	 * 提现列表
+	 * @Title: getWithDrawList
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return List<Bill>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月12日 下午4:14:55</p>
+	 */
+	public List<Bill> getWithDrawList(Map qryMap);
 	
 }

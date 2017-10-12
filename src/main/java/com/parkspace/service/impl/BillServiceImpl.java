@@ -1,6 +1,9 @@
 package com.parkspace.service.impl;
 
+import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -60,10 +63,31 @@ public class BillServiceImpl implements IBillService {
 	@Override
 	public List<Bill> getListByUserId(String userId) throws ParkspaceServiceException, Exception {
 		Bill bill = new Bill();
-		bill.setPayee(userId);
-		bill.setPayer(userId);
-		List<Bill> list = billDao.getByPayeeOrPayer(bill);
+		bill.setUserId(userId);
+		List<Bill> list = billDao.getByUserId(bill);
 		return list;
 	}
+	/**
+	 * 查询收益列表
+	 */
+	@Override
+	public List<Bill> qryIncomeDetailList(String userId, Date beginDate, Date endDate)
+			throws ParkspaceServiceException, Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("beginDate", beginDate);
+		map.put("endDate", endDate);
+		return billDao.getIncomeList(map);
+	}
 	
+	@Override
+	public List<Bill> qryWithdrawList(String userId, Date beginDate, Date endDate)
+			throws ParkspaceServiceException, Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(userId, userId);
+		map.put("beginDate", beginDate);
+		map.put("endDate", endDate);
+		map.put("billType", Constants.AMTTYPE.WITHDRAW.getValue());
+		return billDao.getWithDrawList(map);
+	}
 }

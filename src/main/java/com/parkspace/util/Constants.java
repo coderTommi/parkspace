@@ -54,6 +54,8 @@ public class Constants {
 		BONUSOUT_ERROR(10013),
 		/** 押金不足 **/
 		PLEDGE_AMT_NOT_ENOUPH(10014),
+		/** 分配规则设置失败 **/
+		CHARGERULES_SETUP_ERROR(10015),
 		
 		
 		
@@ -102,8 +104,10 @@ public class Constants {
 		PLEDGEOUT(3),
 		PAYOUT(4),
 		PAYIN(5),
-		ORDERPAY(6),
-		BONUS(7);
+		ORDERIN(6),
+		ORDEROUT(7),
+		BONUSIN(8),
+		BONUSOUT(9);
 		private int value;
 		public int getValue() {
 			return value;
@@ -154,6 +158,20 @@ public class Constants {
 			return value;
 		}
 		private PayChannel(int value) {
+			this.value = value;
+		}
+	}
+	
+	public enum RuleType {
+		/** 分配策略 **/
+		CHARGE(0), 
+		/** 押金额 **/
+		PLEDGE(1);
+		private int value;
+		public int getValue() {
+			return value;
+		}
+		private RuleType(int value) {
 			this.value = value;
 		}
 	}

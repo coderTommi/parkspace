@@ -16,8 +16,8 @@ public class Bill implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String billId;
-	private String payer;
-	private String payee;
+	private String userId;
+	private String oppUserId;
 	private Date transDate;
 	private Timestamp transTime;
 	private Integer billType;
@@ -26,23 +26,12 @@ public class Bill implements Serializable {
 	private String orderJnlno;
 	private String remoteJnlNo;
 	private Integer payChannel;
+	private BigDecimal ticketAmt;
 	public String getBillId() {
 		return billId;
 	}
 	public void setBillId(String billId) {
 		this.billId = billId;
-	}
-	public String getPayer() {
-		return payer;
-	}
-	public void setPayer(String payer) {
-		this.payer = payer;
-	}
-	public String getPayee() {
-		return payee;
-	}
-	public void setPayee(String payee) {
-		this.payee = payee;
 	}
 	public Integer getBillType() {
 		return billType;
@@ -93,5 +82,23 @@ public class Bill implements Serializable {
 	}
 	public void setPayChannel(Integer payChannel) {
 		this.payChannel = payChannel;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getOppUserId() {
+		return oppUserId;
+	}
+	public void setOppUserId(String oppUserId) {
+		this.oppUserId = oppUserId;
+	}
+	public BigDecimal getTicketAmt() {
+		return ticketAmt;
+	}
+	public void setTicketAmt(BigDecimal ticketAmt) {
+		this.ticketAmt = ticketAmt;
 	}
 }

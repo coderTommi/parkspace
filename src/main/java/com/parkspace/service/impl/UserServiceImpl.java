@@ -117,7 +117,8 @@ public class UserServiceImpl implements IUserService {
 	
 	@Override
 	public String getAdminUserId() throws ParkspaceServiceException, Exception {
-		return null;
+		BaseUser adminUser = baseUserDao.getById("1");
+		return adminUser.getUserId();
 	}
 	
 	
