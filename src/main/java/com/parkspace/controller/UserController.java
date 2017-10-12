@@ -1,5 +1,7 @@
 package com.parkspace.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,12 +11,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.parkspace.common.OperationResult;
 import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.controller.pojo.LoginWapper;
 import com.parkspace.controller.pojo.RegisterUserWapper;
+import com.parkspace.db.rmdb.entity.BaseUser;
+import com.parkspace.db.rmdb.entity.SpaceApply;
 import com.parkspace.service.IUserService;
 import com.parkspace.util.Constants;
 
@@ -110,5 +115,92 @@ public class UserController {
 		}
 		return result;
 	}
-	
+	/**
+	 * 车位认证申请
+	 * @Title: spaceApply
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月12日 下午6:37:18</p>
+	 */
+	@RequestMapping(value = "/spaceApply", method = RequestMethod.POST)
+    @ResponseBody
+	public OperationResult spaceApply(HttpServletRequest request, @RequestBody SpaceApply apply){
+		OperationResult result = new OperationResult();
+		try {
+			BaseUser user = (BaseUser)request.getSession().getAttribute("_USER");
+			apply.setUserId(user.getUserId());
+			userService.parkspaceApply(apply);
+			result.setFlag(true);
+		}catch(ParkspaceServiceException e){
+			log.error("spaceApply  error", e);
+			result.setErrCode(e.getMessageCode());
+			result.setFlag(false);
+		} catch (Exception e) {
+			log.error("spaceApply  error", e);
+			result.setFlag(false);
+			result.setErrCode(Constants.ERRORCODE.UNKNOWERROR.toString());
+		}
+		return result;
+	}
+	/**
+	 * 车位认证授权
+	 * @Title: spaceAuth
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月12日 下午6:37:11</p>
+	 */
+	@RequestMapping(value = "/spaceAuth", method = RequestMethod.GET)
+    @ResponseBody
+	public OperationResult spaceAuth(HttpServletRequest request,
+			@RequestParam(value="applyId", required=true) String applyId,
+			@RequestParam(value="state", required=true) Integer state,
+			@RequestParam(value="memo", required=true) String memo){
+		OperationResult result = new OperationResult();
+		try {
+			userService.parkspaceAuth(applyId, memo, state);
+			result.setFlag(true);
+		}catch(ParkspaceServiceException e){
+			log.error("spaceAuth  error", e);
+			result.setErrCode(e.getMessageCode());
+			result.setFlag(false);
+		} catch (Exception e) {
+			log.error("spaceAuth  error", e);
+			result.setFlag(false);
+			result.setErrCode(Constants.ERRORCODE.UNKNOWERROR.toString());
+		}
+		return result;
+	}
+	/**
+	 * 查询待授权车位 信息
+	 * @Title: getApplys
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月12日 下午6:36:57</p>
+	 */
+	@RequestMapping(value = "/getUnAuthApplys", method = RequestMethod.GET)
+    @ResponseBody
+	public OperationResult getApplys(HttpServletRequest request){
+		OperationResult result = new OperationResult();
+		try {
+			BaseUser user = (BaseUser)request.getSession().getAttribute("_USER");
+			List<SpaceApply> list = userService.getSpaceApplys(user.getUserId(), 0);
+			result.setFlag(true);
+			result.setResData(list);
+		}catch(ParkspaceServiceException e){
+			log.error("getApplys  error", e);
+			result.setErrCode(e.getMessageCode());
+			result.setFlag(false);
+		} catch (Exception e) {
+			log.error("getApplys  error", e);
+			result.setFlag(false);
+			result.setErrCode(Constants.ERRORCODE.UNKNOWERROR.toString());
+		}
+		return result;
+	}
 }

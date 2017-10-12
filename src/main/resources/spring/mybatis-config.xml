@@ -28,6 +28,7 @@
 		<typeAlias alias="ReportCommonModel" type="com.parkspace.model.ReportCommonModel"/>
 		<typeAlias alias="PrivilegeTicket" type="com.parkspace.db.rmdb.entity.PrivilegeTicket"/>
 		<typeAlias alias="ChargeRule" type="com.parkspace.db.rmdb.entity.ChargeRule"/>
+		<typeAlias alias="SpaceApply" type="com.parkspace.db.rmdb.entity.SpaceApply"/>
 		
 	</typeAliases>
  	<plugins>

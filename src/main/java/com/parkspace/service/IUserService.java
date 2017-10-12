@@ -1,10 +1,12 @@
 package com.parkspace.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.controller.pojo.RegisterUserWapper;
-import com.parkspace.db.rmdb.entity.BaseUser;
+import com.parkspace.db.rmdb.entity.SpaceApply;
 
 /**
  * 注册、登录service
@@ -22,8 +24,17 @@ public interface IUserService {
 	
 	/** 车主认证 **/
 	
-	/** 业主认证 **/
+	
 	
 	/** 获取管理员userId **/
 	public String getAdminUserId() throws ParkspaceServiceException, Exception;
+	/** 车位认证申请 **/
+	public void parkspaceApply(SpaceApply apply) 
+			throws ParkspaceServiceException, Exception;
+	
+	/** 车位认证授权 **/
+	public void parkspaceAuth(String applyId, String memo, Integer state) 
+			throws ParkspaceServiceException, Exception;
+	
+	public List<SpaceApply> getSpaceApplys(String userId, Integer state)  throws ParkspaceServiceException, Exception;
 }

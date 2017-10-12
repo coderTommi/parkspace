@@ -36,7 +36,7 @@ public interface IBillService {
 	 * @throws
 	 * <p>CreateDate:2017年10月2日 上午10:24:02</p>
 	 */
-	public List qryIncomeDetailList(String usrId, Date beginDate, Date endDate)  throws ParkspaceServiceException, Exception;
+	public List<Bill> qryIncomeDetailList(String usrId, Date beginDate, Date endDate)  throws ParkspaceServiceException, Exception;
 
 	/**
 	 * 查询提现明细
@@ -48,5 +48,15 @@ public interface IBillService {
 	 * <p>CreateDate:2017年10月2日 上午10:22:14</p>
 	 */
 	public List<Bill> qryWithdrawList(String userId,  Date beginDate, Date endDate) throws ParkspaceServiceException, Exception;
+	/**
+	 * 查询消费详情
+	 * @Title: qryOutList
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return List<Bill>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月12日 下午6:45:01</p>
+	 */
+	public List<Bill> qryOutList(String userId, Date beginDate, Date endDate) throws ParkspaceServiceException, Exception;
 
 }

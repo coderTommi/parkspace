@@ -147,5 +147,46 @@ public class BillController {
 		}
 		return result;
 	}
+	
+	
+	/**
+	 * 查询消费
+	 * @Title: qryOutList
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月12日 下午4:55:33</p>
+	 */
+	@RequestMapping(value = "/outlist", method = RequestMethod.GET)
+    @ResponseBody
+	public OperationResult qryOutList(HttpServletRequest req, 
+			@RequestParam(value="beginDate", required=true) Date beginDate, 
+			@RequestParam(value="endDate", required=true) Date endDate,
+			@RequestParam(value = "page", required = true) int page,
+            @RequestParam(value = "pageSize", required = true) int pageSize) {
+		OperationResult result = new OperationResult();
+		PageHelper.startPage(page, pageSize);
+		try {
+			BaseUser user = (BaseUser)req.getSession().getAttribute("_USER");
+			List<Bill> list = billService.qryOutList(user.getUserId(), beginDate, endDate);
+			if(list != null && list.size() > 0) {
+				PageInfo<Bill> listPage = new PageInfo<Bill>(list);
+				result.setResData(listPage);
+			}else {
+				result.setResData(list);
+			}
+			result.setFlag(true);
+		}catch(ParkspaceServiceException e){
+			log.error("qryOutList error", e);
+			result.setErrCode(e.getMessageCode());
+			result.setFlag(false);
+		} catch (Exception e) {
+			log.error("qryOutList error", e);
+			result.setFlag(false);
+			result.setErrCode(Constants.ERRORCODE.UNKNOWERROR.toString());
+		}
+		return result;
+	}
 
 }

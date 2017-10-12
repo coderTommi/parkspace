@@ -121,11 +121,11 @@
         	 <if test="endDate != null">
             	and transDate &lt; #{transDate}
         	 </if>  
-        	 order by transtime desc
+        	 and state=0 order by transtime desc
 	</select>
 	
 		<!-- 查询体现明细 -->
-	<select id="getWithDrawList" parameterType="java.util.HashMap" resultType="Bill">
+	<select id="getByBillType" parameterType="java.util.HashMap" resultType="Bill">
 		select * from bill where 1=1 
 			 <if test="userId != null">
             	and userId = #{userId}
@@ -139,6 +139,7 @@
         	 <if test="endDate != null">
             	and transDate &lt; #{transDate}
         	 </if>  
+            	and state=0
         	 order by transtime desc
 	</select>	
 </mapper>

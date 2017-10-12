@@ -88,6 +88,17 @@ public class BillServiceImpl implements IBillService {
 		map.put("beginDate", beginDate);
 		map.put("endDate", endDate);
 		map.put("billType", Constants.AMTTYPE.WITHDRAW.getValue());
-		return billDao.getWithDrawList(map);
+		return billDao.getByBillType(map);
+	}
+	
+	@Override
+	public List<Bill> qryOutList(String userId, Date beginDate, Date endDate)
+			throws ParkspaceServiceException, Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(userId, userId);
+		map.put("beginDate", beginDate);
+		map.put("endDate", endDate);
+		map.put("billType", Constants.AMTTYPE.ORDEROUT.getValue());
+		return billDao.getByBillType(map);
 	}
 }

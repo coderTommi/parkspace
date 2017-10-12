@@ -56,13 +56,13 @@ public interface BillDao {
 	public List<Bill> getIncomeList(Map qryMap);
 	/**
 	 * 提现列表
-	 * @Title: getWithDrawList
+	 * @Title: getByBillType
 	 * <p>Description:</p>
 	 * @param     参数
 	 * @return List<Bill>    返回类型
 	 * @throws
 	 * <p>CreateDate:2017年10月12日 下午4:14:55</p>
 	 */
-	public List<Bill> getWithDrawList(Map qryMap);
+	public List<Bill> getByBillType(Map qryMap);
 	
 }
