@@ -81,7 +81,11 @@ public class Constants {
 		SPACENO_IS_NO_DELAY(20009),
 		
 		/** 消息发送失败 **/
-		SEND_MESSAGE_IS_FAILURE(20010);
+		SEND_MESSAGE_IS_FAILURE(20010),
+		/** 客户端响应超时 **/
+		CLIENT_TIME_OUT(20011);
+		
+		
 		/** 错误码 **/
 		private int value;
 

@@ -2,7 +2,6 @@ package com.parkspace.socket;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -13,22 +12,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
-import com.corundumstudio.socketio.AckRequest;
+import com.corundumstudio.socketio.AckCallback;
 import com.corundumstudio.socketio.Configuration;
-import com.corundumstudio.socketio.MultiTypeAckCallback;
-import com.corundumstudio.socketio.MultiTypeArgs;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
-import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.parkspace.common.exception.ParkspaceServiceException;
-import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
-import com.parkspace.model.SocketDataModel;
 import com.parkspace.service.IParkingSpaceBillService;
 import com.parkspace.service.IParkingSpaceService;
 import com.parkspace.util.Constants;
-import com.parkspace.util.JsonUtils;
 
 /**
  * @Title: SocketServerService.java
@@ -83,11 +76,29 @@ public class SocketServerService {
         server = new SocketIOServer(config);
         
         //监听各种事件，完成消息的推送
-        //1.进入小区事件
-        checkInCommunity();
-        //2.离开小区事件
-        checkOutCommunity();
-        
+        /**
+         * 1.进入小区事件
+         * <p>Description:监听进入小区的事件
+         * 需要完成-确认订单的操作即调用
+         * parkingSpaceService.confirmOrderParkingSpace(orderJnlNo);
+         */
+        server.addEventListener("checkInCommunity", String.class, 
+				new CheckInCommunityDataListener<String>(parkingSpaceService,
+						parkingSpaceBillService));
+        /**
+         * 2.离开小区事件
+         * 监听离开小区的事件
+         * 调用订单支付接口
+         */
+        server.addEventListener("checkOutCommunity", String.class, 
+        		new CheckOutCommunityDataListener<String>(parkingSpaceService,
+        				parkingSpaceBillService));
+        /**
+         * 增加订单响应，反馈订单信息是否增加成功
+         */
+        server.addEventListener("addOrderParkingSpace", String.class,
+        		new AddOrderParkingSpaceDataListener<String>(parkingSpaceService,
+        				parkingSpaceBillService));
         /**
          * 其他事件监听
          */
@@ -103,126 +114,6 @@ public class SocketServerService {
         Thread.sleep(Integer.MAX_VALUE);
         server.stop();
         
-	}
-	/**
-	 * 
-	 * @Title: checkInCommunity
-	 * <p>Description:监听进入小区的事件
-	 * 需要完成-确认订单的操作即调用
-	 * parkingSpaceService.confirmOrderParkingSpace(orderJnlNo);
-	 * </p>
-	 * @param     参数
-	 * @return void    返回类型
-	 * @throws
-	 * <p>CreateDate:2017年10月12日 上午9:56:40</p>
-	 */
-	private void checkInCommunity() {
-		//数据传输过程使用json字符串
-		server.addEventListener("checkInCommunity", String.class, new DataListener<String>() {
-
-			@Override
-			public void onData(SocketIOClient client, String data, AckRequest ackRequest) 
-					throws Exception {
-				String sa = client.getRemoteAddress().toString();
-				//获取客户端连接的ip
-                String clientIp = sa.substring(1,sa.indexOf(":"));
-                
-                SocketDataModel socketDataModel = JsonUtils.str2Object(data, SocketDataModel.class);
-                if(socketDataModel != null) {
-                	String userId = socketDataModel.getUserId();
-                	String carno = socketDataModel.getCarno();
-                	//查询订单号
-                	ParkingSpaceBill parkingSpaceBill = new ParkingSpaceBill();
-                	parkingSpaceBill.setUserId(userId);
-                	parkingSpaceBill.setCarno(carno);
-                	List<ParkingSpaceBill> list = parkingSpaceBillService.getParkingSpaceBillList(parkingSpaceBill);
-                	if(list != null && list.size() > 0) {
-                		for(ParkingSpaceBill p : list) {
-                			if(p != null) {
-                				try {
-                					parkingSpaceService.confirmOrderParkingSpace(p.getOrderJnlNo());
-                					socketDataModel.setSuccess(true);
-                				}catch(Exception e) {
-                					socketDataModel.setSuccess(false);
-                					e.printStackTrace();
-                					LOG.error("确认订单失败："+e.getMessage());
-                				}
-                				break;
-                			}
-                		}
-                	}
-                }
-                /**
-                 * 发送消息
-                 */
-                client.sendEvent("checkOutCommunity", JsonUtils.object2String(socketDataModel));
-                /*
-                 * 记录日志
-                 */
-                LOG.info("客户端IP：【"+clientIp+"】发送的数据内容是："+data);
-			}
-			
-		});
-	}
-	/**
-	 * 
-	 * @Title: checkOutCommunity
-	 * <p>Description:监听离开小区的事件
-	 * 调用订单支付接口
-	 * </p>
-	 * @param     参数
-	 * @return void    返回类型
-	 * @throws
-	 * <p>CreateDate:2017年10月12日 上午9:56:55</p>
-	 */
-	private void checkOutCommunity() {
-		//数据传输过程使用json字符串
-		server.addEventListener("checkOutCommunity", String.class, new DataListener<String>() {
-
-			@Override
-			public void onData(SocketIOClient client, String data, AckRequest ackRequest) 
-					throws Exception {
-				String sa = client.getRemoteAddress().toString();
-				//获取客户端连接的ip
-                String clientIp = sa.substring(1,sa.indexOf(":"));
-                
-                SocketDataModel socketDataModel = JsonUtils.str2Object(data, SocketDataModel.class);
-                if(socketDataModel != null) {
-                	String userId = socketDataModel.getUserId();
-                	String carno = socketDataModel.getCarno();
-                	//查询订单号
-                	ParkingSpaceBill parkingSpaceBill = new ParkingSpaceBill();
-                	parkingSpaceBill.setUserId(userId);
-                	parkingSpaceBill.setCarno(carno);
-                	List<ParkingSpaceBill> list = parkingSpaceBillService.getParkingSpaceBillList(parkingSpaceBill);
-                	if(list != null && list.size() > 0) {
-                		for(ParkingSpaceBill p : list) {
-                			if(p != null) {
-                				try {
-                					parkingSpaceService.payOrderParkingSpace(p.getOrderJnlNo());
-                					socketDataModel.setSuccess(true);
-                				}catch(Exception e) {
-                					socketDataModel.setSuccess(false);
-                					e.printStackTrace();
-                					LOG.error("支付订单失败："+e.getMessage());
-                				}
-                				break;
-                			}
-                		}
-                	}
-                }
-                
-                /**
-                 * 发送消息
-                 */
-                client.sendEvent("checkOutCommunity", JsonUtils.object2String(socketDataModel));
-                /*
-                 * 记录日志
-                 */
-                LOG.info("客户端IP：【"+clientIp+"】发送的数据内容是："+data);
-			}
-			
-		});
 	}
 	/**
 	 * @Title: commonEventListener
@@ -296,9 +187,8 @@ public class SocketServerService {
      * @param eventType 推送的事件类型
      * @param message  推送的内容
      */
-    public boolean sendMessageToAllClient(String eventType,String message) 
+    public void sendMessageToAllClient(String eventType,String message) 
     		throws ParkspaceServiceException{
-    	boolean  flag = false;
     	try {
     		if(server == null) {
     			startServer();
@@ -306,16 +196,22 @@ public class SocketServerService {
     		Collection<SocketIOClient> clients = server.getAllClients();
             for(SocketIOClient client: clients){
 //                client.sendEvent(eventType,message);
-                client.sendEvent(eventType, new MultiTypeAckCallback() {
-
+               /* client.sendEvent(eventType, new MultiTypeAckCallback() {
 					@Override
 					public void onSuccess(MultiTypeArgs result) {
+						LOG.info("========客户端响应：========"+result);
 						if(result != null) {
 							System.out.println("=====1111====="+result.get(0));
 						}
 					}
-					
-				} , message);
+				} , message);*/
+            	client.sendEvent(eventType, new AckCallback<String>(String.class) {
+					@Override
+					public void onSuccess(String result) {
+						LOG.info("ack from client: " + client.getSessionId() + " data: " + result);
+					}
+            		
+            	}, message);
             }
     	}catch(Exception e) {
     		e.printStackTrace();
@@ -323,8 +219,6 @@ public class SocketServerService {
 					Constants.ERRORCODE.SEND_MESSAGE_IS_FAILURE.toString(), 
 					"发送消息失败");
     	}
-    	return flag;
-        
     }
     /**
      * 给具体的客户端推送消息

@@ -137,6 +137,7 @@ public class TestParkingSpaceController extends TestBaseController{
 			.andDo(print())         //打印出请求和相应的内容  
 			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
 			System.out.println(json);
+			Thread.sleep(15000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
