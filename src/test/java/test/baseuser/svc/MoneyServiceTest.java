@@ -48,7 +48,7 @@ public class MoneyServiceTest {
 	
 	@Test
 	public void testOrder() throws Exception {
-		moneyService.order("f55dc148-5abf-4af3-a0f6-535c6cdebf4d", "222222222222222", new BigDecimal("10"), "1");
+		moneyService.order("f55dc148-5abf-4af3-a0f6-535c6cdebf4d", "222222222222222", new BigDecimal("10"), "1","123");
 	}
 	
 	@Test
