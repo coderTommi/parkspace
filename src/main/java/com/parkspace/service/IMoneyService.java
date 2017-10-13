@@ -80,7 +80,7 @@ public interface IMoneyService {
 	 * @throws
 	 * <p>CreateDate:2017年10月3日 上午11:03:45</p>
 	 */
-	public void order(String payer, String payee, BigDecimal amt, String comId)
+	public void order(String payer, String payee, BigDecimal amt, String comId, String orderId)
 			throws ParkspaceServiceException, Exception; 
 	/**
 	 * 发放奖金

@@ -216,7 +216,7 @@ public class MoneyServiceImpl implements IMoneyService {
 
 	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
-	public void order(String payer, String payee, BigDecimal amt, String comId) 
+	public void order(String payer, String payee, BigDecimal amt, String comId, String orderJnlno) 
 			throws ParkspaceServiceException, Exception {
 
 		BigDecimal payerAmt = amt;
@@ -245,19 +245,19 @@ public class MoneyServiceImpl implements IMoneyService {
 		/*
 		 * 付款人
 		 */
-		Bill payerBill = saveInitBill(payer, payee, payerAmt, orderOutType, ticketAmt);
+		Bill payerBill = saveInitBill(payer, payee, payerAmt, orderOutType, ticketAmt, orderJnlno);
 		/*
 		 * 收款人 
 		 */
-		Bill payeeBill = saveInitBill(payee, payer, payeeAmt, orderInType, null);
+		Bill payeeBill = saveInitBill(payee, payer, payeeAmt, orderInType, null, orderJnlno);
 		/*
 		 * 物业
 		 */
-		Bill propertyBill = saveInitBill(propertyUserId, payer, propertyAmt, orderInType, null);
+		Bill propertyBill = saveInitBill(propertyUserId, payer, propertyAmt, orderInType, null, orderJnlno);
 		/*
 		 * 公司
 		 */
-		Bill adminBill = saveInitBill(adminUserId, payer, adminAmt, orderInType, null);
+		Bill adminBill = saveInitBill(adminUserId, payer, adminAmt, orderInType, null, orderJnlno);
 		try {
 			updateWallet(payer, payerBill, Constants.BillSide.OUT.getValue());
 			updateWallet(payee, payeeBill, Constants.BillSide.IN.getValue());
@@ -294,8 +294,8 @@ public class MoneyServiceImpl implements IMoneyService {
 		 *  发放奖金。 調遠程接口，成功后在轉賬
 		 */
 		String adminUserId = userService.getAdminUserId();
-		Bill userBill = saveInitBill(userId, adminUserId, amt, Constants.AMTTYPE.BONUSIN.getValue() , null); 
-		Bill adminBill = saveInitBill(adminUserId, userId, amt, Constants.AMTTYPE.BONUSOUT.getValue(), null);
+		Bill userBill = saveInitBill(userId, adminUserId, amt, Constants.AMTTYPE.BONUSIN.getValue() , null, null); 
+		Bill adminBill = saveInitBill(adminUserId, userId, amt, Constants.AMTTYPE.BONUSOUT.getValue(), null, null);
 		/*
 		 * 先锁定账户
 		 */
@@ -396,13 +396,14 @@ public class MoneyServiceImpl implements IMoneyService {
 		return ruledef;
 	}
 	
-	private Bill saveInitBill(String userId, String oppUserId, BigDecimal amt, Integer billType, BigDecimal ticketAmt) 
+	private Bill saveInitBill(String userId, String oppUserId, BigDecimal amt, Integer billType, BigDecimal ticketAmt, String orderJnlno) 
 			throws ParkspaceServiceException, Exception {
 		Bill bill = new Bill();
 		bill.setUserId(userId);
 		bill.setOppUserId(oppUserId);
 		bill.setAmount(amt);
 		bill.setBillType(billType);
+		bill.setOrderJnlno(orderJnlno);
 		bill.setState(Constants.BillState.INIT.getValue());
 		billService.save(bill);
 		return bill;
