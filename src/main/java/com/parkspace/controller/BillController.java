@@ -43,7 +43,7 @@ public class BillController {
 	
 	/**
 	 * 查询账户详情
-	 * ex: http://localhost:8080/parkspace/bill/{telePhone}
+	 * ex: http://localhost:8080/parkspace/bill/qry
 	 * @param telePhone
 	 * @return
 	 */
@@ -69,6 +69,7 @@ public class BillController {
 	}
 	/**
 	 * 查询收益
+	 * http://localhost:8080/parkspace/bill/income?page=0&pageSize=10&beginDate=2017-10-10&endDate=2017-10-20
 	 * @Title: qryIncomeList
 	 * <p>Description:</p>
 	 * @param     参数
@@ -110,6 +111,7 @@ public class BillController {
 	
 	/**
 	 * 查询提现
+	 * http://localhost:8080/parkspace/withdraw?page=0&pageSize=10&beginDate=2017-10-10&endDate=2017-10-20
 	 * @Title: qryIncomeList
 	 * <p>Description:</p>
 	 * @param     参数
@@ -151,6 +153,7 @@ public class BillController {
 	
 	/**
 	 * 查询消费
+	 * GET:http://localhost:8080/parkspace/outlist?page=0&pageSize=10&beginDate=2017-10-10&endDate=2017-10-20
 	 * @Title: qryOutList
 	 * <p>Description:</p>
 	 * @param     参数

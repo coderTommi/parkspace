@@ -38,7 +38,15 @@ public class TicketController {
 	private Log log = LogFactory.getLog(TicketController.class);
 	@Resource
 	private ITicketService ticketService;
-	
+	/**
+	 * http://localhost:8080/ticket/qryList?page=0&pageSize=10
+	 * @Title: getUserTickets
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月16日 下午8:52:42</p>
+	 */
 	@RequestMapping(value = "/qryList", method = RequestMethod.GET)
     @ResponseBody
 	public OperationResult getUserTickets(HttpServletRequest req, 

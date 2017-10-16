@@ -32,7 +32,7 @@ public class UserController {
 	private IUserService userService;
 	
 	/**
-	 * ex: http://localhost:8080/parkspace/user/registe
+	 * ex: http://localhost:8080/parkspace/user/regist
 	 * {
 	 * 	"telePhone" : "13888888888",
 	 * 	"smsCode" : "123456",
@@ -43,7 +43,7 @@ public class UserController {
 	 * @param user
 	 * @return
 	 */
-	@RequestMapping(value = "/registe", method = RequestMethod.POST)
+	@RequestMapping(value = "/regist", method = RequestMethod.POST)
     @ResponseBody
 	public OperationResult registerUser(@RequestBody RegisterUserWapper user){
 		OperationResult result = new OperationResult();
@@ -117,6 +117,15 @@ public class UserController {
 	}
 	/**
 	 * 车位认证申请
+	 * http://localhost:8080/parkspace/spaceApply
+	 * {
+	 * 	"comId":"123123123",
+	 *  "spaceId" : "sadfas123",
+	 *   "realName" : "ldl",
+	 *   "idType" : "0",
+	 *   "idNo" : "370724198301011234",
+	 *   "telePhone" : "13888888888"
+	 * }
 	 * @Title: spaceApply
 	 * <p>Description:</p>
 	 * @param     参数
@@ -146,6 +155,7 @@ public class UserController {
 	}
 	/**
 	 * 车位认证授权
+	 * http://localhost:8080/parkspace/spaceAuth?applyId=123123124&state=0&memo=同意
 	 * @Title: spaceAuth
 	 * <p>Description:</p>
 	 * @param     参数
@@ -176,6 +186,7 @@ public class UserController {
 	}
 	/**
 	 * 查询待授权车位 信息
+	 * http://localhost:8080/parkspace/getUnAuthApplys
 	 * @Title: getApplys
 	 * <p>Description:</p>
 	 * @param     参数
