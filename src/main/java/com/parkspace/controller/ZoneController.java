@@ -46,7 +46,9 @@ public class ZoneController {
 	/**
 	 * @Title: addZone
 	 * <p>Description:新建行政区域
-	 * /v1/zone/addzone
+	 * post:http://localhost:8080/parkspace/v1/zone/addzone
+	 * 入参：{"zonename":"天桥行政区1","province":"山东省1","city":"济南1","zone":"天桥区1","memo":"测试区域添加1","createBy":null,"modifyBy":null}
+	 * 出参：{"flag":true,"errCode":null,"resData":{"zoneid":"4d2d629e-45f1-49fb-bcb2-6cf62078c9ff","zonename":"天桥行政区1","isenable":1,"isenableQuery":null,"province":"山东省1","city":"济南1","zone":"天桥区1","memo":"测试区域添加1","createBy":"admin","createTime":1508231174243,"modifyBy":"admin","modifyTime":1508231174243}}
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型
@@ -89,7 +91,9 @@ public class ZoneController {
 	/**
 	 * @Title: updateZone
 	 * <p>Description:更新行政区域信息
-	 * /v1/zone/updatezone
+	 * post:http://localhost:8080/parkspace/v1/zone/updatezone
+	 * 入参：入参{"zoneid":"59f0d481-e78e-4e50-a918-78345194f0df","zonename":"天桥行政区1","province":"山东省1","city":"济南1","zone":"天桥区1","memo":"测试更改端到端","modifyBy":"admin"}
+	 * 出参：{"flag":true,"errCode":null,"resData":null}
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型
@@ -130,7 +134,9 @@ public class ZoneController {
 	/**
 	 * @Title: deleteZone
 	 * <p>Description:删除某个行政区域
-	 * /v1/zone/deletezone/9f7abc0f-197d-4d43-bd09-92b98fd45105
+	 * post:http://localhost:8080/parkspace/v1/zone/deletezone/9f7abc0f-197d-4d43-bd09-92b98fd45105
+	 * 入参：url中使用zoneid
+	 * 出参：{"flag":true,"errCode":null,"resData":null}
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型
@@ -175,7 +181,9 @@ public class ZoneController {
 	 * 
 	 * @Title: getAllZone
 	 * <p>Description:查询所有行政区域信息
-	 * /v1/zone/getallzone
+	 * get:http://localhost:8080/parkspace/v1/zone/getallzone?page=1&pageSize=1
+	 * 入参：入参：{"zoneid":null,"zonename":null,"isenable":null,"isenableQuery":null,"province":"山东省1","city":"济南1","zone":null,"memo":"测试区域添加1","createBy":null,"createTime":null,"modifyBy":null,"modifyTime":null}
+	 * 出参：{"flag":true,"errCode":null,"resData":{"pageNum":1,"pageSize":1,"size":1,"startRow":1,"endRow":1,"total":3,"pages":3,"list":[{"zoneid":"59f0d481-e78e-4e50-a918-78345194f0df","zonename":"天桥行政区1","isenable":-1,"isenableQuery":null,"province":"山东省1","city":"济南1","zone":"天桥区1","memo":"测试更改端到端","createBy":"admin","createTime":1508231288000,"modifyBy":"admin","modifyTime":1508231925000}],"prePage":0,"nextPage":2,"isFirstPage":true,"isLastPage":false,"hasPreviousPage":false,"hasNextPage":true,"navigatePages":8,"navigatepageNums":[1,2,3],"navigateFirstPage":1,"navigateLastPage":3,"firstPage":1,"lastPage":3}}
 	 * 可以通过行政区域的状态获取相关的信息
 	 * 状态  0：未开放  1：已开放，-1,表示删除，默认0
 	 * private Integer isenable;
@@ -217,7 +225,9 @@ public class ZoneController {
 	/**
 	 * @Title: getZone
 	 * <p>Description:获取某个行政区域的信息
-	 * /v1/zone/getzone/9f7abc0f-197d-4d43-bd09-92b98fd45105
+	 * get:http://localhost:8080/parkspace/v1/zone/getzone/9f7abc0f-197d-4d43-bd09-92b98fd45105
+	 * 入参：在url中使用zoneid
+	 * 出参：{"flag":true,"errCode":null,"resData":{"zoneid":"59f0d481-e78e-4e50-a918-78345194f0df","zonename":"天桥行政区1","isenable":-1,"isenableQuery":null,"province":"山东省1","city":"济南1","zone":"天桥区1","memo":"测试区域添加1","createBy":"admin","createTime":1508231288000,"modifyBy":"admin","modifyTime":1508231635000}}
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型

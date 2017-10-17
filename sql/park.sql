@@ -396,7 +396,10 @@ create table ParkingSpaceBill
    budgetPrice          decimal(15,2) not null comment '预算：=单价*停车时长',
    createTime           datetime not null comment '创建时间',
    lastPayTime          datetime comment '上次结算时间:24小时结算一次，并且记录该时间，同时更新结算金额',
-   payedMoney           decimal(15,2) not null default 0 comment '已结算金额：截至目前一共结算的金额'
+   payedMoney           decimal(15,2) not null default 0 comment '已结算金额：截至目前一共结算的金额',
+   isGrantSuccess       int(2) comment '是否授权成功：系统定时执行，如果授权成功表示开通临时权限，1成功，0不成功',
+   comid                varchar(64) comment '小区ID',
+   tryGrantCount        int(10) not null default 0 comment '授权次数：调用socket授权的次数，用来限制最大使用数,默认为0'
 );
 
 alter table ParkingSpaceBill comment '车位订单，用来记录车位的订单信息

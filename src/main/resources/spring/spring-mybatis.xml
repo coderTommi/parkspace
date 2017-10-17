@@ -13,7 +13,7 @@
                         http://www.springframework.org/schema/tx  
                         http://www.springframework.org/schema/tx/spring-tx-4.3.xsd " >
     <!-- 扫描 -->
-    <context:component-scan base-package="com.parkspace.db.rmdb,com.parkspace.service" />
+    <context:component-scan base-package="com.parkspace.db.rmdb,com.parkspace.service,com.parkspace.socket" />
 	<!-- 加载数据库配置文件 -->
 	<context:property-placeholder location="classpath:config/*.properties" />
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"

@@ -46,7 +46,10 @@ public class SpaceOwnerController {
 	 * 
 	 * @Title: getAllSpaceOwner
 	 * <p>Description:查询所有的业主信息
-	 * /v1/spaceowner/getallspaceowner
+	 * get:http://localhost:8080/parkspace/v1/spaceowner/getallspaceowner?page=1&pageSize=1
+	 * 入参（查询所有）：空
+	 * 入参（业主可按名字、手机号、车位号模糊查询）：{"userName":"孙","telePhone":"15300201276","spaceno":"1","carno":"a"}
+	 * 出参：{"flag":true,"errCode":null,"resData":{"pageNum":1,"pageSize":1,"size":1,"startRow":1,"endRow":1,"total":1,"pages":1,"list":[{"userId":"1","userName":"test01","nickName":"test01_nickName","userPwd":null,"telePhone":"15300201276","isAdmin":0,"idType":0,"idNo":"370714198211240087","state":2,"weixinAccount":"123456","avator":"admin","memo":"test user","createBy":"admin","createTime":1506246726000,"modifyBy":"admin","modifyTime":1506246726000,"realName":"孙辽东real","spaceno":"1","isauth":0,"isauthQuery":null,"carno":"abc","parkingSpace":{"spaceno":"1","spacenoLikeQuery":null,"comid":"d2ac2ef6-acad-411a-9b2a-9732d47028b5","parkPositionFloor":"-1F","parkPositionZone":"A区","parkPositionX":"100X","parkPositionY":"200Y","parkStatus":"0","parkStatusQuery":null,"parkType":"P","parkTypeQuery":null,"parkPositionDes":"3号楼附近","spaceOwner":"13518678898","memo":"测试这位添加测试修改信息","createBy":"孙辽东create","createTime":1506413381000,"modifyBy":"modifyBy","modifyTime":1506413856000,"community":null,"zone":null,"spaceOwnerUser":null,"parkHours":null,"parkHoursString":null,"shareConfigList":null,"useCount":2},"certifiedTime":1507471148000,"community":{"comid":"d2ac2ef6-acad-411a-9b2a-9732d47028b5","comidQuery":null,"zoneid":"4e73503c-7052-41bc-a716-b8b2d2e32e5e","comname":"王府庄园","address":"济洛路王府庄园更新地址更新地址","isenable":1,"isenableQuery":null,"memo":"测试添加小区","createBy":"孙辽东创建","createTime":1506244564000,"modifyBy":"孙辽东编辑","modifyTime":1506264204000,"price":null,"maxPriceAllDay":16.00,"freeParkingMinutes":60,"zone":null},"zone":{"zoneid":"4e73503c-7052-41bc-a716-b8b2d2e32e5e","zonename":"天桥行政区","isenable":1,"isenableQuery":null,"province":"山东省","city":"济南","zone":"天桥区","memo":"测试区域添加00010001","createBy":"孙辽东","createTime":1506244295000,"modifyBy":"孙辽东02","modifyTime":1506263494000}}],"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1,"firstPage":1,"lastPage":1}}
 	 * 可以通过状态过滤信息
 	 * 状态:0未认证，1认证，默认0，-1表示禁用不在公开车位
 	 * private Integer isauth;
@@ -99,7 +102,7 @@ public class SpaceOwnerController {
 	/**
 	 * @Title: addBlackList
 	 * <p>Description:加入黑名单
-	 * /v1/spaceowner/addblacklist
+	 * post:http://localhost:8080/parkspace/v1/spaceowner/addblacklist
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型
@@ -130,7 +133,7 @@ public class SpaceOwnerController {
 	/**
 	 * @Title: getBlackList
 	 * <p>Description:查询黑名单
-	 * /v1/spaceowner/getblacklist
+	 * get:http://localhost:8080/parkspace/v1/spaceowner/getblacklist
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型

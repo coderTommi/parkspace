@@ -11,7 +11,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
@@ -29,7 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ContextConfiguration(locations = {"classpath:spring/dispatcher-servlet.xml"}) 
 //配置事务的回滚,对数据库的增删改都会回滚,便于测试用例的循环利用  
 @TransactionConfiguration(transactionManager="transactionManager",defaultRollback=false)  
-@Transactional  
+//@Transactional  
 public class TestBaseController extends AbstractTransactionalJUnit4SpringContextTests{
 	@Autowired
     protected WebApplicationContext wac;

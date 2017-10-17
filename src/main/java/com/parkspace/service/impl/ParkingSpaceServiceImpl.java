@@ -23,14 +23,11 @@ import com.parkspace.db.rmdb.entity.ParkingSpace;
 import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
 import com.parkspace.db.rmdb.entity.ShareConfig;
 import com.parkspace.db.rmdb.entity.SpaceOwner;
-import com.parkspace.model.SocketDataModel;
 import com.parkspace.service.IParkingSpaceBillHisService;
 import com.parkspace.service.IParkingSpaceBillService;
 import com.parkspace.service.IParkingSpaceService;
 import com.parkspace.service.IShareConfigService;
-import com.parkspace.socket.SocketServerService;
 import com.parkspace.util.Constants;
-import com.parkspace.util.JsonUtils;
 
 /**
  * @Title: ParkingSpaceServiceImpl.java
@@ -58,8 +55,8 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	private IParkingSpaceBillHisService parkingSpaceBillHisService;
 	@Resource
 	private CaruserDao caruserDao;
-	@Resource
-	private SocketServerService socketServerService;
+//	@Resource
+//	private SocketServerService socketServerService;
 	/**
 	 * @Title: getParkingSpace
 	 * <p>Description:根据车位编号查询车位信息
@@ -396,6 +393,13 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 					Constants.ERRORCODE.SPACE_IS_NOT_ORDER.toString(), 
 					"该车位不能被预定");
 		}
+		String comid = "";
+		for(ParkingSpace p : list) {
+			if(p != null) {
+				comid = p.getComid();
+				break;
+			}
+		}
 		//获取车位的业主信息--
 		SpaceOwner spaceOwner = spaceOwnerDao.getSpaceOwner(spaceno);
 		parkingSpaceBill.setSpaceOwnerUserId(spaceOwner.getUserId());
@@ -411,6 +415,7 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		parkingSpaceBill.setCreateTime(new Date());
 		parkingSpaceBill.setOrderJnlNo(UUID.randomUUID().toString());
 		parkingSpaceBill.setPayedMoney(new BigDecimal(0));
+		parkingSpaceBill.setComid(comid);
 		parkingSpaceBillService.addParkingSpaceBill(parkingSpaceBill);
 		
 		//更新车位状态-占用
@@ -418,13 +423,16 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		newParkingSpace.setSpaceno(spaceno);
 		newParkingSpace.setParkStatus("1");//占用
 		parkingSpaceDao.updateParkingSpace(newParkingSpace);
+		
+		
+		//使用定时任务处理，事务关联性导致处理失败
 		//调用道闸系统写入数据
-		SocketDataModel socketDataModel = new SocketDataModel();
-		socketDataModel.setCarno(parkingSpaceBill.getCarno());
-		socketDataModel.setSpaceno(spaceno);
-		socketDataModel.setUserId(parkingSpaceBill.getUserId());
-		String message = JsonUtils.object2String(socketDataModel);
-		socketServerService.sendMessageToAllClient("addOrderParkingSpace", message);
+//		SocketDataModel socketDataModel = new SocketDataModel();
+//		socketDataModel.setCarno(parkingSpaceBill.getCarno());
+//		socketDataModel.setSpaceno(spaceno);
+//		socketDataModel.setUserId(parkingSpaceBill.getUserId());
+//		String message = JsonUtils.object2String(socketDataModel);
+//		socketServerService.sendMessageToAllClient("addOrderParkingSpace", message);
 		
 		return parkingSpaceBill;
 	}
@@ -501,12 +509,12 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		parkingSpaceDao.updateParkingSpace(newParkingSpace);
 		
 		//删除在道闸系统中的临时权限
-		SocketDataModel socketDataModel = new SocketDataModel();
-		socketDataModel.setCarno(parkingSpaceBill.getCarno());
-		socketDataModel.setSpaceno(spaceno);
-		socketDataModel.setUserId(parkingSpaceBill.getUserId());
-		String message = JsonUtils.object2String(socketDataModel);
-		socketServerService.sendMessageToAllClient("cancelOrderParkingSpace", message);
+//		SocketDataModel socketDataModel = new SocketDataModel();
+//		socketDataModel.setCarno(parkingSpaceBill.getCarno());
+//		socketDataModel.setSpaceno(spaceno);
+//		socketDataModel.setUserId(parkingSpaceBill.getUserId());
+//		String message = JsonUtils.object2String(socketDataModel);
+//		socketServerService.sendMessageToAllClient("cancelOrderParkingSpace", message);
 	}
 	/**
 	 * @Title: confirmOrderParkingSpace

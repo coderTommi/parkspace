@@ -25,13 +25,13 @@ import com.parkspace.service.IShareConfigService;
 public class TestShareConfigController extends TestBaseController{
 	@Resource
 	private IShareConfigService shareConfigService;
-	public String comid = "1d93e91d-ae0b-4c5f-b0cc-0e6e711357ff";
+	public String comid = "9475e801-4262-4d91-8f9b-73d8b3b729d8";
 	@Test
 	public void getAllShareConfig() {
 		try {
 			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/shareconfig/getallshareconfig/1")
 					.param("page", "1")
-					.param("pageSize", "10"))
+					.param("pageSize", "1"))
 			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
 			.andDo(print())         //打印出请求和相应的内容  
 			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
@@ -69,7 +69,8 @@ public class TestShareConfigController extends TestBaseController{
 		try {
 			mvc.perform(MockMvcRequestBuilders.post("/v1/shareconfig/deleteshareconfig/"+comid))
 			.andDo(print())
-			.andExpect(MockMvcResultMatchers.status().isOk());
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andReturn().getResponse().getContentAsString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -93,7 +94,8 @@ public class TestShareConfigController extends TestBaseController{
 		ObjectMapper mapper = new ObjectMapper(); 
 		
 		try {
-			String requestJson = mapper.writeValueAsString(shareConfig); 
+			String requestJson = mapper.writeValueAsString(shareConfig);
+			System.out.println("input:"+requestJson);
 			String responseString = mvc.perform(MockMvcRequestBuilders.post("/v1/shareconfig/addshareconfig")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson))

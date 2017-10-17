@@ -11,6 +11,8 @@ import javax.annotation.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.corundumstudio.socketio.AckCallback;
 import com.corundumstudio.socketio.Configuration;
@@ -187,6 +189,7 @@ public class SocketServerService {
      * @param eventType 推送的事件类型
      * @param message  推送的内容
      */
+//	@Transactional(propagation=Propagation.REQUIRED)
     public void sendMessageToAllClient(String eventType,String message) 
     		throws ParkspaceServiceException{
     	try {
@@ -194,17 +197,15 @@ public class SocketServerService {
     			startServer();
     		}
     		Collection<SocketIOClient> clients = server.getAllClients();
+    		if(clients == null || clients.size() <= 0) {
+    			throw new ParkspaceServiceException(
+    					Constants.ERRORCODE.SEND_MESSAGE_IS_FAILURE.toString(), 
+    					"发送消息失败");
+    		}
             for(SocketIOClient client: clients){
-//                client.sendEvent(eventType,message);
-               /* client.sendEvent(eventType, new MultiTypeAckCallback() {
-					@Override
-					public void onSuccess(MultiTypeArgs result) {
-						LOG.info("========客户端响应：========"+result);
-						if(result != null) {
-							System.out.println("=====1111====="+result.get(0));
-						}
-					}
-				} , message);*/
+            	
+            	LOG.info("客户端UUID：【"+client.getSessionId()+"】");
+            	
             	client.sendEvent(eventType, new AckCallback<String>(String.class) {
 					@Override
 					public void onSuccess(String result) {
@@ -214,6 +215,7 @@ public class SocketServerService {
             	}, message);
             }
     	}catch(Exception e) {
+    		LOG.error("发送消息失败："+e.getMessage());
     		e.printStackTrace();
     		throw new ParkspaceServiceException(
 					Constants.ERRORCODE.SEND_MESSAGE_IS_FAILURE.toString(), 
@@ -226,6 +228,7 @@ public class SocketServerService {
      * @param eventType推送事件类型
      * @param message 推送的消息内容
      */
+	@Transactional(propagation=Propagation.REQUIRED)
     public void sendMessageToOneClient(String uuid,String eventType,String message) 
     		throws ParkspaceServiceException{
         try {
@@ -286,5 +289,4 @@ public class SocketServerService {
           }
         }, delay,cacheTime);// 这里设定将延时每天固定执行
 	}
-	
 }

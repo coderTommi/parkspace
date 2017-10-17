@@ -122,4 +122,23 @@ public interface ParkingSpaceBillDao {
 	 * <p>CreateDate:2017年10月11日 下午2:11:15</p>
 	 */
 	public List<ParkingSpaceBill> getNoPayedParkingSpaceBillListInPayInterval();
+	
+	/**
+	 * 
+	 * @Title: getNoPayedParkingSpaceBillListInPayInterval
+	 * <p>Description:查询为没有开通临时权限的订单数据</p>
+	 * @return List<ParkingSpaceBill>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月17日 下午4:05:33</p>
+	 */
+	public List<ParkingSpaceBill> getNoGrantParkingSpaceBillList();
+	/**
+	 * @Title: updateGrantParkingSpaceBill
+	 * <p>Description:更新开通权限状态和次数</p>
+	 * @param     parkingSpaceBill 待处理数据
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月17日 下午4:06:31</p>
+	 */
+	public void updateGrantParkingSpaceBill(ParkingSpaceBill parkingSpaceBill);
 }

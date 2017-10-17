@@ -24,7 +24,7 @@ import com.parkspace.db.rmdb.entity.Message;
 
 public class TestMessageController extends TestBaseController{
 	public Calendar cal = Calendar.getInstance();
-	public String UUID = "2ad1e597-c1dd-4c39-adea-e5b4f2c36580";
+	public String UUID = "7cd4952a-65b8-4000-a4c6-3bf965b32b35";
 	@Test
 	public void addMessage() {
 		Message message = new Message();
@@ -41,6 +41,7 @@ public class TestMessageController extends TestBaseController{
 		
 		try {
 			String requestJson = mapper.writeValueAsString(message); 
+			System.out.println("input:"+requestJson);
 			String responseString = mvc.perform(MockMvcRequestBuilders.post("/v1/message/addmessage")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson))
@@ -84,18 +85,19 @@ public class TestMessageController extends TestBaseController{
 	@Test
 	public void getAllMessage() {
 		Message message = new Message();
-//		message.setComid("1");
+		message.setComid("1");
 		message.setStatusQuery(new Integer[] {1,2});
 		message.setMessageObjectQuery(new Integer[] {0});
 		
 		ObjectMapper mapper = new ObjectMapper(); 
 		try {
 			String requestJson = mapper.writeValueAsString(message); 
+			System.out.println("input:"+requestJson);
 			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/message/getallmessage")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson)
 					.param("page", "1")
-					.param("pageSize", "10"))
+					.param("pageSize", "1"))
 			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
 			.andDo(print())         //打印出请求和相应的内容  
 			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  

@@ -22,7 +22,8 @@
 				delayParkHours,
 				spaceOwnerUserId,
 				lastPayTime,
-				payedMoney
+				payedMoney,
+				comid
     		) 
          values(
        			#{orderJnlNo},
@@ -37,7 +38,8 @@
        			#{delayParkHours},
        			#{spaceOwnerUserId},
        			#{lastPayTime},
-       			#{payedMoney}
+       			#{payedMoney},
+       			#{comid}
          )
 	</insert>
 	
@@ -180,4 +182,22 @@
 			and   ifnull(t.lastPayTime,t.createTime) < date_add(now(), interval -${@com.parkspace.util.Constants@PAY_INTERVAL_HOUR} hour )
 		]]>
 	</select>
+	<!-- 查询为没有开通临时权限的订单数据 -->
+	<select id="getNoGrantParkingSpaceBillList" resultType="ParkingSpaceBill">
+		select 	t.* 
+		from 	parkingSpaceBill t
+		where 	1 = 1
+		and		t.billStatus = 1
+		<![CDATA[ 
+			and t.tryGrantCount <= ${@com.parkspace.util.Constants@TRY_GRANT_COUNT}
+			and (isGrantSuccess != 1 or ISNULL(isGrantSuccess))
+		]]>
+	</select>
+	<!-- 更新开通权限状态和次数 -->
+	<update id="updateGrantParkingSpaceBill" parameterType="ParkingSpaceBill">
+    	update ParkingSpaceBill
+    		set isGrantSuccess = #{isGrantSuccess},
+    			tryGrantCount = tryGrantCount + 1
+    	where orderJnlNo = #{orderJnlNo}
+	</update>
 </mapper>

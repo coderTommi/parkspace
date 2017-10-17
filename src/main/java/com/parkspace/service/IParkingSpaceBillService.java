@@ -119,4 +119,22 @@ public interface IParkingSpaceBillService {
 	 * <p>CreateDate:2017年9月23日 下午9:15:51</p>
 	 */
 	public void payParkingSpaceBill(ParkingSpaceBill parkingSpaceBill);
+	/**
+	 * 
+	 * @Title: getNoPayedParkingSpaceBillListInPayInterval
+	 * <p>Description:查询为没有开通临时权限的订单数据</p>
+	 * @return List<ParkingSpaceBill>    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月17日 下午4:05:33</p>
+	 */
+	public List<ParkingSpaceBill> getNoGrantParkingSpaceBillList();
+	/**
+	 * @Title: updateGrantParkingSpaceBill
+	 * <p>Description:更新开通权限状态和次数</p>
+	 * @param     orderJnlNo 待处理订单
+	 * @return void    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月17日 下午4:06:31</p>
+	 */
+	public void updateGrantParkingSpaceBill(String orderJnlNo);
 }

@@ -19,6 +19,9 @@ public class Constants {
 	/** 结算周期 **/
 	public static int PAY_INTERVAL_HOUR = 24;
 	
+	/** 发送信息到client的重试次数 **/
+	public static int TRY_GRANT_COUNT = 3;
+	
 	/**
 	 * 错误码.
 	 * @author lidongliang

@@ -47,7 +47,12 @@ public class CaruserController {
 	 * 
 	 * @Title: getAllCaruser
 	 * <p>Description:查询所有的业主信息
-	 * /v1/caruser/getallcaruser
+	 * get:http://localhost:8080/parkspace/v1/caruser/getallcaruser?page=1&pageSize=1
+	 * 入参（查询所有业主）：空
+	 * 入参（查询某个业主）：{"userId":"1"}
+	 * 入参（按行政区划、小区【支持多选】查询车主）：{"community":{"comidQuery":["d2ac2ef6-acad-411a-9b2a-9732d47028b5"]},"zone":{"zoneid":"4e73503c-7052-41bc-a716-b8b2d2e32e5e"}}
+	 * 入参（可按名字、手机号、车牌号模糊查询）：{"userName":"孙","telePhone":"15300201276","carno":"a"}
+	 * 出参：{"flag":true,"errCode":null,"resData":{"pageNum":1,"pageSize":1,"size":1,"startRow":1,"endRow":1,"total":1,"pages":1,"list":[{"userId":"1","userName":"test01","nickName":"test01_nickName","userPwd":null,"telePhone":"15300201276","isAdmin":0,"idType":0,"idNo":"370714198211240087","state":2,"weixinAccount":"123456","avator":"admin","memo":"test user","createBy":"admin","createTime":1506246726000,"modifyBy":"admin","modifyTime":1506246726000,"realName":null,"carno":"aaa","isauth":1,"isauthQuery":null,"community":{"comid":"b6a0a6e7-f522-4c4f-9dc8-33897f8a6da4","comidQuery":null,"zoneid":"4e73503c-7052-41bc-a716-b8b2d2e32e5e","comname":"王府庄园1","address":"济洛路王府庄园1","isenable":-1,"isenableQuery":null,"memo":"测试添加小区1","createBy":"admin","createTime":1506841978000,"modifyBy":"admin","modifyTime":1506843637000,"price":null,"maxPriceAllDay":16.00,"freeParkingMinutes":60,"zone":null},"zone":{"zoneid":"4e73503c-7052-41bc-a716-b8b2d2e32e5e","zonename":"天桥行政区","isenable":1,"isenableQuery":null,"province":"山东省","city":"济南","zone":"天桥区","memo":"测试区域添加00010001","createBy":"孙辽东","createTime":1506244295000,"modifyBy":"孙辽东02","modifyTime":1506263494000},"parkCount":13,"isQueryNoEnoughMoney":0,"certifiedTime":1507629755000,"wallet":{"userId":"1","pledge":22.00,"balance":11.00,"bonus":1.00,"unclosedAmt":1.00,"lastTrsTime":1507303596000,"openTime":1507303593000}}],"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1,"firstPage":1,"lastPage":1}}
 	 * 可以通过状态过滤信息
 	 * 状态0:未认证 1：已认证，默认1，-1表示禁用
 	 * private Integer isauth;
@@ -103,7 +108,9 @@ public class CaruserController {
 	 * 
 	 * @Title: getNoEnoughMoneyCaruser
 	 * <p>Description:查询余额不足的所有的业主信息
-	 * /v1/caruser/getnoenoughmoneycaruser
+	 * get:http://localhost:8080/parkspace/v1/caruser/getnoenoughmoneycaruser?page=1&pageSize=1
+	 * 入参：空
+	 * 出参：{"flag":true,"errCode":null,"resData":{"pageNum":1,"pageSize":1,"size":1,"startRow":1,"endRow":1,"total":1,"pages":1,"list":[{"userId":"1","userName":"test01","nickName":"test01_nickName","userPwd":null,"telePhone":"15300201276","isAdmin":0,"idType":0,"idNo":"370714198211240087","state":2,"weixinAccount":"123456","avator":"admin","memo":"test user","createBy":"admin","createTime":1506246726000,"modifyBy":"admin","modifyTime":1506246726000,"realName":null,"carno":"aaa","isauth":1,"isauthQuery":null,"community":{"comid":"b6a0a6e7-f522-4c4f-9dc8-33897f8a6da4","comidQuery":null,"zoneid":"4e73503c-7052-41bc-a716-b8b2d2e32e5e","comname":"王府庄园1","address":"济洛路王府庄园1","isenable":-1,"isenableQuery":null,"memo":"测试添加小区1","createBy":"admin","createTime":1506841978000,"modifyBy":"admin","modifyTime":1506843637000,"price":null,"maxPriceAllDay":16.00,"freeParkingMinutes":60,"zone":null},"zone":{"zoneid":"4e73503c-7052-41bc-a716-b8b2d2e32e5e","zonename":"天桥行政区","isenable":1,"isenableQuery":null,"province":"山东省","city":"济南","zone":"天桥区","memo":"测试区域添加00010001","createBy":"孙辽东","createTime":1506244295000,"modifyBy":"孙辽东02","modifyTime":1506263494000},"parkCount":13,"isQueryNoEnoughMoney":0,"certifiedTime":1507629755000,"wallet":{"userId":"1","pledge":22.00,"balance":11.00,"bonus":1.00,"unclosedAmt":1.00,"lastTrsTime":1507303596000,"openTime":1507303593000}}],"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1,"firstPage":1,"lastPage":1}}
 	 * 可以通过状态过滤信息
 	 * 状态0:未认证 1：已认证，默认1，-1表示禁用
 	 * private Integer isauth;
@@ -162,7 +169,9 @@ public class CaruserController {
 	/**
 	 * @Title: addBlackList
 	 * <p>Description:加入黑名单
-	 * /v1/caruser/addblacklist
+	 * post:http://localhost:8080/parkspace/v1/caruser/addblacklist
+	 * 入参：{"userId":"1","memo":"测试把用户添加到黑名单中--车主"}
+	 * 出参：{"flag":true,"errCode":null,"resData":{"userId":"1","isCancel":0,"memo":"测试把用户添加到黑名单中--车主","createTime":1508235658268,"modifyTime":1508235658268,"userType":1,"baseUser":null,"uuid":"5ccfa70c-acab-46ee-b884-13edf0353c07"}}
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型
@@ -193,7 +202,9 @@ public class CaruserController {
 	/**
 	 * @Title: getBlackList
 	 * <p>Description:查询黑名单
-	 * /v1/caruser/getblacklist
+	 * get:http://localhost:8080/parkspace/v1/caruser/getblacklist?page=1&pageSize=1
+	 * 入参：空
+	 * 出参：{"flag":true,"errCode":null,"resData":{"pageNum":1,"pageSize":2,"size":2,"startRow":0,"endRow":1,"total":2,"pages":1,"list":[{"userId":"1","isCancel":0,"memo":"测试把用户添加到黑名单中--车主","createTime":1508235658000,"modifyTime":1508235658000,"userType":1,"baseUser":{"userId":"1","userName":"test01","nickName":"test01_nickName","userPwd":"123456a?","telePhone":"15300201276","isAdmin":0,"idType":0,"idNo":"370714198211240087","state":2,"weixinAccount":"123456","avator":"admin","memo":"test user","createBy":"admin","createTime":1506246726000,"modifyBy":"admin","modifyTime":1506246726000,"realName":"孙辽东real"},"uuid":"5ccfa70c-acab-46ee-b884-13edf0353c07"},{"userId":"1","isCancel":0,"memo":"测试把用户添加到黑名单中--车主","createTime":1506929265000,"modifyTime":1506929265000,"userType":1,"baseUser":{"userId":"1","userName":"test01","nickName":"test01_nickName","userPwd":"123456a?","telePhone":"15300201276","isAdmin":0,"idType":0,"idNo":"370714198211240087","state":2,"weixinAccount":"123456","avator":"admin","memo":"test user","createBy":"admin","createTime":1506246726000,"modifyBy":"admin","modifyTime":1506246726000,"realName":"孙辽东real"},"uuid":"7c89f921-cb16-4750-87a0-cbff288b0d0d"}],"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1,"firstPage":1,"lastPage":1}}
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型

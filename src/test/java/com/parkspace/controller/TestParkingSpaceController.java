@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.Community;
 import com.parkspace.db.rmdb.entity.ParkingSpace;
 import com.parkspace.db.rmdb.entity.Zone;
@@ -35,29 +36,30 @@ public class TestParkingSpaceController extends TestBaseController{
 	
 	public String spaceno = "1";
 	
-	public String orderJnlNo = "ffb6a8a1-3de1-4d95-a2aa-e8b67e8ab063";
+	public String orderJnlNo = "21a35916-2781-447d-b1c1-543b40c006f5";
 	
 	@Test
 	public void getAllParkingSpace() {
 		ParkingSpace parkingSpace = new ParkingSpace();
 		Zone zone = new Zone();
 		zone.setZoneid(zoneid);
-		parkingSpace.setZone(zone);
+//		parkingSpace.setZone(zone);
 
 		Community community = new Community();
 		community.setComidQuery(new String[] {comid});
-		parkingSpace.setCommunity(community);
+//		parkingSpace.setCommunity(community);
 		
 		parkingSpace.setSpacenoLikeQuery(spaceno);
 		
 		ObjectMapper mapper = new ObjectMapper(); 
 		try {
 			String requestJson = mapper.writeValueAsString(parkingSpace); 
+			System.out.println("input:"+requestJson);
 			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/getallparkingspace")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson)
 					.param("page", "1")
-					.param("pageSize", "10"))
+					.param("pageSize", "1"))
 			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
 			.andDo(print())         //打印出请求和相应的内容  
 			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
@@ -87,7 +89,8 @@ public class TestParkingSpaceController extends TestBaseController{
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson))
 			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andDo(print());
+			.andDo(print())
+			.andReturn().getResponse().getContentAsString();  
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,7 +101,8 @@ public class TestParkingSpaceController extends TestBaseController{
 		try {
 			mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/getparkingspace/"+spaceno))
 			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andDo(print());
+			.andDo(print())
+			.andReturn().getResponse().getContentAsString();  
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -126,7 +130,7 @@ public class TestParkingSpaceController extends TestBaseController{
 	public void orderParkingSpace() {
 		try {
 			Thread.sleep(15000);
-			String json = mvc.perform(MockMvcRequestBuilders.post("/v1/parkingspace/orderparkingspace")
+			mvc.perform(MockMvcRequestBuilders.post("/v1/parkingspace/orderparkingspace")
 					.param("spaceno", spaceno)
 					.param("parkHours", "3")
 					.param("userId", userId)
@@ -136,10 +140,10 @@ public class TestParkingSpaceController extends TestBaseController{
 			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
 			.andDo(print())         //打印出请求和相应的内容  
 			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
-			System.out.println(json);
 			Thread.sleep(15000);
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new ParkspaceServiceException("111");
 		}
 	}
 	
@@ -253,7 +257,7 @@ public class TestParkingSpaceController extends TestBaseController{
 		try {
 			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/getparkingspaceusedhistory")
 					.param("page", "1")
-					.param("pageSize", "10")
+					.param("pageSize", "1")
 					.param("spaceno", spaceno)
 					)
 			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
@@ -270,7 +274,7 @@ public class TestParkingSpaceController extends TestBaseController{
 		try {
 			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/parkingspace/getparkingspaceusing")
 					.param("page", "1")
-					.param("pageSize", "10")
+					.param("pageSize", "1")
 					.param("spaceno", spaceno)
 					)
 			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  

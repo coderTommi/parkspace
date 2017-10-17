@@ -29,7 +29,7 @@ public class TestCommunityController extends TestBaseController{
 	@Resource
 	private ICommunityService communityService;
 	public String zoneid = "4e73503c-7052-41bc-a716-b8b2d2e32e5e";
-	public String comid = "16bafa86-7ff2-478a-8e67-c0fb04a11312";
+	public String comid = "647f452a-9569-44ea-a416-af6a557e43f8";
 	@Test
 	public void getAllCommunity() {
 		Community community = new Community();
@@ -38,14 +38,15 @@ public class TestCommunityController extends TestBaseController{
 		
 		zone.setZoneid(zoneid);
 		community.setComname("王府");
-		community.setZone(zone);
+//		community.setZone(zone);
 		
 		ObjectMapper mapper = new ObjectMapper(); 
 		try {
 			String requestJson = mapper.writeValueAsString(community); 
+			System.out.println("入参："+requestJson);
 			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/community/getallcommunity")
 					.param("page", "1")
-					.param("pageSize", "10")
+					.param("pageSize", "1")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson)
 					)
@@ -64,7 +65,8 @@ public class TestCommunityController extends TestBaseController{
 		try {
 			mvc.perform(MockMvcRequestBuilders.post("/v1/community/deletecommunity/"+comid))
 			.andDo(print())
-			.andExpect(MockMvcResultMatchers.status().isOk());
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andReturn().getResponse().getContentAsString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -90,7 +92,7 @@ public class TestCommunityController extends TestBaseController{
 		
 		try {
 			String requestJson = mapper.writeValueAsString(community); 
-			System.out.println(requestJson);
+			System.out.println("input:"+requestJson);
 			String responseString = mvc.perform(MockMvcRequestBuilders.post("/v1/community/addcommunity")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson))
@@ -107,6 +109,7 @@ public class TestCommunityController extends TestBaseController{
 	public void updateCommunity() {
 		
 		Community community = this.communityService.getCommunity(comid);
+		community.setMemo("测试更新小区信息");
 		community.setFreeParkingMinutes(30);
 		community.setMaxPriceAllDay(new BigDecimal(18));
 		
@@ -114,6 +117,7 @@ public class TestCommunityController extends TestBaseController{
 		
 		try {
 			String requestJson = mapper.writeValueAsString(community); 
+			System.out.println("input:"+requestJson);
 			String responseString = mvc.perform(MockMvcRequestBuilders.post("/v1/community/updatecommunity")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson))
@@ -131,7 +135,8 @@ public class TestCommunityController extends TestBaseController{
 		try {
 			mvc.perform(MockMvcRequestBuilders.get("/v1/community/getcommunity/"+comid))
 			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andDo(print());
+			.andDo(print())
+			.andReturn().getResponse().getContentAsString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -141,7 +146,8 @@ public class TestCommunityController extends TestBaseController{
 		try {
 			mvc.perform(MockMvcRequestBuilders.get("/v1/community/getpropertymgmtuser/"+comid))
 			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andDo(print());
+			.andDo(print())
+			.andReturn().getResponse().getContentAsString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

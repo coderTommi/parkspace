@@ -84,6 +84,17 @@ public class ParkingSpaceBill implements Serializable{
 	//实际应该付费
 	private BigDecimal actualPayPrice;
 	
+	
+	/**
+	 * 新增字段，用来判断与客户端的连接信息
+	 */
+	//是否授权成功：系统定时执行，如果授权成功表示开通临时权限，1成功，0不成功
+	private Integer isGrantSuccess;
+	//小区ID
+	private String comid;
+	//授权次数：调用socket授权的次数，用来限制最大使用数,默认为0
+	private Integer tryGrantCount;
+	
 	//车主信息
 	private Caruser caruser;
 	
@@ -253,6 +264,24 @@ public class ParkingSpaceBill implements Serializable{
 		}
 		
 	}
+	public Integer getIsGrantSuccess() {
+		return isGrantSuccess;
+	}
+	public void setIsGrantSuccess(Integer isGrantSuccess) {
+		this.isGrantSuccess = isGrantSuccess;
+	}
+	public String getComid() {
+		return comid;
+	}
+	public void setComid(String comid) {
+		this.comid = comid;
+	}
+	public Integer getTryGrantCount() {
+		return tryGrantCount;
+	}
+	public void setTryGrantCount(Integer tryGrantCount) {
+		this.tryGrantCount = tryGrantCount;
+	}
 	@Override
 	public String toString() {
 		return "ParkingSpaceBill [orderJnlNo=" + orderJnlNo + ", userId=" + userId + ", spaceOwnerUserId="
@@ -265,6 +294,7 @@ public class ParkingSpaceBill implements Serializable{
 				+ maxDelayParkHoursString + ", actualParkHours=" + actualParkHours + ", actualPrice=" + actualPrice
 				+ ", isQuerySoonExpire=" + isQuerySoonExpire + ", maxPriceAllDay=" + maxPriceAllDay
 				+ ", freeParkingMinutes=" + freeParkingMinutes + ", freePrice=" + freePrice + ", actualPayPrice="
-				+ actualPayPrice + ", caruser=" + caruser + "]";
+				+ actualPayPrice + ", isGrantSuccess=" + isGrantSuccess + ", comid=" + comid + ", tryGrantCount="
+				+ tryGrantCount + ", caruser=" + caruser + "]";
 	}
 }

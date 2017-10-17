@@ -8,10 +8,12 @@ import org.apache.commons.logging.LogFactory;
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.listener.DataListener;
+import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
 import com.parkspace.model.SocketDataModel;
 import com.parkspace.service.IParkingSpaceBillService;
 import com.parkspace.service.IParkingSpaceService;
+import com.parkspace.util.Constants;
 import com.parkspace.util.JsonUtils;
 
 /**
@@ -41,10 +43,21 @@ public class AddOrderParkingSpaceDataListener<T> implements DataListener<T> {
 	}
     
 	@Override
-	public void onData(SocketIOClient client, T data, AckRequest ackSender) throws Exception {
+	public void onData(SocketIOClient client, T data, AckRequest ackSender) 
+			throws ParkspaceServiceException {
 		LOG.info("========服务端返回临时车位授权信息========="+data);	
 		SocketDataModel socketDataModel = JsonUtils.str2Object(data.toString(), 
         		SocketDataModel.class);
+		// check is ack requested by client,
+
+        // but it's not required check
+
+        if (!ackSender.isAckRequested()) {
+        	throw new ParkspaceServiceException(
+					Constants.ERRORCODE.SEND_MESSAGE_IS_FAILURE.toString(), 
+					"发送消息失败");
+        }
+		
 		if(socketDataModel != null) {
 			String userId = socketDataModel.getUserId();
         	String carno = socketDataModel.getCarno();
@@ -56,13 +69,28 @@ public class AddOrderParkingSpaceDataListener<T> implements DataListener<T> {
 			if(socketDataModel.isSuccess()) {//成功，校对本地数据是否存在如果不存在返回false，删除临时权限
 	        	if(list == null || list.size() <= 0) {
 	        		ackSender.sendAckData("false");
+	        		throw new ParkspaceServiceException(
+							Constants.ERRORCODE.SEND_MESSAGE_IS_FAILURE.toString(), 
+							"发送消息失败");
+	        	}else {
+	        		for(ParkingSpaceBill b : list) {
+						parkingSpaceBillService.updateGrantParkingSpaceBill(b.getOrderJnlNo());
+					}
+	        		ackSender.sendAckData("true");
 	        	}
 			}else {//失败，删除本地订单信息
 				if(list != null && list.size() > 0) {
 					for(ParkingSpaceBill b : list) {
-						parkingSpaceBillService.deleteParkingSpaceBill(b.getOrderJnlNo());
+						//取消订单
+						parkingSpaceService.cancelOrderParkingSpace(b.getOrderJnlNo());
+						//发送消息通知用户--订单信息被删除
+//						parkingSpaceBillService.deleteParkingSpaceBill(b.getOrderJnlNo());
 					}
 				}
+				ackSender.sendAckData("false");
+				throw new ParkspaceServiceException(
+						Constants.ERRORCODE.SEND_MESSAGE_IS_FAILURE.toString(), 
+						"发送消息失败");
 			}
 		}
 	}

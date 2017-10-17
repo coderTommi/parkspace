@@ -25,24 +25,25 @@ import com.parkspace.service.IZoneService;
 public class TestZoneController extends TestBaseController{
 	@Resource
 	private IZoneService zoneService;
-	public String zoneid = "9f7abc0f-197d-4d43-bd09-92b98fd45105";
+	public String zoneid = "59f0d481-e78e-4e50-a918-78345194f0df";
 	@Test
 	public void getAllZone() {
 		Zone zone = new Zone();
 		zone.setCity("济南1");
-//		zone.setMemo("测试区域添加1");
-//		zone.setProvince("山东省1");
+		zone.setMemo("测试区域添加1");
+		zone.setProvince("山东省1");
 //		zone.setZone("天桥区1");
 //		zone.setZonename("天桥行政区1");
 		
 		ObjectMapper mapper = new ObjectMapper(); 
 		try {
 			String requestJson = mapper.writeValueAsString(zone); 
+			System.out.println("入参："+requestJson);
 			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/zone/getallzone")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson)
 					.param("page", "1")
-					.param("pageSize", "10"))
+					.param("pageSize", "1"))
 			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
 			.andDo(print())         //打印出请求和相应的内容  
 			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
@@ -58,7 +59,8 @@ public class TestZoneController extends TestBaseController{
 		try {
 			mvc.perform(MockMvcRequestBuilders.post("/v1/zone/deletezone/"+zoneid))
 			.andDo(print())
-			.andExpect(MockMvcResultMatchers.status().isOk());
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andReturn().getResponse().getContentAsString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -77,6 +79,7 @@ public class TestZoneController extends TestBaseController{
 		
 		try {
 			String requestJson = mapper.writeValueAsString(zone); 
+			System.out.println("入参:"+requestJson);
 			String responseString = mvc.perform(MockMvcRequestBuilders.post("/v1/zone/addzone")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson))
@@ -93,11 +96,13 @@ public class TestZoneController extends TestBaseController{
 	public void updateZone() {
 		
 		Zone zone = zoneService.getZone(zoneid);
+		zone.setMemo("测试更改端到端");
 		
 		ObjectMapper mapper = new ObjectMapper(); 
 		
 		try {
 			String requestJson = mapper.writeValueAsString(zone); 
+			System.out.println("入参"+requestJson);
 			String responseString = mvc.perform(MockMvcRequestBuilders.post("/v1/zone/updatezone")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson))
@@ -115,7 +120,8 @@ public class TestZoneController extends TestBaseController{
 		try {
 			mvc.perform(MockMvcRequestBuilders.get("/v1/zone/getzone/"+zoneid))
 			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andDo(print());
+			.andDo(print())
+			.andReturn().getResponse().getContentAsString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

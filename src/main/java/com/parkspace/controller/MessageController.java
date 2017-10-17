@@ -43,7 +43,9 @@ public class MessageController {
 	/**
 	 * @Title: addMessage
 	 * <p>Description:增加消息信息
-	 * /v1/message/addmessage
+	 * post:http://localhost:8080/parkspace/v1/message/addmessage
+	 * 入参：{"context":"测试消息内容体Tue Oct 17 18:46:51 CST 2017","status":0,"messageObject":2,"comid":"","enableStartTime":1508237211979,"enableEndTime":1508410008458,"memo":"消息备注Tue Oct 17 18:46:51 CST 2017"}
+	 * 出参：{"flag":true,"errCode":null,"resData":{"context":"测试消息内容体Tue Oct 17 18:46:51 CST 2017","status":0,"statusQuery":null,"messageObject":2,"messageObjectQuery":null,"comid":"","enableStartTime":1508237211979,"enableEndTime":1508410008458,"memo":"消息备注Tue Oct 17 18:46:51 CST 2017","createTime":1508237212323,"modifyTime":1508237212323,"uuid":"7cd4952a-65b8-4000-a4c6-3bf965b32b35"}}
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型
@@ -72,7 +74,9 @@ public class MessageController {
 	/**
 	 * @Title: deleteMessage
 	 * <p>Description:删除某个消息
-	 * /v1/message/deletemessage/b6a0a6e7-f522-4c4f-9dc8-33897f8a6da4
+	 * post:http://localhost:8080/parkspace/v1/message/deletemessage/b6a0a6e7-f522-4c4f-9dc8-33897f8a6da4
+	 * 入参：在url中增加id
+	 * 出参：{"flag":true,"errCode":null,"resData":null}
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型
@@ -100,7 +104,9 @@ public class MessageController {
 	/**
 	 * @Title: getMessage
 	 * <p>Description:查询某个消息的具体内容
-	 * /v1/message/getmessage/b6a0a6e7-f522-4c4f-9dc8-33897f8a6da4
+	 * post:http://localhost:8080/parkspace/v1/message/getmessage/b6a0a6e7-f522-4c4f-9dc8-33897f8a6da4
+	 * 入参：在url中增加id
+	 * 出参：{"flag":true,"errCode":null,"resData":{"context":"测试消息内容体Tue Oct 17 18:46:51 CST 2017","status":2,"statusQuery":null,"messageObject":2,"messageObjectQuery":null,"comid":"","enableStartTime":1508169600000,"enableEndTime":1508342400000,"memo":"消息备注Tue Oct 17 18:46:51 CST 2017","createTime":1508237212000,"modifyTime":1508237365000,"uuid":"7cd4952a-65b8-4000-a4c6-3bf965b32b35"}}
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型
@@ -130,8 +136,12 @@ public class MessageController {
 	 * 
 	 * @Title: getAllMessage
 	 * <p>Description:查询所有message
-	 * /v1/message/getallmessage
-	 * 
+	 * get:http://localhost:8080/parkspace/v1/message/getallmessage?page=1&pageSize=1
+	 * 入参(查询所有)：空
+	 * 入参（小区消息）：{"comid":"1"}
+	 * 入参（消息对象消息面向的人群0物业，1业主，2车主,-1 所有）：{"messageObjectQuery":[0]}
+	 * 入参（状态：）{"statusQuery":[1,2]}
+	 * 出参：{"flag":true,"errCode":null,"resData":{"pageNum":1,"pageSize":1,"size":1,"startRow":1,"endRow":1,"total":6,"pages":6,"list":[{"context":"测试消息内容体Tue Oct 17 18:46:51 CST 2017","status":2,"statusQuery":null,"messageObject":2,"messageObjectQuery":null,"comid":"","enableStartTime":1508169600000,"enableEndTime":1508342400000,"memo":"消息备注Tue Oct 17 18:46:51 CST 2017","createTime":1508237212000,"modifyTime":1508237365000,"uuid":"7cd4952a-65b8-4000-a4c6-3bf965b32b35"}],"prePage":0,"nextPage":2,"isFirstPage":true,"isLastPage":false,"hasPreviousPage":false,"hasNextPage":true,"navigatePages":8,"navigatepageNums":[1,2,3,4,5,6],"navigateFirstPage":1,"navigateLastPage":6,"firstPage":1,"lastPage":6}}
 	 * 1.可以通过信息的状态过滤信息
 	 * 消息状态：0草稿，1，发布，2删除
 	 * private Integer status;

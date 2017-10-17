@@ -10,6 +10,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parkspace.db.rmdb.entity.BlackList;
 import com.parkspace.db.rmdb.entity.Caruser;
+import com.parkspace.db.rmdb.entity.Community;
+import com.parkspace.db.rmdb.entity.Zone;
 
 /**
  * @Title: TestCaruserController.java
@@ -28,26 +30,27 @@ public String zoneid = "4e73503c-7052-41bc-a716-b8b2d2e32e5e";
 	@Test
 	public void getAllCaruser() {
 		Caruser caruser = new Caruser();
-//		Zone zone = new Zone();
-//		zone.setZoneid(zoneid);
+		Zone zone = new Zone();
+		zone.setZoneid(zoneid);
 //		caruser.setZone(zone);
 //		
-//		Community community = new Community();
-//		community.setComidQuery(new String[] {comid});
+		Community community = new Community();
+		community.setComidQuery(new String[] {comid});
 //		caruser.setCommunity(community);
 //		
-//		caruser.setUserName("孙");
-//		caruser.setTelePhone("15300201276");
-//		caruser.setCarno("a");
+		caruser.setUserName("孙");
+		caruser.setTelePhone("15300201276");
+		caruser.setCarno("a");
 		
 		ObjectMapper mapper = new ObjectMapper(); 
 		try {
 			String requestJson = mapper.writeValueAsString(caruser); 
+			System.out.println("input:"+requestJson);
 			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/caruser/getallcaruser")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson)
 					.param("page", "1")
-					.param("pageSize", "10"))
+					.param("pageSize", "1"))
 			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
 			.andDo(print())         //打印出请求和相应的内容  
 			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  
@@ -68,6 +71,7 @@ public String zoneid = "4e73503c-7052-41bc-a716-b8b2d2e32e5e";
 		
 		try {
 			String requestJson = mapper.writeValueAsString(blackList); 
+			System.out.println("input:"+requestJson);
 			String responseString = mvc.perform(MockMvcRequestBuilders.post("/v1/caruser/addblacklist")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson))

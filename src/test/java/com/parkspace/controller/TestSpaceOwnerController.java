@@ -34,25 +34,26 @@ public class TestSpaceOwnerController  extends TestBaseController{
 		SpaceOwner spaceOwner = new SpaceOwner();
 		Zone zone = new Zone();
 		zone.setZoneid(zoneid);
-		spaceOwner.setZone(zone);
+//		spaceOwner.setZone(zone);
 		
 		Community community = new Community();
 		community.setComidQuery(new String[] {comid});
-		spaceOwner.setCommunity(community);
+//		spaceOwner.setCommunity(community);
 		
-		spaceOwner.setUserName("孙");
-		spaceOwner.setTelePhone("15300201276");
-		spaceOwner.setSpaceno("1");
-		spaceOwner.setCarno("a");
+//		spaceOwner.setUserName("孙");
+//		spaceOwner.setTelePhone("15300201276");
+//		spaceOwner.setSpaceno("1");
+//		spaceOwner.setCarno("a");
 		
 		ObjectMapper mapper = new ObjectMapper(); 
 		try {
 			String requestJson = mapper.writeValueAsString(spaceOwner); 
+			System.out.println("input:"+requestJson);
 			String json = mvc.perform(MockMvcRequestBuilders.get("/v1/spaceowner/getallspaceowner")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(requestJson)
 					.param("page", "1")
-					.param("pageSize", "10"))
+					.param("pageSize", "1"))
 			.andExpect(MockMvcResultMatchers.status().isOk())    //返回的状态是200  
 			.andDo(print())         //打印出请求和相应的内容  
 			.andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串  

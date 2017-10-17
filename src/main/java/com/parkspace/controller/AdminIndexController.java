@@ -52,7 +52,9 @@ public class AdminIndexController {
 	 * 
 	 * @Title: getAdminIndexSurvey
 	 * <p>Description:查询管理员首页概况信息
-	 * /v1/admin/index/getadminindexsurvey
+	 * get:http://localhost:8080/parkspace/v1/admin/index/getadminindexsurvey
+	 * 入参：无
+	 * 出参：{"flag":true,"errCode":null,"resData":{"propertyMgmtUserCount":1,"userCout":2,"spaceCount":1}}
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型
@@ -98,7 +100,9 @@ public class AdminIndexController {
 	 * 
 	 * @Title: getCommunitySurvey
 	 * <p>Description:查询小区概况信息
-	 * /v1/admin/index/getcommunitysurvey/43143143
+	 * get:http://localhost:8080/parkspace/v1/admin/index/getcommunitysurvey/43143143
+	 * 入参：在url中输入comid
+	 * 出参：{"flag":true,"errCode":null,"resData":{"propertyMgmtUserCount":1,"userCout":2,"spaceCount":1}}
 	 * </p>
 	 * @param     参数
 	 * @return OperationResult    返回类型
