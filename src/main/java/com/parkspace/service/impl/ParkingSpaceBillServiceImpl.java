@@ -274,9 +274,7 @@ public class ParkingSpaceBillServiceImpl implements IParkingSpaceBillService{
 	 */
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void updateGrantParkingSpaceBill(String orderJnlNo) {
-		ParkingSpaceBill parkingSpaceBill = new ParkingSpaceBill();
-		parkingSpaceBill.setOrderJnlNo(orderJnlNo);
+	public void updateGrantParkingSpaceBill(ParkingSpaceBill parkingSpaceBill) {
 		parkingSpaceBillDao.updateGrantParkingSpaceBill(parkingSpaceBill);
 	}
 }

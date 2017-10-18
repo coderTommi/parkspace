@@ -74,17 +74,26 @@ public class AddOrderParkingSpaceDataListener<T> implements DataListener<T> {
 							"发送消息失败");
 	        	}else {
 	        		for(ParkingSpaceBill b : list) {
-						parkingSpaceBillService.updateGrantParkingSpaceBill(b.getOrderJnlNo());
+	        			ParkingSpaceBill parkingSpaceBillNew = new ParkingSpaceBill();
+	        			parkingSpaceBillNew.setOrderJnlNo(b.getOrderJnlNo());
+	        			parkingSpaceBillNew.setIsGrantSuccess(1);
+						parkingSpaceBillService.updateGrantParkingSpaceBill(parkingSpaceBill);
 					}
 	        		ackSender.sendAckData("true");
 	        	}
 			}else {//失败，删除本地订单信息
 				if(list != null && list.size() > 0) {
 					for(ParkingSpaceBill b : list) {
-						//取消订单
-						parkingSpaceService.cancelOrderParkingSpace(b.getOrderJnlNo());
-						//发送消息通知用户--订单信息被删除
 //						parkingSpaceBillService.deleteParkingSpaceBill(b.getOrderJnlNo());
+						if(b.getTryGrantCount() > Constants.TRY_GRANT_COUNT) {//执行删除
+							//取消订单
+							parkingSpaceService.cancelOrderParkingSpace(b.getOrderJnlNo());
+							//发送消息通知用户--订单信息被删除
+						}else {//更新状态
+							ParkingSpaceBill parkingSpaceBillNew = new ParkingSpaceBill();
+		        			parkingSpaceBillNew.setOrderJnlNo(b.getOrderJnlNo());
+							parkingSpaceBillService.updateGrantParkingSpaceBill(parkingSpaceBill);
+						}
 					}
 				}
 				ackSender.sendAckData("false");

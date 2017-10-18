@@ -13,12 +13,15 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.corundumstudio.socketio.AckCallback;
+import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
+import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.parkspace.common.exception.ParkspaceServiceException;
 import com.parkspace.service.IParkingSpaceBillService;
@@ -126,7 +129,22 @@ public class SocketServerService {
 	 * <p>CreateDate:2017年10月12日 上午10:23:10</p>
 	 */
     private void commonEventListener(){
-    	
+    	server.addEventListener("sendClientID", String.class,
+        		new DataListener<String>() {
+					@Override
+					public void onData(SocketIOClient client, String data, AckRequest ackSender) throws Exception {
+						//记录客户端的ID
+						clientsMap.put(data, client);
+					}
+    	});
+    	server.addEventListener("removeClientID", String.class,
+        		new DataListener<String>() {
+					@Override
+					public void onData(SocketIOClient client, String data, AckRequest ackSender) throws Exception {
+						//记录客户端的ID
+						clientsMap.remove(data, client);
+					}
+    	});
     }
 	/**
 	 * 
@@ -146,7 +164,7 @@ public class SocketServerService {
 				 String sa = client.getRemoteAddress().toString();
 				 //获取设备ip
 	             String clientIp = sa.substring(1,sa.indexOf(":"));
-	             clientsMap.put(clientIp, client);
+//	             clientsMap.put(clientIp, client);
 	             
 	             LOG.info("客户端IP：【"+clientIp+"】,已上线！");
 	             //可以跟客户端进行通信，比如
@@ -160,7 +178,7 @@ public class SocketServerService {
 				String sa = client.getRemoteAddress().toString();
 				//获取设备ip
 				String clientIp = sa.substring(1,sa.indexOf(":"));
-				clientsMap.remove(clientIp);
+//				clientsMap.remove(clientIp);
              
 				LOG.info("客户端IP：【"+clientIp+"】,已下线！");
 			}
@@ -232,12 +250,24 @@ public class SocketServerService {
     public void sendMessageToOneClient(String uuid,String eventType,String message) 
     		throws ParkspaceServiceException{
         try {
-            if(uuid != null && !"".equals(uuid)){
-                SocketIOClient client = (SocketIOClient)clientsMap.get(uuid);
-                if(client != null){
-                    client.sendEvent(eventType,message);
-                }
-            }
+        	if(StringUtils.isEmpty(uuid)) {
+        		throw new ParkspaceServiceException(
+    					Constants.ERRORCODE.SEND_MESSAGE_IS_FAILURE.toString(), 
+    					"发送消息失败");
+        	}
+        	SocketIOClient client = (SocketIOClient)clientsMap.get(uuid);
+        	if(client == null) {
+        		throw new ParkspaceServiceException(
+    					Constants.ERRORCODE.SEND_MESSAGE_IS_FAILURE.toString(), 
+    					"发送消息失败");
+        	}
+        	LOG.info("客户端UUID：【"+client.getSessionId()+"】");
+        	client.sendEvent(eventType, new AckCallback<String>(String.class) {
+				@Override
+				public void onSuccess(String result) {
+					LOG.info("ack from client: " + client.getSessionId() + " data: " + result);
+				}
+        	}, message);
         } catch (Exception e) {
         	LOG.error("发送消息失败："+e.getMessage());
             e.printStackTrace();
@@ -279,6 +309,7 @@ public class SocketServerService {
                             	  initServer();
                               } catch (InterruptedException e) {
                                   e.printStackTrace();
+                                  LOG.error("初始化server 的socket失败："+e.getMessage());
                               }
                           }
                       }).start();

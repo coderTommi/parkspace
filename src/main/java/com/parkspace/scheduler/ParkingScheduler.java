@@ -48,7 +48,7 @@ public class ParkingScheduler {
 	 * @throws
 	 * <p>CreateDate:2017年10月11日 上午8:57:07</p>
 	 */
-	@Scheduled(fixedDelay = 1000)
+//	@Scheduled(fixedDelay = 1000)
 	public void cancelOrderParkingSpace() {
 		//查询预约超过15分钟的订单
 		List<ParkingSpaceBill> list = parkingSpaceBillService.getOverdueOrderParkingSpaceBillList();
@@ -75,7 +75,7 @@ public class ParkingScheduler {
 	 * @throws
 	 * <p>CreateDate:2017年10月11日 下午2:01:59</p>
 	 */
-	@Scheduled(fixedDelay = 1000)
+//	@Scheduled(fixedDelay = 1000)
 	public void regularDeductionsForParkingSpaceBill() {
 		//24小时内未付款的订单
 		List<ParkingSpaceBill> list = parkingSpaceBillService.getNoPayedParkingSpaceBillListInPayInterval();
@@ -115,7 +115,9 @@ public class ParkingScheduler {
 					socketDataModel.setUserId(parkingSpaceBill.getUserId());
 					String message = JsonUtils.object2String(socketDataModel);
 					try {
-						socketServerService.sendMessageToAllClient("addOrderParkingSpace", message);
+//						socketServerService.sendMessageToAllClient("addOrderParkingSpace", message);
+						socketServerService.sendMessageToOneClient(parkingSpaceBill.getComid(),
+								"addOrderParkingSpace", message);
 					}catch(Exception e) {
 						LOG.error("开通临时权限失败："+e.getMessage());
 					}
