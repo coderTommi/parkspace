@@ -19,7 +19,7 @@ import com.parkspace.util.Constants;
 
 public class UserFilter implements Filter {
 	
-    private static final String[] WHITE_URL_LIST = new String[] {"/user/register", "/user/login" };
+    private static final String[] WHITE_URL_LIST = new String[] {"/user/regist", "/user/login" };
     private static final String sessionKey = "_USER";
     private static List<String> whiteList = new ArrayList<String>();
     static {

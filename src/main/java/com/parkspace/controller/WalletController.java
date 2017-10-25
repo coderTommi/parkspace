@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.parkspace.common.OperationResult;
 import com.parkspace.common.exception.ParkspaceServiceException;
+import com.parkspace.controller.pojo.RechargePojo;
+import com.parkspace.controller.pojo.WithDrawPojo;
 import com.parkspace.db.rmdb.entity.BaseUser;
 import com.parkspace.db.rmdb.entity.Bill;
 import com.parkspace.db.rmdb.entity.Wallet;
@@ -103,5 +106,136 @@ public class WalletController {
 		}
 		return result;
 	}
-
+	/**
+	 * POST
+	 *  http://localhost:8080/parkspace/recharge
+	 *  {
+	 *  	"amt" : 12.22,
+	 *  	"remoteJnlno" : "123asdfsadfdsa",
+	 *  	"payChannel" : 1
+	 *  }
+	 * @Title: recharge
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月23日 下午6:51:56</p>
+	 */
+	@RequestMapping(value = "/recharge", method = RequestMethod.POST)
+    @ResponseBody
+	public OperationResult recharge(HttpServletRequest req, @RequestBody RechargePojo pojo ) {
+		OperationResult result = new OperationResult();
+		try {
+			BaseUser user = (BaseUser)req.getSession().getAttribute("_USER");
+			moneyService.recharge(user.getUserId(), pojo.getAmt(), 
+					pojo.getRemoteJnlNo(), pojo.getPayChannel());
+			result.setFlag(true);
+		}catch(ParkspaceServiceException e){
+			log.error("recharge error", e);
+			result.setErrCode(e.getMessageCode());
+			result.setFlag(false);
+		} catch (Exception e) {
+			log.error("recharge error", e);
+			result.setFlag(false);
+			result.setErrCode(Constants.ERRORCODE.UNKNOWERROR.toString());
+		}
+		return result;
+	}
+	/**
+	 * POST:
+	 * http://localhost:8080/parkspace/withdraw
+	 * {
+	 * 	"amt" : "100"
+	 * }
+	 * @Title: withdraw
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月23日 下午6:58:12</p>
+	 */
+	@RequestMapping(value = "/withdraw", method = RequestMethod.POST)
+    @ResponseBody
+	public OperationResult withdraw(HttpServletRequest req, @RequestBody WithDrawPojo pojo ) {
+		OperationResult result = new OperationResult();
+		try {
+			BaseUser user = (BaseUser)req.getSession().getAttribute("_USER");
+			moneyService.withdrawCash(user.getUserId(), pojo.getAmt());
+			result.setFlag(true);
+		}catch(ParkspaceServiceException e){
+			log.error("withdraw error", e);
+			result.setErrCode(e.getMessageCode());
+			result.setFlag(false);
+		} catch (Exception e) {
+			log.error("withdraw error", e);
+			result.setFlag(false);
+			result.setErrCode(Constants.ERRORCODE.UNKNOWERROR.toString());
+		}
+		return result;
+	}
+	/**
+	 * http://localhost:8080/parkspace/pledgeIn
+	 *  {
+	 *  	"amt" : "100",
+	 *  	"remoteJnlno" : "123asdfsadfdsa",
+	 *  	"payChannel" : "1"
+	 *  }
+	 * @Title: pledgeIn
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月23日 下午7:00:48</p>
+	 */
+	@RequestMapping(value = "/pledgeIn", method = RequestMethod.POST)
+    @ResponseBody
+	public OperationResult pledgeIn(HttpServletRequest req, @RequestBody RechargePojo pojo ) {
+		OperationResult result = new OperationResult();
+		try {
+			BaseUser user = (BaseUser)req.getSession().getAttribute("_USER");
+			moneyService.pledgeIn(user.getUserId(), pojo.getAmt(), pojo.getRemoteJnlNo(), pojo.getPayChannel());
+			result.setFlag(true);
+		}catch(ParkspaceServiceException e){
+			log.error("pledgeIn error", e);
+			result.setErrCode(e.getMessageCode());
+			result.setFlag(false);
+		} catch (Exception e) {
+			log.error("pledgeIn error", e);
+			result.setFlag(false);
+			result.setErrCode(Constants.ERRORCODE.UNKNOWERROR.toString());
+		}
+		return result;
+	}
+	/**
+	 * POST
+	 * http://localhost:8080/parkspace/pledgeOut
+	 * {
+	 * 	"amt" : "100"
+	 * }
+	 * @Title: pledgeOut
+	 * <p>Description:</p>
+	 * @param     参数
+	 * @return OperationResult    返回类型
+	 * @throws
+	 * <p>CreateDate:2017年10月23日 下午7:02:10</p>
+	 */
+	@RequestMapping(value = "/pledgeOut", method = RequestMethod.POST)
+    @ResponseBody
+	public OperationResult pledgeOut(HttpServletRequest req, @RequestBody WithDrawPojo pojo ) {
+		OperationResult result = new OperationResult();
+		try {
+			BaseUser user = (BaseUser)req.getSession().getAttribute("_USER");
+			moneyService.pledgeOut(user.getUserId(), pojo.getAmt());
+			result.setFlag(true);
+		}catch(ParkspaceServiceException e){
+			log.error("pledgeOut error", e);
+			result.setErrCode(e.getMessageCode());
+			result.setFlag(false);
+		} catch (Exception e) {
+			log.error("pledgeOut error", e);
+			result.setFlag(false);
+			result.setErrCode(Constants.ERRORCODE.UNKNOWERROR.toString());
+		}
+		return result;
+	}
 }
