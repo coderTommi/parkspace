@@ -282,6 +282,7 @@ alter table ChargeStrategy
 create table Community
 (
    comid                varchar(64) not null comment '小区ID',
+   overtimePrice        decimal(15, 2) not null default 0 comment '超时单价：超过共享时间的小时费用，默认为0',
    price                decimal(15, 2) not null default 0 comment '单价，车位单价按小时计算',
    maxPriceAllDay       decimal(15, 2) not null default 0 comment '最大费用：一天停车最多消费多少钱，默认0',
    zoneid               varchar(64) comment '区域ID',

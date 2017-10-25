@@ -41,7 +41,8 @@
 		c.modifyBy 				as "community.modifyBy",
 		c.modifyTime 			as "community.modifyTime",
 		c.maxPriceAllDay  		as "community.maxPriceAllDay",
-		c.freeParkingMinutes 	as "community.freeParkingMinutes"
+		c.freeParkingMinutes 	as "community.freeParkingMinutes",
+		c.overtimePrice         as "community.overtimePrice"
 	</sql>
 	<!-- 行政区域信息字段 -->
 	<sql id="Zone_Column">

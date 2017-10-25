@@ -15,7 +15,8 @@
 		c.modifyTime,
 		c.price,
 		c.maxPriceAllDay,
-		c.freeParkingMinutes
+		c.freeParkingMinutes,
+		c.overtimePrice
 	</sql>
 	<!-- 行政区域信息字段 -->
 	<sql id="Zone_Column">
@@ -54,7 +55,8 @@
     			modifyTime,
     			price,
     			maxPriceAllDay,
-    			freeParkingMinutes
+    			freeParkingMinutes,
+    			overtimePrice
     		) 
     	 values(
     	 		#{comid},
@@ -69,7 +71,8 @@
     	 		#{modifyTime},
     	 		#{price},
     	 		#{maxPriceAllDay},
-    	 		#{freeParkingMinutes}
+    	 		#{freeParkingMinutes},
+    	 		#{overtimePrice}
     	 	)
 	</insert>
 	
@@ -105,7 +108,10 @@
 				maxPriceAllDay     = #{maxPriceAllDay},
 			</if>
 			<if test="freeParkingMinutes != null">
-				freeParkingMinutes     = #{freeParkingMinutes}
+				freeParkingMinutes     = #{freeParkingMinutes},
+			</if>
+			<if test="overtimePrice != null">
+				overtimePrice     = #{overtimePrice}
 			</if>
 		</trim>
     	where comid = #{comid}
@@ -140,6 +146,9 @@
         	 <if test="price != null">
             	and price = #{price}
         	 </if>
+        	 <if test="overtimePrice != null">
+            	and overtimePrice = #{overtimePrice}
+        	 </if>
         	 <if test="maxPriceAllDay != null">
             	and maxPriceAllDay = #{maxPriceAllDay}
         	 </if>
@@ -172,8 +181,11 @@
             	 and c.comname like CONCAT('%', #{comname}, '%')  
         	  </if>
         	  <if test="price != null">
-            	and c.price = #{price}
-        	 </if>
+            	 and c.price = #{price}
+        	  </if>
+        	  <if test="overtimePrice != null">
+            	 and c.overtimePrice = #{overtimePrice}
+        	  </if>
         	  <if test="address != null">
             	 and c.address like CONCAT('%', #{address}, '%') 
         	  </if>

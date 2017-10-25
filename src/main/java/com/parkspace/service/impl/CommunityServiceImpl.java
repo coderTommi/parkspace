@@ -128,6 +128,7 @@ public class CommunityServiceImpl implements ICommunityService{
 			newCommunity.setPrice(community.getPrice());
 			newCommunity.setMaxPriceAllDay(community.getMaxPriceAllDay());
 			newCommunity.setFreeParkingMinutes(community.getFreeParkingMinutes());
+			newCommunity.setOvertimePrice(community.getOvertimePrice());
 			
 			this.communityDao.addCommunity(newCommunity);
 			return newCommunity;

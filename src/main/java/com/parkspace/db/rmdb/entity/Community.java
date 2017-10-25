@@ -47,12 +47,19 @@ public class Community implements Serializable{
 	private Date modifyTime;
 	//单价
 	private BigDecimal price;
+	//超时单价：超过共享时间的小时费用，默认为0
+	private BigDecimal overtimePrice;
 	//最大费用：一天停车最多消费多少钱，默认0
 	private BigDecimal maxPriceAllDay;
 	//免费停车时长：单位分钟,默认0
 	private Integer freeParkingMinutes;
 	
-	
+	public BigDecimal getOvertimePrice() {
+		return overtimePrice;
+	}
+	public void setOvertimePrice(BigDecimal overtimePrice) {
+		this.overtimePrice = overtimePrice;
+	}
 	public BigDecimal getMaxPriceAllDay() {
 		return maxPriceAllDay;
 	}
@@ -157,7 +164,8 @@ public class Community implements Serializable{
 		return "Community [comid=" + comid + ", comidQuery=" + Arrays.toString(comidQuery) + ", zoneid=" + zoneid
 				+ ", comname=" + comname + ", address=" + address + ", isenable=" + isenable + ", isenableQuery="
 				+ Arrays.toString(isenableQuery) + ", memo=" + memo + ", createBy=" + createBy + ", createTime="
-				+ createTime + ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + ", price=" + price + ", zone="
-				+ zone + "]";
+				+ createTime + ", modifyBy=" + modifyBy + ", modifyTime=" + modifyTime + ", price=" + price
+				+ ", overtimePrice=" + overtimePrice + ", maxPriceAllDay=" + maxPriceAllDay + ", freeParkingMinutes="
+				+ freeParkingMinutes + ", zone=" + zone + "]";
 	}
 }

@@ -23,6 +23,7 @@ import com.parkspace.db.rmdb.entity.ParkingSpace;
 import com.parkspace.db.rmdb.entity.ParkingSpaceBill;
 import com.parkspace.db.rmdb.entity.ShareConfig;
 import com.parkspace.db.rmdb.entity.SpaceOwner;
+import com.parkspace.service.IMoneyService;
 import com.parkspace.service.IParkingSpaceBillHisService;
 import com.parkspace.service.IParkingSpaceBillService;
 import com.parkspace.service.IParkingSpaceService;
@@ -57,6 +58,8 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 	private CaruserDao caruserDao;
 //	@Resource
 //	private SocketServerService socketServerService;
+	@Resource
+	private IMoneyService moneyService;
 	/**
 	 * @Title: getParkingSpace
 	 * <p>Description:根据车位编号查询车位信息
@@ -692,6 +695,18 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		BigDecimal surplusMoney = actualPrice.subtract(freePrice).subtract(payedMoney);
 		
 		LOG.info("=======应付金额===="+surplusMoney);
+		try {
+			moneyService.order(parkingSpaceBill.getUserId(),
+					parkingSpaceBill.getSpaceOwnerUserId(), 
+					surplusMoney, 
+					parkingSpaceBill.getComid(), 
+					parkingSpaceBill.getOrderJnlNo());
+		} catch (Exception e) {
+			LOG.error("付款失败："+e.getMessage());
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_STATUS_IS_ILLLEGAL.toString(), 
+					"付款失败");
+		}
 		
 	}
 	/**
@@ -729,5 +744,17 @@ public class ParkingSpaceServiceImpl implements IParkingSpaceService{
 		 * 扣款，需要判断余额是否满足，余额不如需要抛出异常
 		 */
 		LOG.info("=======应付金额===="+payedMoney);
+		try {
+			moneyService.order(parkingSpaceBill.getUserId(),
+					parkingSpaceBill.getSpaceOwnerUserId(), 
+					payedMoney, 
+					parkingSpaceBill.getComid(), 
+					parkingSpaceBill.getOrderJnlNo());
+		} catch (Exception e) {
+			LOG.error("付款失败："+e.getMessage());
+			throw new ParkspaceServiceException(
+					Constants.ERRORCODE.ORDER_STATUS_IS_ILLLEGAL.toString(), 
+					"付款失败");
+		}
 	}
 }

@@ -87,6 +87,7 @@ public class TestCommunityController extends TestBaseController{
 		community.setPrice(new BigDecimal(2));//单价
 		community.setFreeParkingMinutes(60);//免费一小时
 		community.setMaxPriceAllDay(new BigDecimal(16));//一条最多16元
+		community.setOvertimePrice(new BigDecimal(5));
 		
 		ObjectMapper mapper = new ObjectMapper(); 
 		
@@ -112,6 +113,7 @@ public class TestCommunityController extends TestBaseController{
 		community.setMemo("测试更新小区信息");
 		community.setFreeParkingMinutes(30);
 		community.setMaxPriceAllDay(new BigDecimal(18));
+		community.setOvertimePrice(new BigDecimal(5));
 		
 		ObjectMapper mapper = new ObjectMapper(); 
 		
