@@ -138,6 +138,8 @@ alter table chargerule
 
 drop table if exists chargerule;
 
+drop table if exists smscode;
+
 alter table walletlock
    drop primary key;
 
@@ -655,6 +657,18 @@ alter table chargerule comment '计费规则表(chargerule)';
 
 alter table chargerule
    add primary key (id);
+
+/*==============================================================*/
+/* Table: smscode                                               */
+/*==============================================================*/
+create table smscode
+(
+   telePhone            varchar(11) not null comment 'telePhone',
+   smscode              varchar(8) not null comment 'smscode',
+   createTime           varchar(32) not null comment 'createTime'
+);
+
+alter table smscode comment '短信验证码(smscode)';
 
 /*==============================================================*/
 /* Table: walletlock                                            */
